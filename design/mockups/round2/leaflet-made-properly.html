@@ -627,8 +627,8 @@ html.calm ::view-transition-new(root) { animation: fadein2 180ms linear both; }
   html.leaf-3d .pto { margin-top: 0; }
 }
 /* the overprint poster line sits back while you read, and inks up fully once the leaflet lies open as a poster */
-html.leaf-3d .op { opacity: .5; transition: opacity .6s ease; }
-html.leaf-3d.at-poster .op { opacity: 1; }
+html.leaf-3d .op { opacity: .25; transition: opacity .6s ease; }
+html.leaf-3d.at-poster .op { opacity: .6; }
 @media (prefers-reduced-motion: reduce) { html.leaf-3d .op { transition: none; } }
 
 /* in the 3D leaflet the open sheet reaches near the top, so the imprint sits on one line above it */
@@ -667,6 +667,16 @@ html.leaf-3d .op { --opfs: calc(var(--W) * .5); }
 /* lockup: "Made" is scaled up so both lines fill the panel width */
 .cover__h1 .l:first-child { font-size: calc(var(--h1a, 1.6) * 1em); line-height: .86; }
 html.leaf-3d .cover__h1 { margin-top: calc(var(--H) * .14); }
+/* about panel without a photo: a short ruled fact list and a pencil note */
+.facts { margin: 30px 0 0; border-top: 1px solid var(--crease-dark); max-width: 360px; }
+.facts > div { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 11px 0 10px; border-bottom: 1px solid var(--crease); }
+.facts dt { font: 400 11px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.facts dd { margin: 0; font: 500 calc(17px * var(--ts)) / 1.3 var(--sans); color: var(--ink); }
+.about-note { margin-top: 20px; font: italic 500 calc(19px * var(--ts)) / 1.3 var(--serif) !important; color: var(--pencil); transform: rotate(-1.5deg); transform-origin: 0 50%; }
+html.leaf-3d .facts { margin-top: auto; }
+html.leaf-3d .about-note { margin-bottom: auto; }
+/* the big panel words on phones are a watermark too: keep them light */
+.op-word { opacity: .5; }
 </style>
 </head>
 <body>
@@ -771,10 +781,13 @@ html.leaf-3d .cover__h1 { margin-top: calc(var(--H) * .14); }
             <span class="op-word" aria-hidden="true">Made</span>
             <h2 class="kicker" id="about-h"><b aria-hidden="true">2</b><span data-fr="À propos">About</span></h2>
             <p class="intro">Hi, I'm Nick. I design brands and build websites, apps and bots for shops, cafés, trades and anyone with a good idea. You deal with me from the first chat to launch day, and I'm still around after.</p>
-            <figure class="photo">
-              <div class="print print--photo" role="img" aria-label="[Your photo]"><span class="slot">[Your photo]</span><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i><i class="pc pc--br"></i></div>
-              <figcaption>Me, at my desk in [city]. I answer my own emails.</figcaption>
-            </figure>
+            <dl class="facts">
+              <div><dt data-fr="Basé à">Based in</dt><dd>[city], France</dd></div>
+              <div><dt data-fr="Langues">Languages</dt><dd>[English, French]</dd></div>
+              <div><dt data-fr="Réponse">Replies</dt><dd>[within one working day]</dd></div>
+              <div><dt data-fr="Pour qui">Works with</dt><dd>Shops, cafés, trades, salons and freelancers</dd></div>
+            </dl>
+            <p class="about-note">I answer my own emails.</p>
           </div>
           <div class="cast" aria-hidden="true"></div>
           <div class="shade" aria-hidden="true"></div>
