@@ -33,7 +33,7 @@ const data = {
   works: site.projects.map((p, i) => ({
     slot: d.work.items[i].slot,
     meta: `${p.year} · ${d.work.items[i].kind}`,
-    name: p.client,
+    name: p.client[locale],
     text: d.work.items[i].desc,
     quote: p.quote ? { text: p.quote.text[locale], by: p.quote.by[locale] } : null,
     url: p.url ?? '',

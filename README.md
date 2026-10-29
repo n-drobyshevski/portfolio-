@@ -49,7 +49,7 @@ On Vercel or GitHub Actions, set it in the project's environment variables befor
 
 ## Deploy
 
-Before deploying, set `site` in `astro.config.mjs` and the sitemap line in `public/robots.txt` to the real domain.
+Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.txt` is generated from it). Then run `npm run build && node scripts/check-launch.mjs`: it fails while `yourdomain.com` or a `[placeholder]` inside an `href` is still in the built pages. Links whose URL still contains `[brackets]` (booking, LinkedIn, GitHub) are rendered without an `href` until you replace them in `src/data/site.ts`. `public/og.png` and `public/apple-touch-icon.png` come from `node scripts/make-social-images.mjs`; replace them with real artwork if you like. `vercel.json` sets long-lived caching for `/_astro/*`.
 
 **Vercel:** import the repository. Framework preset Astro, build `npm run build`, output `dist`. Add `PUBLIC_WEB3FORMS_KEY` under Environment Variables. `404.html` is served automatically.
 

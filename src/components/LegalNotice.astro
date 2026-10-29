@@ -1,5 +1,5 @@
 ---
-import { useI18n, type Locale } from '../i18n/utils';
+import { useI18n, localePath, type Locale } from '../i18n/utils';
 import PlainPage from './PlainPage.astro';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -11,9 +11,10 @@ const { d, t } = useI18n(locale);
     <p class="meta">{d.legal.meta}</p>
     {d.legal.sections.map((s) => (
       <>
-        <h3>{s.h}</h3>
+        <h2>{s.h}</h2>
         {s.p.map((line) => <p>{t(line)}</p>)}
       </>
     ))}
+    <p class="legal__back"><a class="link-drawn" href={localePath(locale)}>{d.ui.home}</a></p>
   </div>
 </PlainPage>

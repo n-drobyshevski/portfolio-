@@ -22,6 +22,11 @@ export function fill(text: string, vars: Record<string, string | number> = {}): 
   return text.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
 }
 
+/** A URL that may go in an href: placeholders in [brackets] come back undefined, so the link stays inert until they are replaced. */
+export function liveUrl(url: string): string | undefined {
+  return url && !url.includes('[') ? url : undefined;
+}
+
 /** Values every page shares in templates: city, month, reply time, email, year. */
 export function siteVars(locale: Locale) {
   return {

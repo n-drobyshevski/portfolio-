@@ -41,9 +41,11 @@ html[lang="fr"] { --h1k: 14.3; --h1a: 3.65; }
 .plain-wrap .sheet { max-width: 640px; }
 .plain-wrap .face { padding: 36px 28px 40px; }
 .plain-wrap .h2 { font-size: 34px; }
-.legal h3 { margin: 22px 0 6px; font: 600 19px/1.2 var(--sans); letter-spacing: -.01em; }
+.legal h2 { margin: 22px 0 6px; font: 600 19px/1.2 var(--sans); letter-spacing: -.01em; }
 .legal p, .legal li { margin-top: 6px; }
 .legal ul { list-style: disc; padding-left: 1.2em; }
 .legal .meta { margin-bottom: 14px; }
+.nf-fr { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--crease); }
+.legal__back { margin-top: 28px; }
 .nf-links { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; }
 .nf-big { font: 800 clamp(72px, 22vw, 140px) / .84 var(--sans); letter-spacing: -.035em; color: var(--overprint-strong); margin: 0 0 18px -.04em; }

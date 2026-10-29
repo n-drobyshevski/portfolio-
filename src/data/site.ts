@@ -13,7 +13,7 @@ export type PriceId = 'onePage' | 'business' | 'app' | 'branding';
 
 export interface Project {
   id: string;
-  client: string;
+  client: L;
   year: string;
   /** Optional client quote, shown in the loose-print dialog. */
   quote?: { text: L; by: L };
@@ -42,26 +42,26 @@ export const site = {
   projectsTotal: '[n]',
   /** Four price rows. Names and descriptions are in the dictionaries, keyed by id. */
   prices: [
-    { id: 'onePage', amount: '[price]' },
-    { id: 'business', amount: '[price]', featured: true },
-    { id: 'app', amount: '[price]' },
-    { id: 'branding', amount: '[price]' },
-  ] as { id: PriceId; amount: string; featured?: boolean }[],
+    { id: 'onePage', amount: { en: '[price]', fr: '[prix]' } },
+    { id: 'business', amount: { en: '[price]', fr: '[prix]' }, featured: true },
+    { id: 'app', amount: { en: '[price]', fr: '[prix]' } },
+    { id: 'branding', amount: { en: '[price]', fr: '[prix]' } },
+  ] as { id: PriceId; amount: L; featured?: boolean }[],
   /** Shown under the prices; keep or replace with your own VAT mention. */
   vat: { en: '[Prices TTC, or: TVA non applicable, art. 293 B du CGI]', fr: '[Prix TTC, ou : TVA non applicable, art. 293 B du CGI]' } as L,
   /** Three placeholder projects for the Work panel and the loose-print dialog (keep exactly three). */
   projects: [
     {
       id: 'project-1',
-      client: '[Client name]',
+      client: { en: '[Client name]', fr: '[Nom du client]' },
       year: '2026',
       quote: {
         text: { en: '[One real sentence from the client.]', fr: '[Une vraie phrase du client.]' },
         by: { en: '[Name], owner', fr: '[Nom], gérant' },
       },
     },
-    { id: 'project-2', client: '[Client name]', year: '2026' },
-    { id: 'project-3', client: '[Client name]', year: '2025' },
+    { id: 'project-2', client: { en: '[Client name]', fr: '[Nom du client]' }, year: '2026' },
+    { id: 'project-3', client: { en: '[Client name]', fr: '[Nom du client]' }, year: '2025' },
   ] as Project[],
   /** Legal notice details (mentions légales). */
   legal: {

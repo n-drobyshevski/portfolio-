@@ -1,6 +1,6 @@
 ---
 /* O1: the reply slip, on the back of the leaflet. Posts to Web3Forms when PUBLIC_WEB3FORMS_KEY is set, else mailto. */
-import { useI18n, localePath, type Locale } from '../i18n/utils';
+import { useI18n, localePath, liveUrl, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import Pencil from './Pencil.astro';
 import { replyArrow } from './marks';
@@ -29,12 +29,12 @@ const needs = [
       <span class="mail__ghost" aria-hidden="true">{site.email}</span>
       <button type="button" class="copy" aria-describedby="email">{d.contact.copy}</button>
     </div>
-    <p class="mail-note"><Pencil mark={replyArrow} g="reply" />{d.contact.note}</p>
-    <p><a class="call" href={site.bookingUrl}>{d.contact.call}</a></p>
+    <p class="mail-note"><Pencil mark={replyArrow} g="reply" />{t(d.contact.note)}</p>
+    <p><a class="call" href={liveUrl(site.bookingUrl)}>{d.contact.call}</a></p>
     <div class="perf" aria-hidden="true"><span class="perf__line"></span><svg class="scissors" viewBox="0 0 28 24"><circle cx="5" cy="6" r="3.6"/><circle cx="5" cy="18" r="3.6"/><path d="M8 8.2 26 18.5M8 15.8 26 5.5"/></svg></div>
     <div class="coupon-wrap">
       <div class="coupon">
-        <form class="slip-form" action={hasKey ? 'https://api.web3forms.com/submit' : `mailto:${site.email}`} method="post" enctype={hasKey ? undefined : 'text/plain'}>
+        <form class="slip-form" action={hasKey ? 'https://api.web3forms.com/submit' : liveUrl(`mailto:${site.email}`) ?? '#contact'} method="post" enctype={hasKey || !liveUrl(site.email) ? undefined : 'text/plain'}>
           {hasKey && <input type="hidden" name="access_key" value={key} />}
           {hasKey && <input type="hidden" name="subject" value={d.contact.mailSubject} />}
           {hasKey && <input type="hidden" name="from_name" value={site.name} />}
@@ -70,7 +70,7 @@ const needs = [
     </div>
     <footer class="colophon">
       <p>{t(d.colophon.text)}</p>
-      <p class="colophon__links">{site.socials.map((s) => <a href={s.url}>{s.name}</a>)}<a href={localePath(locale, 'mentions-legales')}>{d.contents.legal}</a></p>
+      <p class="colophon__links">{site.socials.map((s) => <a href={liveUrl(s.url)}>{s.name}</a>)}<a href={localePath(locale, 'mentions-legales')} lang={locale === 'en' ? 'fr' : undefined}>{d.contents.legal}</a></p>
     </footer>
   </div>
   <div class="shade" aria-hidden="true"></div>

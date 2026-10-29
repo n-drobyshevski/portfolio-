@@ -1,6 +1,6 @@
 ---
 /* Desk furniture: the controls and shortcuts that sit around the leaflet on the desk. */
-import { useI18n, localePath, fill, type Locale } from '../i18n/utils';
+import { useI18n, localePath, fill, liveUrl, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import LangSwitch from './LangSwitch.astro';
 interface Props { locale: Locale }
@@ -15,7 +15,7 @@ const toc = [
   { href: '#contact', label: d.contents.contact, n: 8 },
 ];
 ---
-<button class="skip" type="button">{d.ui.skip}</button>
+<button class="skip" type="button" hidden>{d.ui.skip}</button>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <filter id="graphite" x="-10%" y="-30%" width="120%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.7" xChannelSelector="R" yChannelSelector="G"/></filter>
@@ -62,8 +62,8 @@ const toc = [
         </ol>
         <div class="contents__opts">
           <button type="button" class="marks-toggle" aria-pressed="true">{fill(d.contents.marks, { state: d.contents.on })}</button>
-          {site.socials.map((s) => <a href={s.url}>{s.name}</a>)}
-          <a href={localePath(locale, 'mentions-legales')}>{d.contents.legal}</a>
+          {site.socials.map((s) => <a href={liveUrl(s.url)}>{s.name}</a>)}
+          <a href={localePath(locale, 'mentions-legales')} lang={locale === 'en' ? 'fr' : undefined}>{d.contents.legal}</a>
         </div>
       </div>
     </details>

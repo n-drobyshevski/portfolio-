@@ -96,7 +96,7 @@ export const en = {
     title: 'Recent work',
     count: '3 of {n} projects',
     read: 'Read how it went',
-    lookCloser: 'Look closer',
+    lookCloser: 'Look closer: {client}, {label}',
     items: [
       {
         kind: 'Restaurant website · Design & build',
@@ -191,7 +191,7 @@ export const en = {
     selected: 'Selected',
     copiedLive: 'Email address copied',
     selectedLive: 'Address selected. Press Ctrl+C or Cmd+C to copy it.',
-    note: 'I answer my own emails.',
+    note: 'I usually reply {reply}.',
     call: 'Or book a 15-minute call',
     slipTitle: 'Reply slip',
     name: 'Name',
@@ -209,7 +209,7 @@ export const en = {
     errSend: 'Something went wrong and your message was not sent. Please write to {email} instead.',
     mailtoStatus: 'Your email app should open with your message ready. If it does not, write to {email}.',
     sentHead: 'Sent.',
-    sentText: 'I answer my own emails.',
+    sentText: 'Thanks, I have your message.',
     sentReply: 'I usually reply {reply}.',
     sentLive: 'Sent. I will reply soon.',
     mailSubject: 'New message from the website',

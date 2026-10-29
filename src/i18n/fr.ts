@@ -10,7 +10,7 @@ export const fr: Dict = {
     title: "Nick Drobyshevski | Fait comme il faut. Identité visuelle, sites, applis et bots",
     description: "Nick Drobyshevski, design et développement web pour les petites entreprises à {city}, France.",
     ogLocale: "fr_FR",
-    ogImageAlt: "Nick Drobyshevski : Fait comme il faut.",
+    ogImageAlt: "Nick Drobyshevski : « Fait comme il faut. »",
     legalTitle: "Mentions légales | Nick Drobyshevski",
     notFoundTitle: "Page introuvable | Nick Drobyshevski"
   },
@@ -29,7 +29,7 @@ export const fr: Dict = {
     nextPage: "Page suivante",
     home: "Retour à la couverture"
   },
-  imprintLine: "Projets possibles dès {month}",
+  imprintLine: "Nouveaux projets à partir de {month}",
   nav: {
     work: "Travaux",
     prices: "Tarifs",
@@ -46,7 +46,7 @@ export const fr: Dict = {
       menu: "Tarifs",
       poster: "Le dépliant ouvert",
       reply: "Contact",
-      why: "Pourquoi une personne",
+      why: "Pourquoi un indépendant",
       how: "Comment ça marche",
       services: "Services"
     }
@@ -73,7 +73,7 @@ export const fr: Dict = {
   },
   about: {
     kicker: "À propos",
-    intro: "Bonjour, moi c’est Nick. Je crée des identités visuelles et je développe des sites, des applis et des bots pour les boutiques, les cafés, les artisans et tous ceux qui ont une bonne idée. Vous avez affaire à moi du premier échange à la mise en ligne, et je suis encore là après.",
+    intro: "Bonjour, moi c’est Nick. Je crée des identités visuelles et je développe des sites, des applis et des bots pour les boutiques, les cafés, les artisans et tous ceux qui ont une bonne idée. Vous avez affaire à moi du premier échange à la mise en ligne, et je reste disponible ensuite.",
     based: "Basé à",
     languages: "Langues",
     replies: "Réponse",
@@ -82,34 +82,34 @@ export const fr: Dict = {
     note: "Je réponds moi-même à mes e-mails."
   },
   why: {
-    kicker: "Pourquoi une personne",
+    kicker: "Pourquoi un indépendant",
     title: "Pourquoi une seule personne plutôt qu’une agence ?",
     p1: {
       pre: "Vous savez toujours qui fait le travail, ",
-      mark: "puisque c’est moi.",
-      post: " Pas de chargé de compte qui fait passer les messages, pas de junior qui apprend sur votre projet."
+      mark: "parce que c’est moi.",
+      post: " Pas d’intermédiaire qui fait passer les messages, pas de junior qui apprend sur votre projet."
     },
     p2: "Le prix fixé avant que je commence est celui que vous payez. Si quelque chose me prend plus de temps que prévu, c’est mon problème.",
-    p3: "Une fois terminé, tout vous appartient : les fichiers de design, le code, le nom de domaine et le compte d’hébergement. Vous pouvez partir quand vous voulez et tout emporter."
+    p3: "Une fois le projet terminé, tout vous appartient : les fichiers de design, le code, le nom de domaine et le compte d’hébergement. Vous pouvez partir quand vous voulez et tout emporter."
   },
   work: {
     kicker: "Travaux",
-    title: "Travaux récents",
+    title: "Mes réalisations",
     count: "3 projets sur {n}",
     read: "Voir comment ça s’est passé",
-    lookCloser: "Regarder de plus près",
+    lookCloser: "Regarder de plus près : {client}, {label}",
     items: [
       {
-        kind: "Site de restaurant · Design et développement",
+        kind: "Site de restaurant · Design et code",
         label: "site de restaurant",
         slot: "[Capture du site, idéalement sur un téléphone tenu en main]",
-        desc: "[Deux phrases : ce dont ils avaient besoin, et ce que vous avez réalisé pour eux.]"
+        desc: "[Deux phrases : leur besoin, et ce que vous avez réalisé.]"
       },
       {
         kind: "Appli web",
         label: "réservation pour un salon de coiffure",
         slot: "[Capture d’écran]",
-        desc: "Réservation en ligne pour un salon de coiffure. [Ce qui a changé pour eux.]"
+        desc: "Réservation en ligne pour un salon. [Ce qui a changé pour eux.]"
       },
       {
         kind: "Design",
@@ -136,8 +136,8 @@ export const fr: Dict = {
       post: " de 15 minutes. Vous me parlez de votre activité, je vous pose beaucoup de questions."
     },
     s2: {
-      h: "Vous recevez un prix fixe",
-      p: "Par écrit, avec une date de mise en ligne. Si vous dites oui, c’est ce prix-là, point."
+      h: "Un prix fixe, par écrit",
+      p: "Avec une date de mise en ligne. Si vous dites oui, c’est ce prix-là, point final."
     },
     s3: {
       h: "Je dessine, vous commentez",
@@ -145,7 +145,7 @@ export const fr: Dict = {
     },
     s4: {
       h: "Mise en ligne",
-      p: "Je le mets en ligne et je vous montre comment le modifier. Ensuite, je suis à un e-mail de vous."
+      p: "Je le mets en ligne et je vous montre comment le modifier. Ensuite, il suffit d’un e-mail pour me joindre."
     }
   },
   services: {
@@ -153,7 +153,7 @@ export const fr: Dict = {
     title: "Ce que je peux faire pour vous",
     s1: {
       h: "Un site web",
-      p: "Neuf, ou refait à partir de celui que vous avez. Il marche sur téléphone, apparaît quand on vous cherche, et vous modifiez vous-même les textes et les photos."
+      p: "Neuf, ou refait à partir du vôtre. Il s’affiche bien sur mobile, ressort sur Google, et vous modifiez vous-même textes et photos."
     },
     s2: {
       h: "Une appli ou un bot",
@@ -163,7 +163,7 @@ export const fr: Dict = {
     },
     s3: {
       h: "Identité visuelle",
-      p: "Un logo, des couleurs et des typos, plus les menus, enseignes et posts pour les réseaux qui vont avec, pour que tout ait l’air de venir du même endroit."
+      p: "Un logo, des couleurs et des polices, avec menus, enseignes et publications sociales assortis, pour que tout soit reconnaissable au premier coup d’œil."
     },
     slip: "Vous avez déjà un développeur ? Je peux faire seulement le design. Vous avez déjà un design ? Je le développe."
   },
@@ -176,57 +176,57 @@ export const fr: Dict = {
     rows: {
       onePage: {
         name: "Site d’une page",
-        desc: "Votre activité sur une seule page : ce que vous faites, photos, tarifs, horaires, formulaire de contact et plan."
+        desc: "Votre activité sur une page : services, photos, tarifs, horaires, contact et plan."
       },
       business: {
         name: "Site vitrine",
-        desc: "Jusqu’à six pages que vous modifiez vous-même, un formulaire de réservation ou de devis, et Google bien réglé pour qu’on vous trouve."
+        desc: "Jusqu’à six pages que vous modifiez, un formulaire de devis ou de réservation, et une fiche Google soignée."
       },
       app: {
         name: "Appli ou bot",
-        desc: "Réservations, comptes, paiements, ou un bot pour les tâches répétitives. Prix fixe après un premier appel."
+        desc: "Réservations, comptes, paiements ou bot pour les tâches répétitives. Prix fixe après un premier appel."
       },
       branding: {
         name: "Identité visuelle",
-        desc: "Logo, couleurs et typos, prêts pour l’impression et les écrans."
+        desc: "Logo, couleurs et polices, prêts pour l’impression et les écrans."
       }
     },
-    fine: "Chaque prix comprend deux séries de modifications, un mois d’aide après la mise en ligne, et tout ce que je crée pour vous vous appartient.",
+    fine: "Chaque tarif comprend deux séries de retouches, un mois d’accompagnement après la mise en ligne et la pleine propriété de tout ce que je crée pour vous.",
     pto: "T.S.V.P.",
     ptoLabel: "Tournez s’il vous plaît : écrivez-moi"
   },
   contact: {
     kicker: "Contact",
     title: "Écrivez-moi.",
-    text: "Parlez-moi de votre activité et de ce dont vous avez besoin. Si un nouveau site n’est pas la solution, je vous le dirai aussi.",
+    text: "Parlez-moi de votre activité et de vos besoins. Si un nouveau site n’est pas la solution, je vous le dirai.",
     copy: "Copier",
     copied: "Copié",
     selected: "Sélectionné",
     copiedLive: "Adresse e-mail copiée",
     selectedLive: "Adresse sélectionnée. Appuyez sur Ctrl+C ou Cmd+C pour la copier.",
-    note: "Je réponds moi-même à mes e-mails.",
-    call: "Ou réservez un appel de 15 minutes",
+    note: "Je réponds en général {reply}.",
+    call: "Ou réservez un appel de 15 min",
     slipTitle: "Coupon-réponse",
     name: "Nom",
     email: "E-mail",
     needLegend: "Votre besoin",
     needs: {
       newSite: "Un nouveau site",
-      fix: "Reprendre celui que vous avez",
+      fix: "Améliorer mon site actuel",
       app: "Un outil ou une appli sur mesure"
     },
     message: "Message",
     send: "Envoyer",
     sending: "Envoi en cours",
     noteForm: "Arrive directement dans ma boîte mail.",
-    noteMailto: "Ouvre votre messagerie. Le formulaire n’est pas encore branché.",
+    noteMailto: "Ouvre votre messagerie. Formulaire pas encore branché.",
     errName: "Merci d’indiquer votre nom.",
     errEmail: "Merci d’indiquer votre adresse e-mail.",
     errEmailBad: "Cette adresse e-mail semble incomplète.",
     errSend: "Un problème est survenu et votre message n’est pas parti. Écrivez-moi plutôt à {email}.",
     mailtoStatus: "Votre messagerie devrait s’ouvrir avec votre message déjà rédigé. Sinon, écrivez à {email}.",
     sentHead: "Envoyé.",
-    sentText: "Je réponds moi-même à mes e-mails.",
+    sentText: "Merci, j’ai bien reçu votre message.",
     sentReply: "Je réponds en général {reply}.",
     sentLive: "Envoyé. Je vous réponds bientôt.",
     mailSubject: "Nouveau message depuis le site",
@@ -258,7 +258,7 @@ export const fr: Dict = {
   },
   legal: {
     title: "Mentions légales",
-    meta: "Modèle à compléter avant la mise en ligne.",
+    meta: "[Modèle à compléter avant la mise en ligne.]",
     sections: [
       {
         h: "Éditeur du site",
@@ -266,7 +266,7 @@ export const fr: Dict = {
           "{publisher}",
           "{siret}",
           "{address}",
-          "Courriel : {email}",
+          "E-mail : {email}",
           "{phone}"
         ]
       },
@@ -297,7 +297,7 @@ export const fr: Dict = {
       {
         h: "Cookies",
         p: [
-          "Ce site ne dépose aucun cookie de suivi. Le dépliant garde deux petites préférences dans votre navigateur : animations activées ou non, et si vous avez déjà vu l’introduction."
+          "Ce site ne dépose aucun cookie de suivi. Le dépliant enregistre seulement deux préférences dans votre navigateur : l’activation ou non des animations, et le fait que vous ayez déjà vu l’introduction."
         ]
       }
     ]

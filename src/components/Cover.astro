@@ -15,7 +15,7 @@ const { d, t } = useI18n(locale);
       <p class="cover__book">{t(d.imprintLine)}</p>
     </div>
     <h1 class="cover__h1" id="cover-h">
-      <span class="l">{d.cover.h1a}</span>
+      <span class="l">{d.cover.h1a}</span>{" "}
       <span class="l"><span class="loopw"><span class="loopw__t">{d.cover.h1b}</span><Pencil mark={coverLoop} g="cover" /></span>.</span>
     </h1>
     <p class="cover__place">{t(d.cover.place)}</p>
@@ -23,7 +23,7 @@ const { d, t } = useI18n(locale);
       <a class="btn" href="#contact">{d.cover.cta}</a>
       <a class="link-drawn" href="#work"><span>{d.cover.see}</span><Pencil mark={linkLine} /></a>
     </div>
-    <p class="cover__imprint">{d.cover.imprint}</p>
+    <p class="cover__imprint" lang={locale === 'en' ? 'fr' : undefined}>{d.cover.imprint}</p>
   </div>
   <button class="open-tab" type="button" aria-label={d.ui.openLeaflet}><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 13C5 5 11 4 15.5 9.5M15.5 9.5 11 9.6M15.5 9.5l-.2-4.4"/></svg><span aria-hidden="true">{d.ui.open}</span></button>
   <div class="shade" aria-hidden="true"></div>

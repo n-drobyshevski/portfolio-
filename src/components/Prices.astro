@@ -17,7 +17,7 @@ const { d } = useI18n(locale);
     <ul class="menu">
       {site.prices.map((row) => (
         <li>
-          <div class="mrow__top"><h3>{d.prices.rows[row.id].name}</h3><span class="lead" aria-hidden="true"></span><p class="price">{locale === 'fr' ? `${d.prices.from} ${row.amount} €` : `${d.prices.from} €${row.amount}`}</p></div>
+          <div class="mrow__top"><h3>{d.prices.rows[row.id].name}</h3><span class="lead" aria-hidden="true"></span><p class="price">{locale === 'fr' ? `${d.prices.from} ${row.amount[locale]} €` : `${d.prices.from} €${row.amount[locale]}`}</p></div>
           <p class="mrow__d">{d.prices.rows[row.id].desc}</p>
           {row.featured && <p class="pick">{d.prices.pick}</p>}
           {row.featured && <Pencil mark={bracket} g="menu" class="pencil--bracket" />}

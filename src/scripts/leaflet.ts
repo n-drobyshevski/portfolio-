@@ -607,6 +607,7 @@ function init(CFG: Config) {
       return;
     }
     introDone = false;
+    skipBtn.hidden = false;
     Object.assign(intro, { dy: -4, s: 1.06, rx: 14, rz: -5.3, dx: 18, puff: 0, lift: 1 });
     hidePaths(coverMarks); hidePaths(cropPaths); drawn.cover = true;
     render();
@@ -624,6 +625,7 @@ function init(CFG: Config) {
   }
   function endIntro() {
     introDone = true; introTl = null;
+    hideSkip();
     Object.assign(intro, { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 });
     gsap.set(tags.concat(stamp), { clearProps: 'transform' });
     showPaths(cropPaths); showPaths(coverMarks);
@@ -641,7 +643,10 @@ function init(CFG: Config) {
     const fn = (e: Event) => { if (e.type === 'keydown' && (e as KeyboardEvent).key === 'Tab') return; skipIntro(); ev.forEach(n => removeEventListener(n, fn, true)); };
     ev.forEach(n => addEventListener(n, fn, { capture: true, passive: true }));
   }
-  $('.skip').addEventListener('click', () => { skipIntro(); $('.cover__acts .btn').focus(); });
+  /* the Skip button exists only while the intro plays; afterwards it would be a dead control */
+  const skipBtn = $('.skip');
+  function hideSkip() { const had = document.activeElement === skipBtn; skipBtn.hidden = true; if (had) $('.cover__acts .btn').focus({ preventScroll: true }); }
+  skipBtn.addEventListener('click', () => { skipIntro(); $('.cover__acts .btn').focus(); });
 
   /* the corner peek: a hint that the cover lifts */
   function setPeek(on: boolean) {
@@ -869,10 +874,11 @@ function init(CFG: Config) {
     const w = WORKS[i];
     $('#loose-slot').textContent = w.slot; $('#loose-meta').textContent = w.meta; $('#loose-h').textContent = w.name;
     $('#loose-text').textContent = w.text;
-    lQuote.hidden = !w.quote; lRead.hidden = !w.quote;
+    lQuote.hidden = !w.quote;
     if (w.quote) { $('p', lQuote).textContent = w.quote.text; $('footer', lQuote).textContent = w.quote.by; }
-    if (w.url) { lReadA.href = w.url; lReadA.target = '_blank'; lReadA.rel = 'noopener'; lRead.hidden = false; }
-    else { lReadA.href = '#case-study'; lReadA.removeAttribute('target'); lReadA.removeAttribute('rel'); }
+    /* no case study yet: the link stays hidden instead of pointing nowhere */
+    lRead.hidden = !w.url;
+    if (w.url) { lReadA.href = w.url; lReadA.target = '_blank'; lReadA.rel = 'noopener'; }
     $('#loose-count').textContent = fill(CFG.dialog.count, { i: i + 1, n: WORKS.length });
   }
   function openLoose(i: number, src: HTMLElement | null) {
@@ -909,7 +915,6 @@ function init(CFG: Config) {
   dlg.addEventListener('cancel', e => { e.preventDefault(); closeLoose(); });
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target === lWrap) closeLoose(); });
   dlg.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') switchLoose(-1); if (e.key === 'ArrowRight') switchLoose(1); });
-  lReadA.addEventListener('click', e => { if (lReadA.getAttribute('href') === '#case-study') { e.preventDefault(); live.textContent = CFG.dialog.caseStudyNote; } });
 
   /* ---------- reply slip ---------- */
   const copyBtn = $('.copy'), addr = $('.mail__addr'), ghost = $('.mail__ghost');
@@ -991,7 +996,7 @@ function init(CFG: Config) {
   /* without a key: open the visitor's email app with the message ready, and say so */
   function sendMailto() {
     const v = formValues();
-    const lines = [v.message, '', v.needs.length ? CFG.contact.needs + ': ' + v.needs.join(', ') : '', '', v.name + ' <' + v.email + '>'].filter((l, i, a) => l !== '' || (i > 0 && a[i - 1] !== ''));
+    const lines = [v.message, '', v.needs.length ? CFG.contact.needs + (CFG.lang === 'fr' ? '\u202f: ' : ': ') + v.needs.join(', ') : '', '', v.name + ' <' + v.email + '>'].filter((l, i, a) => l !== '' || (i > 0 && a[i - 1] !== ''));
     const href = 'mailto:' + CFG.email + '?subject=' + encodeURIComponent(CFG.contact.subject) + '&body=' + encodeURIComponent(lines.join('\n'));
     setStatus(CFG.contact.mailtoStatus, false);
     live.textContent = CFG.contact.mailtoStatus;

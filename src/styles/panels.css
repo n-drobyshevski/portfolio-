@@ -103,6 +103,7 @@ html.strip .shade { display: block; }
 .read { position: relative; margin-top: 6px; }
 .read a { display: inline-flex; align-items: center; min-height: 44px; font: 400 calc(17px * var(--ts)) var(--serif); }
 .read { display: inline-block; }
+.read[hidden] { display: none; }
 .read .pencil--arrow { left: calc(100% + 8px); top: 4px; width: 74px; height: 32px; transform: scaleX(-1) rotate(8deg); }
 .wrow { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: start; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--crease); }
 .wrow .print { aspect-ratio: 4 / 3; }

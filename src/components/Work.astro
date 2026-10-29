@@ -8,7 +8,7 @@ const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
 const [p1, p2, p3] = site.projects;
 const [i1, i2, i3] = d.work.items;
-const look = (client: string, label: string) => `${d.work.lookCloser}: ${client}, ${label}`;
+const look = (client: string, label: string) => t(d.work.lookCloser, { client, label });
 ---
 <!-- I2: recent work -->
 <section class="face face--i face--p2" id="work" aria-labelledby="work-h">
@@ -18,19 +18,19 @@ const look = (client: string, label: string) => `${d.work.lookCloser}: ${client}
     <p class="kicker" aria-hidden="true"><b>4</b><span>{d.work.kicker}</span></p>
     <div class="work-head"><h2 class="h2" id="work-h">{d.work.title}</h2><p class="meta">{t(d.work.count)}</p></div>
     <article class="w1" id="work-1" aria-labelledby="w1-h">
-      <button type="button" class="print print--btn" data-work="0" aria-label={look(p1.client, i1.label)}><span class="paper" aria-hidden="true"></span><span class="slot">{i1.slot}</span><span class="dog" aria-hidden="true"></span><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i></button>
-      <h3 class="w-name" id="w1-h">{p1.client}</h3>
+      <button type="button" class="print print--btn" data-work="0"><span class="paper" aria-hidden="true"></span><span class="slot">{i1.slot}</span><span class="sr-only">{look(p1.client[locale], i1.label)}</span><span class="dog" aria-hidden="true"></span><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i></button>
+      <h3 class="w-name" id="w1-h">{p1.client[locale]}</h3>
       <p class="meta">{p1.year} · {i1.kind}</p>
       <p class="w-text">{i1.desc}</p>
-      <p class="read"><a href="#work-1" data-work="0">{d.work.read}</a><Pencil mark={arrow} g="work" class="pencil--arrow" /></p>
+      {p1.url && <p class="read"><a href={p1.url} target="_blank" rel="noopener">{d.work.read}</a><Pencil mark={arrow} g="work" class="pencil--arrow" /></p>}
     </article>
     <article class="wrow" id="work-2" aria-labelledby="w2-h">
-      <button type="button" class="print print--btn" data-work="1" aria-label={look(p2.client, i2.label)}><span class="paper" aria-hidden="true"></span><span class="slot">{i2.slot}</span><span class="dog" aria-hidden="true"></span></button>
-      <div><h3 class="w-name" id="w2-h">{p2.client}</h3><p class="meta">{p2.year} · {i2.kind}</p><p class="w-text">{i2.desc}</p></div>
+      <button type="button" class="print print--btn" data-work="1"><span class="paper" aria-hidden="true"></span><span class="slot">{i2.slot}</span><span class="sr-only">{look(p2.client[locale], i2.label)}</span><span class="dog" aria-hidden="true"></span></button>
+      <div><h3 class="w-name" id="w2-h">{p2.client[locale]}</h3><p class="meta">{p2.year} · {i2.kind}</p><p class="w-text">{i2.desc}</p></div>
     </article>
     <article class="wrow" id="work-3" aria-labelledby="w3-h">
-      <button type="button" class="print print--btn" data-work="2" aria-label={look(p3.client, i3.label)}><span class="paper" aria-hidden="true"></span><span class="slot">{i3.slot}</span><span class="dog" aria-hidden="true"></span></button>
-      <div><h3 class="w-name" id="w3-h">{p3.client}</h3><p class="meta">{p3.year} · {i3.kind}</p><p class="w-text">{i3.desc}</p></div>
+      <button type="button" class="print print--btn" data-work="2"><span class="paper" aria-hidden="true"></span><span class="slot">{i3.slot}</span><span class="sr-only">{look(p3.client[locale], i3.label)}</span><span class="dog" aria-hidden="true"></span></button>
+      <div><h3 class="w-name" id="w3-h">{p3.client[locale]}</h3><p class="meta">{p3.year} · {i3.kind}</p><p class="w-text">{i3.desc}</p></div>
     </article>
   </div>
   <div class="cast" aria-hidden="true"></div>

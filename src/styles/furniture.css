@@ -6,6 +6,9 @@ html.no-marks .pencil { opacity: 0; }
 .mk { position: relative; white-space: nowrap; }
 .mk--wave .pencil, .mk--under .pencil { left: -2%; width: 104%; bottom: -.42em; height: .5em; }
 .mk--loop .pencil { left: -22%; top: -24%; width: 144%; height: 150%; }
+/* French "gratuit" is a longer word: keep the loop inside the neighbouring spaces */
+:lang(fr) .mk--loop .pencil { left: -14%; top: -22%; width: 128%; height: 146%; }
+:lang(fr) .mk--loop { padding: 0 .08em; }
 
 /* ---------- desk furniture ---------- */
 .skip {
@@ -38,7 +41,8 @@ html:not(.js) .skip, html.calm .skip { display: none; }
 .lang:hover, .motion:hover { color: var(--pencil-deep); }
 .motion { padding: 0 8px; }
 .motion b { font-weight: 400; color: var(--ink); }
-html:not(.js) .controls { display: none; }
+/* no JS: keep the EN/FR switch and the contents list; hide what only works with a script */
+html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 
 /* shop tags on strings: one-tap Work and Prices */
 .tag { position: fixed; top: 0; z-index: 21; display: block; width: 62px; text-decoration: none; color: var(--ink); transform-origin: 50% 0; }
@@ -117,5 +121,7 @@ html:not(.js) .marks-toggle { display: none; }
 .colophon p { font: inherit !important; }
 .colophon a { display: inline-flex; align-items: center; min-height: 28px; color: var(--ink-soft); }
 .colophon a:hover { color: var(--pencil-deep); }
-.colophon__links { display: flex; gap: 12px; }
+.colophon__links { display: flex; gap: 4px; }
+.colophon__links a { min-height: 28px; padding: 0 4px; }
+.colophon a:not([href]) { cursor: default; }
 

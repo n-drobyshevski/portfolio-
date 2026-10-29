@@ -3,15 +3,21 @@ import Base from '../layouts/Base.astro';
 import PlainPage from '../components/PlainPage.astro';
 import { getDict, localePath } from '../i18n/utils';
 const d = getDict('en');
+const f = getDict('fr');
 ---
-<Base locale="en" variant="plain" title={d.meta.notFoundTitle} noindex>
+<Base locale="en" variant="plain" title={d.meta.notFoundTitle} noindex schema="none">
   <PlainPage locale="en">
     <p class="nf-big" aria-hidden="true">404</p>
     <h1 class="h2">{d.notFound.title}</h1>
     <p>{d.notFound.text}</p>
     <div class="nf-links">
       <a class="btn" href={localePath('en')}>{d.notFound.home}</a>
-      <a class="link-drawn" href={localePath('fr')} hreflang="fr" lang="fr">Français</a>
+      <a class="link-drawn" href={localePath('fr')} hreflang="fr" lang="fr">{d.notFound.other}</a>
+    </div>
+    <div lang="fr" class="nf-fr">
+      <h2 class="h2">{f.notFound.title}</h2>
+      <p>{f.notFound.text}</p>
+      <div class="nf-links"><a class="link-drawn" href={localePath('fr')} hreflang="fr">{f.notFound.home}</a></div>
     </div>
   </PlainPage>
 </Base>

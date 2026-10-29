@@ -10,6 +10,8 @@ import '../styles/panels.css';
 import '../styles/leaflet-3d.css';
 import '../styles/responsive.css';
 import '../styles/refinements.css';
+import schibstedLatin from '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url';
+import newsreaderLatin from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
 import { useI18n, localePath, otherLocale, type Locale } from '../i18n/utils';
 import { site, locales } from '../data/site';
 
@@ -22,9 +24,12 @@ interface Props {
   /** "leaflet" runs the pre-paint mode script; "plain" is a flat page (legal notice, 404). */
   variant?: 'leaflet' | 'plain';
   noindex?: boolean;
+  /** Structured data: the business (home page), a plain WebPage (legal notice) or none (404). */
+  schema?: 'business' | 'webpage' | 'none';
 }
 const { locale, path = '', variant = 'leaflet', noindex = false } = Astro.props;
 const { d, t } = useI18n(locale);
+const schema = Astro.props.schema ?? (variant === 'leaflet' ? 'business' : 'webpage');
 const title = Astro.props.title ?? d.meta.title;
 const description = Astro.props.description ?? t(d.meta.description);
 
@@ -37,20 +42,36 @@ const other = otherLocale(locale);
 
 /* JSON-LD: leave out anything that is still a [placeholder] */
 const real = (v: string) => (v && !v.includes('[') ? v : undefined);
-const jsonLd = {
-  '@context': 'https://schema.org',
+const homeUrl = abs(localePath(locale));
+const city = real(site.city[locale]);
+const sameAs = site.socials.map((s) => real(s.url)).filter(Boolean);
+const business = {
   '@type': 'ProfessionalService',
+  '@id': abs('/') + '#business',
   name: site.name,
-  url: abs(localePath(locale)),
-  description,
+  url: homeUrl,
+  description: real(description),
   email: real(site.email),
-  image: abs('/favicon.svg'),
-  areaServed: { '@type': 'Country', name: site.region },
-  address: { '@type': 'PostalAddress', addressLocality: real(site.city[locale]), addressCountry: 'FR' },
-  availableLanguage: ['English', 'French'],
-  sameAs: site.socials.map((s) => real(s.url)).filter(Boolean),
+  image: abs('/og.png'),
+  logo: abs('/apple-touch-icon.png'),
+  areaServed: city
+    ? [{ '@type': 'City', name: city }, { '@type': 'Country', name: site.region }]
+    : { '@type': 'Country', name: site.region },
+  address: { '@type': 'PostalAddress', addressLocality: city, addressCountry: 'FR' },
+  knowsLanguage: ['en', 'fr'],
+  availableLanguage: [
+    { '@type': 'Language', name: 'English', alternateName: 'en' },
+    { '@type': 'Language', name: 'French', alternateName: 'fr' },
+  ],
+  ...(sameAs.length ? { sameAs } : {}),
   founder: { '@type': 'Person', name: site.name },
 };
+const website = { '@type': 'WebSite', '@id': abs('/') + '#website', url: homeUrl, name: site.name, inLanguage: hreflang[locale], publisher: { '@id': abs('/') + '#business' } };
+const webpage = { '@type': 'WebPage', '@id': canonical + '#webpage', url: canonical, name: title, inLanguage: hreflang[locale], isPartOf: { '@id': abs('/') + '#website' } };
+const jsonLd =
+  schema === 'business' ? { '@context': 'https://schema.org', '@graph': [business, website] }
+  : schema === 'webpage' ? { '@context': 'https://schema.org', '@graph': [website, webpage] }
+  : null;
 /* Before first paint: pick the mode (3D leaflet, strip or calm) and arm a watchdog,
    so a script that never arrives falls back to the readable flat strip instead of a frozen fold. */
 const prePaint = `(function () {
@@ -70,7 +91,8 @@ const prePaint = `(function () {
   }
   setTimeout(function () { if (!window.__leafReady) d.classList.remove('leaf-3d', 'intro'); }, 3000);
 })();`;
-const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
+const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : '';
+const ogImageAlt = t(d.meta.ogImageAlt);
 ---
 <!doctype html>
 <html lang={locale}>
@@ -85,15 +107,24 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 {!noindex && alternates.map((a) => <link rel="alternate" hreflang={hreflang[a.l]} href={a.href}>)}
 {!noindex && <link rel="alternate" hreflang="x-default" href={abs(localePath('en', path))}>}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+{variant === 'leaflet' && <link rel="preload" as="font" type="font/woff2" crossorigin href={schibstedLatin}>}
+{variant === 'leaflet' && <link rel="preload" as="font" type="font/woff2" crossorigin href={newsreaderLatin}>}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content={site.name}>
 <meta property="og:title" content={title}>
 <meta property="og:description" content={description}>
-<meta property="og:url" content={canonical}>
+{!noindex && <meta property="og:url" content={canonical}>}
 <meta property="og:locale" content={d.meta.ogLocale}>
 <meta property="og:locale:alternate" content={other === 'fr' ? 'fr_FR' : 'en_GB'}>
-<meta name="twitter:card" content="summary">
-<script is:inline type="application/ld+json" set:html={jsonLdText}></script>
+<meta property="og:image" content={abs('/og.png')}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content={ogImageAlt}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content={abs('/og.png')}>
+<meta name="twitter:image:alt" content={ogImageAlt}>
+{jsonLd && <script is:inline type="application/ld+json" set:html={jsonLdText}></script>}
 {variant === 'leaflet' && <script is:inline set:html={prePaint}></script>}
 </head>
 <body>
