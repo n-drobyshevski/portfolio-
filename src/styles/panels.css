@@ -221,3 +221,6 @@ html:not(.js) .copy { display: none; }
 .loose__close { position: fixed; right: 24px; top: 22px; z-index: 2; }
 .loose__nav button:hover, .loose__close:hover { border-color: var(--pencil); color: var(--pencil-deep); }
 
+
+.reply-alt { display: flex; flex-wrap: wrap; gap: 0 22px; }
+html.leaf-3d .mail__addr, html.leaf-3d .mail__ghost { font-size: 17px; }

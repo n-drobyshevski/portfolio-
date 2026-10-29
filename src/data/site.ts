@@ -25,14 +25,16 @@ export const site = {
   name: 'Nick Drobyshevski',
   initials: 'N.D.',
   /** Production URL lives in astro.config.mjs (site). */
-  city: { en: "Villeneuve d'Ascq", fr: "Villeneuve d'Ascq" } as L,
+  city: { en: 'Lille', fr: 'Lille' } as L,
   region: 'France',
-  email: 'hello@[yourdomain].com',
+  email: 'nicolai.drobyshevski@pm.me',
+  telegram: { handle: '@ndrobyshevski', url: 'https://t.me/ndrobyshevski' },
   /** Booking page for the 15-minute call (Cal.com, Calendly, ...). */
   bookingUrl: 'https://cal.com/[your-handle]',
   /** Month projects can start, shown in the imprint and on the cover. */
   bookingFrom: { en: '[month]', fr: '[mois]' } as L,
   socials: [
+    { name: 'Telegram', url: 'https://t.me/ndrobyshevski' },
     { name: 'LinkedIn', url: 'https://www.linkedin.com/in/[your-handle]' },
     { name: 'GitHub', url: 'https://github.com/[your-handle]' },
   ],
@@ -67,7 +69,7 @@ export const site = {
   legal: {
     publisher: 'Nicolai Drobyshevski EI (entrepreneur individuel)',
     siret: '[SIRET 000 000 000 00000]',
-    address: "[Adresse], 59650 Villeneuve d'Ascq",
+    address: '[Adresse postale]',
     phone: '[Téléphone]',
     director: 'Nicolai Drobyshevski',
     host: '[Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis]',

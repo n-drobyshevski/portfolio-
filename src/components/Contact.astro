@@ -30,7 +30,7 @@ const needs = [
       <button type="button" class="copy" aria-describedby="email">{d.contact.copy}</button>
     </div>
     <p class="mail-note"><Pencil mark={replyArrow} g="reply" />{t(d.contact.note)}</p>
-    <p><a class="call" href={liveUrl(site.bookingUrl)}>{d.contact.call}</a></p>
+    <p class="reply-alt">{liveUrl(site.bookingUrl) && <a class="call" href={liveUrl(site.bookingUrl)}>{d.contact.call}</a>}<a class="call" href={site.telegram.url}>Telegram {site.telegram.handle}</a></p>
     <div class="perf" aria-hidden="true"><span class="perf__line"></span><svg class="scissors" viewBox="0 0 28 24"><circle cx="5" cy="6" r="3.6"/><circle cx="5" cy="18" r="3.6"/><path d="M8 8.2 26 18.5M8 15.8 26 5.5"/></svg></div>
     <div class="coupon-wrap">
       <div class="coupon">
