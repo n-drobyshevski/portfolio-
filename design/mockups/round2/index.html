@@ -1,0 +1,113 @@
+<title>Round Two Prototypes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap">
+<style>
+  /* Layout: a proof-room wall. One column of numbered proofs, each a thumbnail beside its notes. */
+  :root {
+    --bed: #DCDBD3;
+    --paper: #F2F0EA;
+    --ink: #23262B;
+    --muted: #51555C;
+    --blue: #3D5588;
+    --rule: #B4B3AA;
+    --mist: #D0DAB9;
+    --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --body: "Newsreader", Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bed: #17191B; --paper: #212427; --ink: #E7E4DB; --muted: #ADAEA7;
+      --blue: #A3B6DC; --rule: #3E4146; --mist: #33402F; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bed: #17191B; --paper: #212427; --ink: #E7E4DB; --muted: #ADAEA7;
+    --blue: #A3B6DC; --rule: #3E4146; --mist: #33402F; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bed); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-block: 56px 72px; display: flex; flex-direction: column; gap: 48px; }
+  header { display: flex; flex-direction: column; gap: 12px; max-width: 720px; }
+  .label { font-family: var(--display); font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(36px, 6vw, 64px); line-height: .98; letter-spacing: -.03em; text-wrap: balance; }
+  header p { margin: 0; color: var(--muted); max-width: 62ch; }
+  ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 28px; }
+  .proof { background: var(--paper); padding: 20px; display: flex; flex-wrap: wrap; gap: 24px 32px; align-items: flex-start; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.06); }
+  .thumb { flex: 3 1 420px; min-width: 0; display: flex; gap: 12px; align-items: flex-end; }
+  .thumb a { display: block; flex: 1 1 auto; min-width: 0; }
+  .thumb img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
+  .thumb .phone { flex: 0 0 22%; max-width: 120px; }
+  .pending { flex: 3 1 420px; aspect-ratio: 16 / 10; max-width: 100%; border: 1px dashed var(--rule); display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); font-family: var(--display); font-size: 15px; }
+  .notes { flex: 2 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .notes h2 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1.05; letter-spacing: -.02em; }
+  .notes p { margin: 0; }
+  .notes ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .open { align-self: flex-start; margin-top: 6px; display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; background: var(--ink); color: var(--paper); font-family: var(--display); font-weight: 600; font-size: 16px; text-decoration: none; }
+  .open:hover { background: var(--blue); }
+  .open:focus-visible, .thumb a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .status { font-family: var(--display); font-size: 14px; font-weight: 600; color: var(--blue); }
+  footer { color: var(--muted); font-size: 15px; max-width: 70ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="label">Nick Drobyshevski · landing page · round 2</span>
+    <h1>Three ways to make the page an event</h1>
+    <p>Each one is a working prototype: open it, scroll, click the controls, try it on your phone. They share the calm paper colours, the type from A, and the same words, so you are only comparing the idea and the motion.</p>
+  </header>
+
+  <ol>
+    <li class="proof">
+      <div class="thumb">
+        <a href="r2-press.html"><img src="img/press.jpg" alt="Print Run prototype, first screen: the headline on a sheet of paper on a press bed, with a job ticket and a pile of printed sheets on the right"></a>
+        <img class="phone" src="img/press-phone.jpg" alt="Print Run on a phone">
+      </div>
+      <div class="notes">
+        <span class="label">Prototype 1</span>
+        <h2>Print Run</h2>
+        <p>The page is a small riso press. Every scene is printed in front of you, ink pass by pass, then carried onto a pile of finished sheets. The tabbed pile is the menu, and the job ticket with "Get a quote" never leaves the screen.</p>
+        <ul>
+          <li>Scroll to print the next sheet, or click a tab to run the press at speed.</li>
+          <li>On a phone, sheets stack vertically with a bottom bar for Menu, Prices and Get a quote.</li>
+          <li>"Animations off" on the job ticket shows everything as plain printed sheets.</li>
+        </ul>
+        <a class="open" href="r2-press.html">Open Print Run</a>
+      </div>
+    </li>
+
+    <li class="proof">
+      <div class="thumb">
+        <a href="r2-sentence.html"><img src="img/sentence.jpg" alt="The Sentence prototype, first screen: the giant line I make websites for small businesses, with small labels under each word and a pencil circle around small"></a>
+        <img class="phone" src="img/sentence-phone.jpg" alt="The Sentence on a phone">
+      </div>
+      <div class="notes">
+        <span class="label">Prototype 2</span>
+        <h2>The Sentence</h2>
+        <p>The whole site is one hand-set line: "I make websites for small businesses." Each word is a link with a small label under it. On the first scroll the words lift out of the line and settle in the margin as the menu, and every word does its own trick when it opens its page.</p>
+        <ul>
+          <li>"make" spreads into four steps, "websites" splits into web and sites around your work, "small" becomes "No small print." on the prices.</li>
+          <li>The full stop swells and floods the screen dark for the contact page. The "Prices" bookmark ribbon is always one click away.</li>
+          <li>On a phone, a Menu slip at the bottom carries a tiny copy of the sentence. The French version is still a placeholder here.</li>
+        </ul>
+        <a class="open" href="r2-sentence.html">Open The Sentence</a>
+      </div>
+    </li>
+
+    <li class="proof">
+      <div class="pending">The Leaflet is still being built</div>
+      <div class="notes">
+        <span class="label">Prototype 3</span>
+        <h2>The Leaflet</h2>
+        <p>A folded printed leaflet lies on a desk and opens one crease at a time in 3D as you scroll. Fully open it lies flat like a poster, then turns over like real paper to show the reply slip on its back.</p>
+        <span class="status">Coming soon on this page</span>
+      </div>
+    </li>
+  </ol>
+
+  <footer>All words in [brackets] are placeholders for your real photo, projects, prices and city. The forms in the prototypes don't send anything yet.</footer>
+</div>

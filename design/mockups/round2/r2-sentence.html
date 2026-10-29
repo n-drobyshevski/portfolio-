@@ -1,0 +1,2066 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>The Sentence</title>
+<meta name="description" content="Nick Drobyshevski, web design and development for small businesses in [city], France.">
+<script>
+/* Runs before first paint: decide intro + stage, and a watchdog so a failed script never leaves the page half-set. */
+(function () {
+  var d = document.documentElement, calm = false, seen = false;
+  d.classList.add('js');
+  try { calm = localStorage.getItem('nd-motion') === 'off'; } catch (e) {}
+  try { seen = sessionStorage.getItem('nd-set') === '1'; } catch (e) {}
+  d.style.setProperty('--vh', (window.innerHeight / 100) + 'px');
+  if (calm || matchMedia('(prefers-reduced-motion: reduce)').matches) { d.classList.add('calm'); }
+  else {
+    if (!seen && !location.hash) d.classList.add('intro', 'wait');
+    if (innerWidth >= 1024 && innerHeight >= 700) d.classList.add('stage', 'on-cover');
+    else if (innerWidth < 1024) d.classList.add('slipwait');
+  }
+  setTimeout(function () { if (!window.__ndReady) d.classList.remove('intro', 'wait', 'stage', 'on-cover', 'slipwait'); }, 2500);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap">
+<style>
+:root {
+  /* LAYOUT CONCEPT: THE SENTENCE.
+     One hand-set line, "I make websites for small businesses.", is the whole site.
+     Each word opens its own page, the stacked words in the margin are the contents,
+     and the sentence's full stop is the seal that gets you a quote. */
+  --paper: #EEECE6;
+  --sheet: #F6F4EF;
+  --shade: #E2DFD7;
+  --ink: #262521;
+  --muted: #5F5D57;
+  --pencil: #46597A;
+  --rule: #C8C4BA;
+  --night: #22231F;
+  --night-ink: #ECE9E1;
+  --night-muted: #A9A69D;
+  --night-pencil: #A3B4CE;
+  --night-shade: #2C2D29;
+  --night-rule: #3B3C37;
+  --emboss-hi: rgba(255, 255, 255, .7);
+  --emboss-lo: rgba(38, 37, 33, .18);
+  --shadow: rgba(20, 20, 18, .55);
+
+  --sans: "Schibsted Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --set: cubic-bezier(.16, 1, .3, 1);
+  --turn: cubic-bezier(.86, 0, .07, 1);
+  --ui: cubic-bezier(.22, 1, .36, 1);
+
+  /* one fluid unit for the stage: 1vw, or 1.55% of the real viewport height, whichever is smaller */
+  --vh: 1vh;
+  --k: min(1vw, calc(var(--vh) * 1.55));
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  --t-body: 18px;
+
+  /* tokens the fixed furniture reads, flipped on the night page */
+  --u-fg: var(--ink);
+  --u-fg2: var(--muted);
+  --u-pen: var(--pencil);
+  --u-bg: var(--sheet);
+  --u-hair: var(--rule);
+  --u-blind: var(--shade);
+  --u-dot: var(--ink);
+  --u-dot-fg: var(--sheet);
+  --u-hi: var(--emboss-hi);
+  --u-lo: var(--emboss-lo);
+  --rib: var(--pencil);
+  --rib-fg: var(--sheet);
+  color-scheme: light;
+}
+html.night {
+  --u-fg: var(--night-ink);
+  --u-fg2: var(--night-muted);
+  --u-pen: var(--night-pencil);
+  --u-bg: var(--night-shade);
+  --u-hair: var(--night-rule);
+  --u-blind: #34352F;
+  --u-dot: var(--night-ink);
+  --u-dot-fg: var(--night);
+  --u-hi: rgba(255, 255, 255, .05);
+  --u-lo: rgba(0, 0, 0, .5);
+  --rib: var(--night-pencil);
+  --rib-fg: var(--night);
+}
+@media (min-width: 1024px) {
+  :root {
+    --gl: clamp(250px, 19vw, 300px);
+    --gr: clamp(64px, 6.4vw, 110px);
+    --t-body: max(16px, calc(var(--k) * 1.4));
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: 96px; overflow-x: clip; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .15 0 0 0 0 .12 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  font-optical-sizing: auto;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; font-weight: inherit; }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; }
+.sc-biz :focus-visible, html.night .ui :focus-visible { outline-color: var(--night-pencil); }
+.sc-biz .letter :focus-visible { outline-color: var(--pencil); }
+[tabindex="-1"]:focus { outline: none; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.hold { visibility: hidden !important; }
+.meta { font: 500 13px/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.br-d { display: none; }
+@media (min-width: 1024px) { .br-d { display: inline; } .br-p { display: none; } }
+
+/* ---------- buttons and links ---------- */
+.btn {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; padding: 0 22px; border: 0; border-radius: 0;
+  background: var(--ink); color: var(--sheet);
+  font: 600 16px/1.1 var(--sans); text-decoration: none; cursor: pointer;
+}
+.btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--pencil); clip-path: inset(0 100% 0 0); transition: clip-path .35s var(--ui); }
+.btn:hover::before, .btn:focus-visible::before { clip-path: inset(0 0 0 0); }
+.btn:active { transform: translateY(1px); }
+.lnk {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font: 600 16px/1.3 var(--sans); color: inherit;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+  transition: text-decoration-thickness .2s;
+}
+.lnk:hover, .lnk:focus-visible { text-decoration-thickness: 2px; }
+
+/* ---------- pencil marks ---------- */
+.mk { position: absolute; overflow: visible; pointer-events: none; }
+.mk path { fill: none; stroke: var(--mk, var(--pencil)); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+html:not(.js) .seq { display: none; }
+html.js .seq:not(.fit) { visibility: hidden; }
+
+/* ---------- fixed furniture ---------- */
+.imprint { position: absolute; z-index: 10; top: 16px; left: var(--gl); display: flex; flex-direction: column; color: var(--u-fg); }
+.imp-name { font: 700 16px/1.2 var(--sans); letter-spacing: -.01em; text-decoration: none; min-height: 24px; }
+.imp-what { font: italic 400 15px/1.3 var(--serif); color: var(--u-fg2); }
+.lang { position: absolute; z-index: 10; top: 6px; right: calc(var(--gr) + 60px); display: flex; align-items: center; gap: 2px; font: 600 13px/1 var(--sans); letter-spacing: .06em; color: var(--u-fg2); }
+.lang a { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 44px; text-decoration: none; color: var(--u-fg2); }
+.lang a[aria-current] { color: var(--u-fg); text-decoration: underline; text-underline-offset: 4px; }
+.lang-note { position: absolute; top: 46px; right: 0; width: max-content; max-width: 220px; font: italic 400 15px/1.3 var(--serif); letter-spacing: 0; color: var(--u-pen); }
+.ribbon {
+  position: fixed; z-index: 12; top: 0; right: max(16px, env(safe-area-inset-right, 0px));
+  width: 44px; height: 58px; padding-top: 12px;
+  display: flex; justify-content: center; align-items: flex-start;
+  background: var(--rib); color: var(--rib-fg);
+  font: 600 12px/1 var(--sans); letter-spacing: .02em; text-decoration: none;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  transition: height .35s var(--ui), background-color .3s, color .3s;
+}
+.ribbon:hover, .ribbon:focus-visible { height: 68px; }
+html.on-prices .ribbon { height: 120px; transition: height .6s var(--set), background-color .3s, color .3s; }
+.ribbon:focus-visible { outline-offset: -4px; outline-color: var(--rib-fg); }
+.seal {
+  position: fixed; z-index: 12; right: var(--gr); bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  display: flex; align-items: center; gap: 8px; min-height: 48px;
+  color: var(--u-fg); text-decoration: none;
+}
+.seal-l { display: inline-flex; align-items: center; min-height: 36px; padding: 0 10px; background: var(--u-bg); border: 1px solid var(--u-hair); font: 600 14px/1 var(--sans); white-space: nowrap; transition: letter-spacing 1.4s var(--set), background-color .3s, color .3s; }
+.seal-dot { position: relative; display: block; width: 44px; height: 44px; border-radius: 50%; background: var(--u-dot); transition: background-color .3s; }
+.seal-dot::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1.5px solid var(--u-dot); opacity: 0; transform: scale(1); transition: transform .3s var(--ui), opacity .3s var(--ui); }
+.seal:hover .seal-dot::after, .seal:focus-visible .seal-dot::after { opacity: 1; transform: scale(1.24); }
+.seal:hover .seal-l, .seal:focus-visible .seal-l { letter-spacing: .04em; }
+.seal:active .seal-dot { transform: scale(.94); }
+.seal:focus-visible { outline-color: var(--u-pen); }
+.slip {
+  position: fixed; z-index: 12; left: var(--gl); bottom: max(12px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  display: flex; align-items: center; gap: 10px; min-height: 48px; max-width: calc(100vw - 32px - 168px);
+  padding: 4px 12px; background: var(--u-bg); border: 1px solid var(--u-hair); color: var(--u-fg);
+  text-decoration: none; transition: background-color .3s, color .3s;
+}
+.slip-k { font: 700 13px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+.slip-s { font: 600 11.5px/1.25 var(--sans); letter-spacing: -.01em; color: var(--u-fg2); max-width: 128px; }
+.slip-s .sw { display: inline-block; }
+.slip-s .sw.cur { color: var(--u-fg); text-decoration: underline; text-decoration-color: var(--u-pen); text-decoration-thickness: 2px; text-underline-offset: 2px; }
+html.slipwait .slip-s .sw { visibility: hidden; }
+.folio, .index, .crops { display: none; }
+@media (max-width: 359px) { .seal-l { display: none; } .slip { max-width: calc(100vw - 96px); } }
+
+@media (min-width: 1024px) {
+  .imprint { left: clamp(20px, 2vw, 36px); top: 18px; }
+  .lang { right: 92px; top: 8px; }
+  .ribbon { right: 20px; width: 56px; height: 76px; padding-top: 16px; font-size: 13px; }
+  .ribbon:hover, .ribbon:focus-visible { height: 86px; }
+  .seal { right: 24px; bottom: 14px; gap: 12px; }
+  .seal-l { font-size: 15px; }
+  html.stage .seal-l { background: none; border: 0; padding: 0; font-size: 16px; }
+  html.js:not(.stage) .folio { flex-direction: column; align-items: flex-start; gap: 0; }
+  .seal-dot { width: clamp(48px, calc(var(--vh) * 6), 56px); height: clamp(48px, calc(var(--vh) * 6), 56px); }
+  .slip { display: none; }
+  html.js .folio { position: fixed; z-index: 12; left: clamp(20px, 2vw, 36px); bottom: 14px; display: flex; align-items: center; gap: 4px 18px; color: var(--u-fg2); transition: color .3s; }
+  .folio a, .folio button { display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--u-fg); text-decoration: none; cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit; }
+  .folio a:hover, .folio button:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .fo-p { display: inline-flex; align-items: center; white-space: nowrap; }
+  .odo { display: inline-block; position: relative; overflow: hidden; height: 1.3em; vertical-align: bottom; min-width: .7em; }
+  .odo span { display: block; }
+  .odo span + span { position: absolute; left: 0; top: 0; }
+  .index { display: block; position: fixed; z-index: 11; left: clamp(20px, 2vw, 36px); top: 50%; transform: translateY(-50%); }
+  html.stage.on-cover .index, html.js.cover-in:not(.stage) .index { visibility: hidden; }
+  html.stage .crops { display: block; }
+}
+.crops i { position: fixed; z-index: 3; width: 14px; height: 14px; border: 0 solid var(--u-hair); pointer-events: none; }
+.crops i:nth-child(1) { top: 16px; left: 16px; border-width: 0 1px 1px 0; }
+.crops i:nth-child(2) { top: 16px; right: 16px; border-width: 0 0 1px 1px; }
+.crops i:nth-child(3) { bottom: 16px; left: 16px; border-width: 1px 1px 0 0; }
+.crops i:nth-child(4) { bottom: 16px; right: 16px; border-width: 1px 0 0 1px; }
+
+/* the index: the sentence stacked in the margin, plain labels primary */
+.index ol { list-style: none; margin: 0; padding: 0; }
+.ix { position: relative; display: grid; grid-template-columns: 92px auto; align-items: center; min-height: 44px; color: var(--u-fg); text-decoration: none; }
+.ix-w { justify-self: start; font: 700 15px/1 var(--sans); letter-spacing: -.02em; color: var(--u-fg2); transition: color .2s, text-shadow .2s; }
+.ix-l { font: 600 17px/1.2 var(--sans); letter-spacing: -.01em; transition: transform .35s var(--ui), color .3s; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; text-decoration-thickness: 1.5px; }
+.ix:hover .ix-l, .ix:focus-visible .ix-l { transform: translateX(4px); text-decoration-color: var(--u-pen); }
+.ix[aria-current] .ix-l { color: var(--u-pen); }
+.ix.out .ix-w { color: var(--u-blind); text-shadow: -1px -1px 0 var(--u-hi), 1px 1px 0 var(--u-lo); }
+.ix.wait .ix-w { visibility: hidden; }
+.ix-ring { left: 0; top: 0; width: 10px; height: 10px; --mk: var(--u-pen); }
+html.stage.on-cover .ix-ring, html:not(.js) .ix-ring { display: none; }
+
+/* ---------- scenes: base is a printed page in plain flow ---------- */
+.sc { position: relative; padding: 72px var(--gr) 72px var(--gl); }
+.sc-in { position: relative; z-index: 1; }
+.plate { display: none; }
+.rh { font: 600 15px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.ph { display: flex; align-items: center; justify-content: center; padding: 14px; background: var(--shade); color: var(--muted); font: 500 14px/1.35 var(--sans); text-align: center; }
+
+/* cover */
+.sc-cover { padding-top: 104px; min-height: 92svh; }
+.sentence { font: 700 13.2vw/1.46 var(--sans); letter-spacing: -.035em; font-kerning: none; word-spacing: .4em; color: var(--ink); }
+.w { position: relative; display: inline-block; line-height: 1; color: var(--ink); text-decoration: none; }
+.wt { display: inline-block; transition: color .35s var(--ui); }
+.gl { position: absolute; left: 0; top: 100%; padding-top: 9px; margin-top: .02em; font: italic 400 16px/1.15 var(--serif); letter-spacing: 0; word-spacing: 0; color: var(--ink); white-space: nowrap; }
+.gl::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 1px; background: var(--muted); transform-origin: 0 0; transform: scaleX(var(--tk, .14)); transition: transform .35s var(--ui); }
+.w:hover .gl::before, .w:focus-visible .gl::before { transform: scaleX(1); }
+.w:hover .gl, .w:focus-visible .gl { letter-spacing: .03em; transition: letter-spacing 1.4s var(--set); }
+@media (hover: hover) { .sentence:hover .w:not(:hover) .wt { color: var(--muted); } }
+.w:focus-visible { outline-offset: 6px; }
+.w[data-w="i"] { padding-right: .3em; margin-right: -.3em; }
+.ring-small { left: -9%; top: -14%; width: 118%; height: 128%; rotate: -4deg; }
+.cover-foot { display: flex; flex-direction: column; align-items: stretch; gap: 8px; margin-top: 44px; }
+.acts { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
+.acts .lnk { justify-content: center; }
+.booking { font: italic 400 17px/1.4 var(--serif); color: var(--muted); }
+.hint { margin-top: 28px; color: var(--muted); }
+.h-touch { display: none; }
+@media (hover: none) { .h-fine { display: none; } .h-touch { display: inline; } }
+
+@media (min-width: 1024px) {
+  .sc { padding: calc(var(--k) * 7) var(--gr) calc(var(--k) * 7) var(--gl); }
+  .sc-cover { min-height: 0; padding-top: calc(var(--k) * 8.4); }
+  .sentence { font-size: min(7.6vw, calc(var(--vh) * 15)); line-height: 1.3; word-spacing: normal; }
+  html.stage .sentence { font-size: min(10.4vw, calc(var(--vh) * 16.5)); }
+  .gl { font-size: max(16px, calc(var(--k) * 1.3)); padding-top: 10px; }
+  .cover-foot { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px 40px; margin-top: calc(var(--k) * 1.6); }
+  .acts { flex-direction: row; align-items: center; gap: 12px 28px; }
+  .hint { margin-top: 24px; }
+}
+
+/* I : about */
+.fig-i { margin: 0; }
+.frame { position: relative; display: flex; align-items: center; justify-content: center; height: min(118vw, 62svh); border: 1px solid var(--ink); background: var(--shade); color: var(--muted); font: 500 14px/1.3 var(--sans); }
+.fig-i figcaption { margin-top: 10px; font: italic 400 15px/1.4 var(--serif); color: var(--muted); }
+.i-intro { margin-top: 36px; }
+.lede { margin-top: 14px; font-size: 20px; line-height: 1.5; max-width: 36ch; }
+.lede::first-letter { float: left; font: 800 4.1em/.8 var(--sans); margin: .07em .08em 0 0; color: var(--ink); }
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+  .lede::first-letter { float: none; font-size: 1em; line-height: 1; margin: 0 .12em 0 0; -webkit-initial-letter: 3; initial-letter: 3; }
+}
+.i-why { position: relative; margin-top: 40px; padding-left: 26px; }
+.i-why h3 { font: 600 22px/1.2 var(--sans); letter-spacing: -.01em; max-width: 18em; }
+.notes { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 16px; }
+.notes li { position: relative; display: grid; grid-template-columns: 38px 1fr; align-items: start; font-size: 17px; line-height: 1.5; }
+.num-c { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-top: -1px; font: 600 14px/1 var(--sans); color: var(--pencil); font-variant-numeric: tabular-nums; }
+.num-c .mk { inset: -1px; width: 30px; height: 30px; }
+.bracket { left: 0; top: 4px; bottom: 4px; width: 14px; height: calc(100% - 8px); }
+
+/* make : how it works */
+.steps { list-style: none; margin: 24px 0 0; padding: 0; position: relative; }
+.step { position: relative; display: grid; grid-template-columns: 64px 1fr; column-gap: 18px; padding: 16px 0 20px; }
+.head { position: relative; grid-row: 1 / span 3; font: 800 64px/1 var(--sans); letter-spacing: -.02em; color: var(--ink); transition: color .3s var(--ui); }
+.head::after { content: attr(data-c); position: absolute; left: 0; top: 0; font: italic 400 1em/1 var(--serif); letter-spacing: 0; color: var(--ink); opacity: 0; transition: opacity .3s var(--ui); }
+.tick, .crule { display: none; }
+.step .num { font: 600 15px/1.2 var(--sans); color: var(--pencil); font-variant-numeric: tabular-nums; }
+.step h3 { margin: 4px 0 6px; font: 600 23px/1.15 var(--sans); letter-spacing: -.015em; }
+.step p { font-size: 17px; line-height: 1.5; }
+.seq { left: 0; top: 0; width: 100%; height: 100%; }
+@media (hover: hover) {
+  .step:hover .head, .step:focus-within .head { color: transparent; }
+  .step:hover .head::after, .step:focus-within .head::after { opacity: 1; }
+}
+
+/* websites : work */
+.bookends { display: flex; flex-direction: column; }
+.be { font: 700 18vw/1 var(--sans); letter-spacing: -.035em; color: var(--ink); }
+.be-sites { display: none; }
+.be-sites-end { display: block; text-align: right; margin-top: 18px; }
+.be-mid h2 { font: 600 24px/1.2 var(--sans); letter-spacing: -.01em; margin-top: 14px; }
+.count { font: italic 400 16px/1.3 var(--serif); color: var(--muted); }
+.p1 { margin-top: 24px; }
+.print { position: relative; background: var(--sheet); border: 1px solid var(--rule); padding: 8px; transition: transform .35s var(--ui); }
+.print::after { content: ""; position: absolute; left: 6%; right: 6%; bottom: -8px; height: 14px; border-radius: 50%; background: var(--shadow); filter: blur(8px); opacity: .22; z-index: -1; transition: opacity .35s var(--ui); }
+.print .ph { height: 100%; }
+.print-1 { height: min(120vw, 58svh); }
+.print-2 { height: 56vw; rotate: -.6deg; }
+.print-3 { height: 56vw; rotate: .5deg; }
+@media (hover: hover) { .print:hover, article:focus-within .print { transform: translateY(-3px); } .print:hover::after, article:focus-within .print::after { opacity: .4; } }
+.p1-text { margin-top: 18px; }
+.p1-text h3, .side h3 { font: 600 30px/1.05 var(--sans); letter-spacing: -.02em; }
+.pmeta { margin-top: 6px; font: italic 400 16px/1.35 var(--serif); color: var(--muted); }
+.p1-text .desc { margin-top: 12px; }
+.p1-text blockquote { margin: 16px 0 0; font: italic 400 21px/1.4 var(--serif); }
+.p1-text blockquote p { text-indent: -.42em; }
+.p1-text blockquote footer { margin-top: 6px; font: 500 14px/1.3 var(--sans); font-style: normal; color: var(--muted); }
+.p1-text .lnk { margin-top: 6px; }
+.side { display: grid; gap: 34px; margin-top: 40px; }
+.side h3 { font-size: 22px; margin-top: 14px; }
+.side p:not(.pmeta) { margin-top: 6px; font-size: 17px; line-height: 1.45; }
+
+/* for : services */
+.for-t { font: 650 12.4vw/1.05 var(--sans); letter-spacing: -.03em; }
+.tw { display: inline-block; }
+.t-for { font: italic 400 1.08em/1 var(--serif); letter-spacing: 0; }
+.rows { margin-top: 28px; }
+.row { position: relative; padding: 20px 0 22px; }
+.rl { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--rule); transform-origin: 0 50%; transition: background-color .35s var(--ui), height .35s var(--ui); }
+.rl-end { position: relative; display: block; }
+.row h3 { font: 600 26px/1.1 var(--sans); letter-spacing: -.02em; transition: transform .35s var(--ui); }
+.row p { margin-top: 8px; max-width: 44ch; }
+.row:hover .rl, .row:focus-within .rl { background: var(--pencil); height: 2px; }
+.row:hover h3 { transform: translateX(6px); }
+.note-for { position: relative; margin-top: 30px; padding-top: 52px; max-width: 30ch; }
+.note-for p { font: italic 400 18px/1.4 var(--serif); color: var(--pencil); }
+.arrow { left: 8px; top: 0; width: 48px; height: 46px; }
+
+/* small : prices */
+.pr-head h2 { font: 650 12.4vw/1 var(--sans); letter-spacing: -.03em; }
+.pr-sub { margin-top: 10px; font: italic 400 20px/1.35 var(--serif); color: var(--muted); }
+.fine { margin-top: 18px; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 46ch; }
+.np { font-style: italic; color: var(--ink); white-space: nowrap; }
+.np > span { display: inline-block; }
+.vat { margin-top: 6px; font: 500 13px/1.45 var(--sans); color: var(--muted); }
+.menu-col { margin-top: 30px; }
+.menu { list-style: none; margin: 0; padding: 0; }
+.item { position: relative; padding-bottom: 28px; }
+.item-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 10px; }
+.item h3 { font: 600 24px/1.2 var(--sans); letter-spacing: -.02em; }
+.lead { flex: 1 1 24px; min-width: 24px; height: 0; border-bottom: 2px dotted var(--muted); opacity: .6; transition: opacity .25s var(--ui); }
+.price { margin-left: auto; font: 600 24px/1.2 var(--sans); white-space: nowrap; font-variant-numeric: tabular-nums; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: 6px; transition: text-decoration-color .3s var(--ui); }
+.price i { font: italic 400 .72em var(--serif); margin-right: 3px; }
+.ttc { margin-left: 5px; font: 500 12px/1 var(--sans); letter-spacing: .08em; color: var(--muted); }
+.item p { margin-top: 8px; max-width: 62ch; font-size: 17px; }
+.item:hover .lead, .item:focus-within .lead { opacity: 1; }
+.item:hover .price { text-decoration-color: var(--pencil); }
+.pick { position: relative; display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.pick p { margin: 0; font: italic 400 18px/1.35 var(--serif); color: var(--pencil); }
+.brace { position: relative; display: none; }
+.pick-u { position: absolute; left: 0; top: -6px; width: 120px; height: 8px; }
+.menu-col .btn { margin-top: 4px; }
+
+/* businesses : contact, the night page */
+.sc-biz { background: var(--night); color: var(--night-ink); }
+.sc-biz h2 { font: 700 15vw/.95 var(--sans); letter-spacing: -.045em; }
+.c-body { margin-top: 18px; font-size: 20px; line-height: 1.45; max-width: 32ch; }
+.yb { display: inline-block; }
+.email-row { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 22px; }
+.email { font: 400 24px/1.25 var(--serif); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.copy { min-height: 44px; padding: 0 16px; border: 1px solid var(--night-muted); background: transparent; color: var(--night-ink); font: 600 14px/1 var(--sans); cursor: pointer; transition: border-color .2s; }
+.copy:hover { border-color: var(--night-ink); }
+@media (scripting: none) { .copy { display: none; } }
+.stamp { display: inline-block; padding: 4px 7px; border: 1.5px solid var(--night-pencil); color: var(--night-pencil); font: 700 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; rotate: -4deg; opacity: 0; }
+.c-call .lnk { color: var(--night-pencil); }
+.c-book { font: italic 400 17px/1.4 var(--serif); color: var(--night-muted); }
+.colophon { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 0 18px; font: 500 13px/1.5 var(--sans); color: var(--night-muted); }
+.colophon span { flex: 1 1 100%; }
+.colophon a { display: inline-flex; align-items: center; min-height: 44px; color: var(--night-ink); text-underline-offset: 3px; }
+.colophon a:hover { text-decoration-thickness: 2px; }
+
+.letter { position: relative; margin-top: 36px; background: var(--paper); color: var(--ink); rotate: .4deg; padding: 22px 20px 20px; box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 18px 34px -22px rgba(0, 0, 0, .8); perspective: 900px; }
+.lt-in { display: grid; gap: 14px; }
+.f2 { display: grid; gap: 14px; }
+.fld { display: block; }
+.fl-l { display: block; margin-bottom: 2px; font: 500 12px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.fld input, .fld textarea {
+  display: block; width: 100%; min-height: 44px; padding: 8px 0 6px; border: 0; border-radius: 0;
+  border-bottom: 1px solid var(--muted); background: transparent; color: var(--ink);
+  font: 400 19px/1.3 var(--serif); transition: border-color .25s var(--ui), box-shadow .25s var(--ui);
+}
+.fld textarea { resize: vertical; line-height: 32px; padding: 0; min-height: 98px; border-bottom: 0; background-image: linear-gradient(var(--rule), var(--rule)), linear-gradient(var(--rule), var(--rule)), linear-gradient(var(--rule), var(--rule)); background-size: 100% 1px; background-repeat: no-repeat; background-position: 0 31px, 0 63px, 0 95px; }
+.fld input:focus, .fld textarea:focus { border-color: var(--pencil); box-shadow: 0 1px 0 0 var(--pencil); outline: none; }
+.fld input:focus-visible, .fld textarea:focus-visible { outline: 2px solid var(--pencil); outline-offset: 4px; }
+.need { margin: 0; padding: 0; border: 0; min-width: 0; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.opt { position: relative; display: flex; align-items: center; min-height: 44px; cursor: pointer; font: 400 17px/1.2 var(--serif); }
+.opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.opt span { position: relative; padding: 2px 4px; }
+.opt .mk { left: -8px; top: -6px; width: calc(100% + 16px); height: calc(100% + 12px); opacity: 0; }
+.opt input:checked ~ span .mk { opacity: 1; }
+.opt:has(input:focus-visible) span { outline: 2px solid var(--pencil); outline-offset: 3px; }
+.lt-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 4px; }
+.lt-note { font: italic 400 15px/1.35 var(--serif); color: var(--muted); }
+.flap { position: absolute; left: 0; right: 0; height: 33.34%; background: var(--sheet); visibility: hidden; backface-visibility: visible; }
+.flap-t { top: 0; transform-origin: 50% 100%; }
+.flap-b { bottom: 0; transform-origin: 50% 0; }
+.flap i { position: absolute; inset: 0; background: var(--ink); opacity: 0; }
+.sent { display: grid; justify-items: start; gap: 12px; padding: 8px 0; }
+.sent[hidden], .lt-in[hidden] { display: none; }
+.sent p { font-size: 19px; line-height: 1.45; max-width: 30ch; }
+.postmark { width: 112px; height: 112px; rotate: -8deg; color: var(--pencil); }
+.postmark circle { fill: none; stroke: currentColor; stroke-width: 1.5; }
+.postmark text { fill: currentColor; font: 600 10.5px var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+
+@media (min-width: 1024px) {
+  .rh { font-size: max(14px, calc(var(--k) * 1.1)); }
+  /* I */
+  .sc-i .sc-in { display: grid; grid-template-columns: calc(var(--k) * 15) minmax(calc(var(--k) * 3), 1fr) calc(var(--k) * 27) calc(var(--k) * 5) calc(var(--k) * 23); align-items: start; }
+  .fig-i { grid-column: 1; }
+  .frame { height: calc(var(--k) * 41); }
+  .fig-i figcaption { font-size: max(15px, calc(var(--k) * 1.05)); }
+  .i-intro { grid-column: 3; margin-top: 0; padding-top: calc(var(--k) * 9); }
+  .lede { font-size: max(18px, calc(var(--k) * 1.78)); line-height: 1.45; margin-top: calc(var(--k) * 1.3); max-width: 30ch; }
+  .i-why { grid-column: 5; margin-top: 0; padding-top: calc(var(--k) * 2); padding-left: calc(var(--k) * 2); }
+  .i-why h3 { font-size: max(18px, calc(var(--k) * 1.6)); }
+  .notes { gap: calc(var(--k) * 1.3); margin-top: calc(var(--k) * 1.6); }
+  .notes li { font-size: max(16px, calc(var(--k) * 1.2)); }
+  /* make */
+  .sc-make .sc-in { display: flex; flex-direction: column; }
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: calc(var(--k) * 2.6); flex: 1 1 auto; align-content: start; }
+  .step { display: block; padding: 0 calc(var(--k) * 1.8); }
+  .step:first-child { padding-left: 0; }
+  .step:nth-child(2) { margin-top: calc(var(--k) * 2.8); }
+  .step:nth-child(3) { margin-top: calc(var(--k) * 5.6); }
+  .step:nth-child(4) { margin-top: calc(var(--k) * 8.4); }
+  .head { display: block; font-size: calc(var(--k) * 8.4); width: max-content; }
+  .tick { display: block; height: calc(var(--k) * 3.6); }
+  .crule { display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--rule); transform-origin: 50% 0; }
+  .step h3 { font-size: calc(var(--k) * 1.8); margin: calc(var(--k) * .5) 0 calc(var(--k) * .7); max-width: 11em; }
+  .step p { font-size: max(16px, calc(var(--k) * 1.28)); max-width: 24ch; }
+  /* websites */
+  .sc-web .sc-in { display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--k) * 3.4) calc(var(--k) * 20); grid-template-rows: auto minmax(0, 1fr); row-gap: calc(var(--k) * 2); }
+  .bookends { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: flex-end; }
+  .be { font-size: calc(var(--k) * 6.2); }
+  .be-sites { display: block; }
+  .be-sites-end { display: none; }
+  .be-mid { text-align: center; padding-bottom: calc(var(--k) * .6); }
+  .be-mid h2 { margin-top: 0; font-size: max(17px, calc(var(--k) * 1.5)); }
+  .count { font-size: max(15px, calc(var(--k) * 1.1)); }
+  .p1 { grid-column: 1; margin-top: 0; display: grid; grid-template-columns: calc(var(--k) * 22) minmax(0, 1fr); gap: calc(var(--k) * 2.4); align-items: start; }
+  .print-1 { height: calc(var(--k) * 30); }
+  .p1-text { margin-top: 0; }
+  .p1-text h3 { font-size: calc(var(--k) * 2.3); }
+  .pmeta { font-size: max(15px, calc(var(--k) * 1.1)); }
+  .p1-text .desc { font-size: max(16px, calc(var(--k) * 1.3)); margin-top: calc(var(--k) * .9); }
+  .p1-text blockquote { font-size: max(17px, calc(var(--k) * 1.45)); margin-top: calc(var(--k) * 1.2); }
+  .side { grid-column: 3; margin-top: 0; gap: calc(var(--k) * 1.8); align-content: start; }
+  .print-2, .print-3 { height: calc(var(--k) * 10.5); }
+  .side h3 { font-size: max(18px, calc(var(--k) * 1.5)); margin-top: calc(var(--k) * .9); }
+  .side .pmeta { margin-top: 2px; }
+  .side p:not(.pmeta) { font-size: max(15px, calc(var(--k) * 1.12)); margin-top: 3px; }
+  /* for */
+  .sc-for .sc-in { display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--k) * 13); column-gap: calc(var(--k) * 2.6); align-content: start; }
+  .for-t { grid-column: 1 / -1; font-size: calc(var(--k) * 4.6); }
+  .rows { grid-column: 1; margin-top: calc(var(--k) * 3); }
+  .row { display: grid; grid-template-columns: calc(var(--k) * 27) minmax(0, 1fr); column-gap: calc(var(--k) * 2.4); padding: calc(var(--k) * 1.6) 0 calc(var(--k) * 1.7); }
+  .row h3 { font-size: calc(var(--k) * 2.4); }
+  .row p { margin-top: 0; }
+  .note-for { grid-column: 2; align-self: end; margin: 0 0 calc(var(--k) * 1); padding-top: calc(var(--k) * 6.4); max-width: none; }
+  .note-for p { font-size: max(16px, calc(var(--k) * 1.25)); }
+  .arrow { left: -18%; top: 0; width: 70%; height: calc(var(--k) * 5.6); }
+  /* small */
+  .sc-small .sc-in { display: grid; grid-template-columns: calc(var(--k) * 21) minmax(0, 1fr) calc(var(--k) * 12.5); column-gap: calc(var(--k) * 3); align-content: start; }
+  .pr-head { grid-column: 1; display: flex; flex-direction: column; }
+  .pr-head h2 { font-size: calc(var(--k) * 4.6); }
+  .pr-sub { font-size: max(17px, calc(var(--k) * 1.5)); margin-top: calc(var(--k) * 1); }
+  .fine { margin-top: calc(var(--k) * 2.6); font-size: max(15px, calc(var(--k) * 1.1)); padding-top: calc(var(--k) * 1.2); border-top: 1px solid var(--rule); }
+  .menu-col { grid-column: 2; margin-top: calc(var(--k) * .6); }
+  .item { padding-bottom: calc(var(--k) * 2.2); }
+  .item h3, .price { font-size: calc(var(--k) * 2.05); }
+  .item p { font-size: max(16px, calc(var(--k) * 1.25)); margin-top: calc(var(--k) * .6); }
+  .pick { position: absolute; left: calc(100% + var(--k) * 3); top: 0; bottom: calc(var(--k) * 2.2); width: calc(var(--k) * 12.5); margin: 0; gap: calc(var(--k) * 1); }
+  .brace { display: block; flex: 0 0 calc(var(--k) * 1.3); width: calc(var(--k) * 1.3); height: 100%; }
+  .pick-u { display: none; }
+  .pick p { font-size: max(16px, calc(var(--k) * 1.22)); }
+  /* businesses */
+  .sc-biz .sc-in { display: grid; grid-template-columns: minmax(0, calc(var(--k) * 37)) minmax(calc(var(--k) * 2), 1fr) calc(var(--k) * 34); align-items: stretch; }
+  .c-left { grid-column: 1; display: flex; flex-direction: column; }
+  .sc-biz h2 { font-size: calc(var(--k) * 6.8); }
+  .c-body { font-size: max(17px, calc(var(--k) * 1.6)); margin-top: calc(var(--k) * 1.8); }
+  .email { font-size: max(20px, calc(var(--k) * 2.2)); }
+  .email-row { margin-top: calc(var(--k) * 1.8); }
+  .colophon { margin-top: auto; padding-top: 16px; }
+  .letter { grid-column: 3; align-self: start; margin-top: calc(var(--k) * .8); padding: calc(var(--k) * 1.8) calc(var(--k) * 2); }
+  .lt-in { gap: calc(var(--k) * .9); }
+  .f2 { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .fld input { font-size: max(17px, calc(var(--k) * 1.3)); }
+}
+
+/* ---------- stage mode: one fixed stage, native scroll picks the scene ---------- */
+html.stage #main { height: calc(var(--vh) * 700); }
+html.stage #stage { position: fixed; left: 0; top: 0; width: 100%; height: calc(var(--vh) * 100); overflow: hidden; z-index: 1; }
+html.stage .sc { position: absolute; inset: 0; padding: 0; min-height: 0; opacity: 0; pointer-events: none; }
+html.stage .sc.is-on { opacity: 1; pointer-events: auto; }
+html.stage .sc-in { position: absolute; left: var(--gl); right: var(--gr); top: calc(var(--k) * 4); bottom: calc(var(--k) * 6.2); }
+html.stage .sc-cover .sc-in { left: clamp(40px, 6.4vw, 112px); top: calc(var(--k) * 8.4); }
+html.stage .hint { position: absolute; left: 50%; bottom: calc(var(--k) * 2.6); margin: 0; transform: translateX(-50%); white-space: nowrap; }
+html.stage .sc-biz.nobg { background: transparent; }
+#fly { position: fixed; inset: 0; z-index: 20; pointer-events: none; overflow: hidden; }
+#flood { position: fixed; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+.flood-c, .flood-s { position: absolute; left: 0; top: 0; border-radius: 50%; background: var(--night); visibility: hidden; }
+.fl { position: absolute; left: 0; top: 0; transform-origin: 0 0; white-space: nowrap; line-height: 1; color: var(--ink); visibility: hidden; }
+.flx { display: block; }
+.flx + .flx { position: absolute; left: 0; top: 0; }
+.fs { font-family: var(--sans); font-weight: 700; letter-spacing: -.035em; font-kerning: none; }
+.fx { font-family: var(--sans); font-weight: 800; letter-spacing: -.02em; }
+.fn { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: 0; }
+.fl-dot { position: absolute; left: 0; top: 0; border-radius: 50%; background: var(--ink); visibility: hidden; }
+.fl-ink { position: absolute; background: var(--ink); transform-origin: 0 0; visibility: hidden; }
+.roller { position: absolute; z-index: 6; width: 10px; background: var(--sheet); border-left: 2px solid var(--ink); box-shadow: 1px 0 0 var(--rule); pointer-events: none; }
+.roller.n { background: var(--night-shade); border-left-color: var(--night-ink); box-shadow: 1px 0 0 var(--night-rule); }
+.dw { display: inline-block; }
+
+/* intro gate: only the glosses, the circle and the small print wait; the sentence is inked from the first frame */
+html.intro .sc-cover .gl { clip-path: inset(0 100% 0 0); }
+html.intro .ring-small, html.intro .booking, html.intro .hint { opacity: 0; }
+html.intro.wait .sc-cover .gl { animation: nd-wipe .4s 1.5s both; }
+html.intro.wait .ring-small, html.intro.wait .booking, html.intro.wait .hint { animation: nd-fade .4s 1.5s both; }
+@keyframes nd-wipe { to { clip-path: inset(0 0 0 0); } }
+@keyframes nd-fade { to { opacity: 1; } }
+
+/* ---------- phone and narrow screens: flow mode with title plates ---------- */
+@media (max-width: 1023.98px) {
+  .sc-biz { padding-bottom: 104px; }
+  .sc:not(.sc-cover) { padding-top: 8px; }
+  .plate { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; min-height: 22svh; max-height: 30svh; padding: 28px 0 14px; margin-bottom: 18px; border-bottom: 1px solid var(--rule); }
+  .pw { font: 700 19vw/1 var(--sans); letter-spacing: -.035em; color: var(--ink); white-space: nowrap; }
+  .pw > span { display: inline-block; }
+  .pf { padding-bottom: 6px; color: var(--muted); }
+  .sc-biz .plate { border-color: var(--night-rule); flex-wrap: wrap; }
+  .sc-biz .pw { font-size: 10.6vw; }
+  .sc-for .plate { display: none; }
+  .be-web { display: none; }
+  .ribbon { transition: height .35s var(--ui), translate .35s var(--ui), background-color .3s, color .3s; }
+  html.rib-up .ribbon { translate: 0 calc(-100% - 4px); }
+  .sc-biz .pw { color: var(--night-ink); }
+  .sc-biz .pf { color: var(--night-muted); }
+  .plate { position: relative; z-index: 1; }
+  .pw .yrw { display: none; }
+  .pw-space { opacity: 0; left: 0; top: 30%; width: 14px; height: 60%; }
+  .seq { left: 0; top: 0; width: 64px; height: 100%; }
+  .sc-biz.pre { background: transparent; }
+  .sc-biz.pre .pw { color: var(--ink); }
+  .sc-biz.pre .plate { border-color: var(--rule); }
+  .sc-biz.pre .sc-in, .sc-biz.pre .pf { visibility: hidden; }
+  .sc-biz .sc-in { display: flex; flex-direction: column; }
+  .c-left { display: contents; }
+  .colophon { order: 10; }
+  .sc-biz { overflow: hidden; }
+}
+
+/* ---------- the contents dialog (phones) ---------- */
+.menu-d { width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; background: var(--paper); color: var(--ink); }
+.menu-d::backdrop { background: rgba(34, 35, 31, .45); }
+.md-in { display: flex; flex-direction: column; min-height: 100%; padding: max(14px, env(safe-area-inset-top, 0px)) var(--gr) max(20px, env(safe-area-inset-bottom, 0px)) var(--gl); }
+.md-top { display: flex; align-items: center; justify-content: space-between; min-height: 52px; color: var(--muted); }
+.md-close { min-height: 44px; min-width: 44px; padding: 0 14px; border: 1px solid var(--rule); background: var(--sheet); font: 600 14px/1 var(--sans); cursor: pointer; }
+.md-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.md-list a { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; min-height: 52px; padding: 4px 0; border-bottom: 1px solid var(--rule); text-decoration: none; }
+.md-word { font: 700 12vw/1.05 var(--sans); letter-spacing: -.035em; }
+.md-gl { font: 600 17px/1.2 var(--sans); white-space: nowrap; }
+.md-list a[aria-current] .md-gl { color: var(--pencil); }
+.md-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; margin-top: auto; padding-top: 24px; }
+.md-foot .btn { flex: 1 1 100%; }
+.md-foot button.lnk { border: 0; background: none; padding: 0; cursor: pointer; }
+
+/* ---------- calm: reduced motion or "Motion: off" ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+html.calm .ix-ring { transition: opacity .15s; }
+</style>
+</head>
+<body>
+<div class="imprint ui">
+  <a class="imp-name" href="#cover">Nick Drobyshevski</a>
+  <span class="imp-what">Web design &amp; development, [city], France</span>
+</div>
+<div class="lang ui" role="group" aria-label="Language">
+  <a href="#cover" lang="en" aria-current="true">EN</a><span aria-hidden="true">/</span><a class="to-fr" href="#fr" lang="fr" hreflang="fr">FR</a>
+  <span class="lang-note" role="status"></span>
+</div>
+<a class="ribbon ui" href="#small"><span>Prices</span></a>
+<a class="seal ui" href="#businesses" data-quote><span class="seal-l">Get a quote</span><span class="seal-dot" aria-hidden="true"></span></a>
+
+<main id="main">
+<div id="stage">
+
+<!-- 1 · cover: the sentence is the menu -->
+<section class="sc sc-cover is-on" id="cover" aria-labelledby="h1" data-label="Cover">
+  <div class="sc-in">
+    <h1 class="sentence" id="h1" tabindex="-1">
+      <a class="w" data-w="i" href="#i" aria-describedby="g-i"><span class="wt">I</span><span class="gl" id="g-i" aria-hidden="true">About</span></a>
+      <a class="w" data-w="make" href="#make" aria-describedby="g-make"><span class="wt">make</span><span class="gl" id="g-make" aria-hidden="true">How it works</span></a><br class="br-p">
+      <a class="w" data-w="websites" href="#websites" aria-describedby="g-websites"><span class="wt">websites</span><span class="gl" id="g-websites" aria-hidden="true">Work</span></a><br>
+      <a class="w" data-w="for" href="#for" aria-describedby="g-for"><span class="wt">for</span><span class="gl" id="g-for" aria-hidden="true">Services</span></a>
+      <a class="w" data-w="small" href="#small" aria-describedby="g-small"><span class="wt">small</span><span class="gl" id="g-small" aria-hidden="true">Prices</span><svg class="mk ring-small" data-mk="ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M15.3 20 C37.3 1.7 84 5 96 35 C104 60 82.7 93.3 50 95 C20.7 96.7 2 78.3 3.3 50 C4.3 30 19.3 13.3 42 7.5"/></svg></a><br>
+      <a class="w" data-w="businesses" href="#businesses" aria-describedby="g-businesses"><span class="wt">businesses<span class="stop">.</span></span><span class="gl" id="g-businesses" aria-hidden="true">Contact</span></a>
+    </h1>
+    <div class="cover-foot">
+      <div class="acts">
+        <a class="btn" href="#businesses" data-quote>Tell me about your project</a>
+        <a class="lnk" href="#websites" data-go="websites">See what I've made</a>
+      </div>
+      <p class="booking">Booking projects for [month].</p>
+    </div>
+  </div>
+  <p class="hint meta"><span class="h-fine">Scroll, or pick a word.</span><span class="h-touch">Scroll, or tap a word.</span></p>
+</section>
+
+<!-- 2 · I : about -->
+<section class="sc sc-i" id="i" aria-labelledby="h-i" data-label="About">
+  <div class="plate" aria-hidden="true"><span class="pw">I</span><span class="pf meta">p. 2 / 7</span></div>
+  <div class="sc-in">
+    <figure class="fig-i">
+      <div class="frame" data-r="feed"><span>[Your photo]</span></div>
+      <figcaption data-r="roll">Me, at my desk in [city]. I answer my own emails.</figcaption>
+    </figure>
+    <div class="i-intro">
+      <h2 class="rh" id="h-i" tabindex="-1" data-r="drop">About</h2>
+      <p class="lede" data-r="roll">Hi, I'm Nick. I design and build websites and web apps for shops, cafés, trades and anyone with a good idea. You deal with me from the first chat to launch day, and I'm still around after.</p>
+    </div>
+    <div class="i-why">
+      <svg class="mk bracket" data-mk="bracket" data-r="draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M92 1 C42 2 22 4 26 12 C30 38 20 66 27 88 C30 96 52 98 94 99"/></svg>
+      <h3 data-r="drop">Why hire one person instead of an agency?</h3>
+      <ol class="notes">
+        <li><span class="num-c" aria-hidden="true">1<svg class="mk" data-mk="ring2" data-r="draw" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path vector-effect="non-scaling-stroke" d="M58 5 C86 7 99 30 96 55 C93 83 63 97 38 93 C13 89 1 66 5 41 C9 17 33 4 68 10"/></svg></span><p data-r="roll">You always know who is doing the work, because it's me. No account manager passing messages along, no junior learning on your project.</p></li>
+        <li><span class="num-c" aria-hidden="true">2<svg class="mk" data-mk="ring2" data-r="draw" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path vector-effect="non-scaling-stroke" d="M40 6 C70 2 98 22 95 52 C92 82 66 98 40 94 C14 90 2 70 4 44 C6 20 26 6 54 7"/></svg></span><p data-r="roll">The price we agree on before I start is the price you pay. If something takes me longer than planned, that's my problem.</p></li>
+        <li><span class="num-c" aria-hidden="true">3<svg class="mk" data-mk="ring2" data-r="draw" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path vector-effect="non-scaling-stroke" d="M62 8 C88 12 98 36 94 60 C90 86 60 98 36 92 C12 86 2 62 7 38 C12 14 36 2 70 12"/></svg></span><p data-r="roll">When it's done, it all belongs to you: the design files, the code, the domain and the hosting account. You can leave whenever you want and take everything with you.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · make : how it works -->
+<section class="sc sc-make" id="make" aria-labelledby="h-make" data-label="How it works">
+  <div class="plate" aria-hidden="true"><span class="pw">make</span><span class="pf meta">p. 3 / 7</span></div>
+  <div class="sc-in">
+    <h2 class="rh" id="h-make" tabindex="-1" data-r="drop">How it works</h2>
+    <ol class="steps">
+      <li class="step"><span class="head" data-c="m" aria-hidden="true">m</span><span class="tick" aria-hidden="true"></span><span class="num" data-r="press">1</span><h3 data-r="drop">We talk</h3><p data-r="roll">A free 15-minute call. You tell me about your business, I ask a lot of questions.</p></li>
+      <li class="step"><span class="crule" aria-hidden="true"></span><span class="head" data-c="a" aria-hidden="true">a</span><span class="tick" aria-hidden="true"></span><span class="num" data-r="press">2</span><h3 data-r="drop">You get a fixed price</h3><p data-r="roll">In writing, with a launch date. If you say yes, that's the price, full stop.</p></li>
+      <li class="step"><span class="crule" aria-hidden="true"></span><span class="head" data-c="k" aria-hidden="true">k</span><span class="tick" aria-hidden="true"></span><span class="num" data-r="press">3</span><h3 data-r="drop">I design, you comment</h3><p data-r="roll">You see the whole site before I build it, and tell me what to change.</p></li>
+      <li class="step"><span class="crule" aria-hidden="true"></span><span class="head" data-c="e" aria-hidden="true">e</span><span class="tick" aria-hidden="true"></span><span class="num" data-r="press">4</span><h3 data-r="drop">It goes live</h3><p data-r="roll">I put it online and show you how to edit it. After that I'm one email away.</p></li>
+      <svg class="mk seq" aria-hidden="true" focusable="false"><path d=""/></svg>
+    </ol>
+  </div>
+</section>
+
+<!-- 4 · websites : work -->
+<section class="sc sc-web" id="websites" aria-labelledby="h-websites" data-label="Work">
+  <div class="plate" aria-hidden="true"><span class="pw"><span class="pw-web">web</span><span class="pw-sites">sites</span></span><span class="pf meta">p. 4 / 7</span><svg class="mk pw-space" data-mk="space" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path vector-effect="non-scaling-stroke" d="M52 0 C47 30 54 66 49 100"/></svg></div>
+  <div class="sc-in">
+    <div class="bookends">
+      <span class="be be-web" aria-hidden="true">web</span>
+      <div class="be-mid">
+        <h2 id="h-websites" tabindex="-1" data-r="drop">Recent work</h2>
+        <p class="count" data-r="roll">3 of [n] projects</p>
+      </div>
+      <span class="be be-sites" aria-hidden="true">sites</span>
+    </div>
+    <article class="p1">
+      <div class="print print-1" data-r="feed"><div class="ph">[Screenshot of the site, ideally on a phone in someone's hand]</div></div>
+      <div class="p1-text">
+        <h3 data-r="drop">[Client name]</h3>
+        <p class="pmeta" data-r="roll">2026 · Restaurant website · Design &amp; build</p>
+        <p class="desc" data-r="roll">[Two sentences: what they needed, and what you built for them.]</p>
+        <blockquote data-r="roll"><p>“[One real sentence from the client.]”</p><footer>[Name], owner</footer></blockquote>
+        <a class="lnk" href="#websites" data-ph data-r="roll">Read how it went</a>
+      </div>
+    </article>
+    <div class="side">
+      <article class="p2">
+        <div class="print print-2" data-r="feed"><div class="ph">[Screenshot]</div></div>
+        <h3 data-r="drop">[Client name]</h3>
+        <p class="pmeta" data-r="roll">2026 · Web app</p>
+        <p data-r="roll">Online booking for a hair salon. [What changed for them.]</p>
+      </article>
+      <article class="p3">
+        <div class="print print-3" data-r="feed"><div class="ph">[Screenshot]</div></div>
+        <h3 data-r="drop">[Client name]</h3>
+        <p class="pmeta" data-r="roll">2025 · Design</p>
+        <p data-r="roll">Portfolio for a photographer. [What changed for them.]</p>
+      </article>
+    </div>
+    <span class="be be-sites-end" aria-hidden="true" data-r="drop">sites</span>
+  </div>
+</section>
+
+<!-- 5 · for : services -->
+<section class="sc sc-for" id="for" aria-labelledby="h-for" data-label="Services">
+  <div class="plate" aria-hidden="true"><span class="pw">for</span><span class="pf meta">p. 5 / 7</span></div>
+  <div class="sc-in">
+    <h2 class="for-t" id="h-for" tabindex="-1"><span class="tw">What</span> <span class="tw">I</span> <span class="tw">can</span> <span class="tw">do</span><br class="br-p"> <span class="tw t-for">for</span><br class="br-p"> <span class="tw">you</span></h2>
+    <div class="rows">
+      <div class="row"><span class="rl" aria-hidden="true" data-r="rule"></span><h3 data-r="drop">A new website</h3><p data-r="roll">I design it, build it and put it online. It works on phones, loads fast, and shows up when people search for you. You can change the text and photos yourself.</p></div>
+      <div class="row"><span class="rl" aria-hidden="true" data-r="rule"></span><h3 data-r="drop">Fixing the one you have</h3><p data-r="roll">If your current site is slow, looks dated, or nobody remembers the password, I'll rebuild it and keep the parts that already work.</p></div>
+      <div class="row"><span class="rl" aria-hidden="true" data-r="rule"></span><h3 data-r="drop">A custom tool or app</h3><p data-r="roll">Online booking, a client area, an order form that lands straight in your inbox. If you're doing it by hand in a spreadsheet every week, it can probably be an app.</p></div>
+      <span class="rl rl-end" aria-hidden="true" data-r="rule"></span>
+    </div>
+    <aside class="note-for">
+      <svg class="mk arrow" data-mk="arrow" data-r="draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M96 96 C70 94 38 74 30 22 M12 38 C20 30 26 24 30 18 C36 26 42 32 50 38"/></svg>
+      <p data-r="roll">Already have a developer? I can do just the design. Already have a design? I'll build it.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- 6 · small : prices -->
+<section class="sc sc-small" id="small" aria-labelledby="h-small" data-label="Prices">
+  <div class="plate" aria-hidden="true"><span class="pw">small</span><span class="pf meta">p. 6 / 7</span></div>
+  <div class="sc-in">
+    <div class="pr-head">
+      <h2 id="h-small" tabindex="-1" data-r="drop">Prices</h2>
+      <p class="pr-sub" data-r="roll">Fixed before I start. I don't bill by the hour.</p>
+      <p class="fine" data-r="roll"><span class="np"><span class="np-a">No</span> <span class="np-s">small</span> <span class="np-b">print.</span></span> Every price includes two rounds of changes, a month of help after launch, and full ownership of everything I make for you.</p>
+      <p class="vat" data-r="roll">All prices TTC. [Or, if exempt: TVA non applicable, art. 293 B du CGI.]</p>
+    </div>
+    <div class="menu-col">
+      <ul class="menu">
+        <li class="item">
+          <div class="item-line"><h3 data-r="drop">One-page website</h3><span class="lead" aria-hidden="true" data-r="wipe"></span><span class="price" data-r="press"><i>from</i> €[price]<span class="ttc">TTC</span></span></div>
+          <p data-r="roll">Your business on one page: what you do, photos, prices, opening hours, a contact form and a map. Right for trades, freelancers and small shops.</p>
+        </li>
+        <li class="item">
+          <div class="item-line"><h3 data-r="drop">Business website</h3><span class="lead" aria-hidden="true" data-r="wipe"></span><span class="price" data-r="press"><i>from</i> €[price]<span class="ttc">TTC</span></span></div>
+          <p data-r="roll">Up to six pages you can edit yourself, a booking or quote form, and Google set up properly so people find you.</p>
+          <aside class="pick">
+            <svg class="mk brace" data-mk="brace" data-r="draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M4 2 C38 2 46 9 46 26 C46 43 52 48 94 50 C52 52 46 57 46 74 C46 91 38 98 4 98"/></svg>
+            <svg class="mk pick-u" data-mk="under" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M1 62 C26 44 58 70 99 46"/></svg>
+            <p data-r="roll">Most of my clients pick this one.</p>
+          </aside>
+        </li>
+        <li class="item">
+          <div class="item-line"><h3 data-r="drop">Web app</h3><span class="lead" aria-hidden="true" data-r="wipe"></span><span class="price" data-r="press"><i>from</i> €[price]<span class="ttc">TTC</span></span></div>
+          <p data-r="roll">Bookings, customer accounts, payments, or a tool built around the way you already work. I'll give you a fixed price after a first call.</p>
+        </li>
+      </ul>
+      <a class="btn" href="#businesses" data-quote data-r="press">Tell me about your project</a>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · businesses. : contact, inside the full stop -->
+<section class="sc sc-biz" id="businesses" aria-labelledby="h-businesses" data-label="Contact">
+  <div class="plate" aria-hidden="true"><span class="pw"><span class="yrw"><span>your&nbsp;</span></span><span>busines</span><span class="pe">s</span><span class="ps">e</span><span class="pz">s</span><span class="pp">.</span></span><span class="pf meta">p. 7 / 7</span></div>
+  <div class="sc-in">
+    <div class="c-left">
+      <h2 id="h-businesses" tabindex="-1" data-r="drop">Write to me.</h2>
+      <p class="c-body" data-r="roll">Tell me about <span class="yb">your business</span> and what you need. If a new website isn't the answer, I'll tell you that too.</p>
+      <div class="email-row" data-r="press">
+        <span class="email" id="email">hello@[yourdomain].com</span>
+        <button class="copy" type="button" aria-describedby="email">Copy</button>
+        <span class="stamp" aria-hidden="true">Copied</span>
+      </div>
+      <p class="c-call" data-r="roll"><a class="lnk" href="#businesses" data-ph>Or book a 15-minute call</a></p>
+      <p class="c-book" data-r="roll">Booking projects for [month].</p>
+      <footer class="colophon" data-r="roll">
+        <span>© 2026 Nick Drobyshevski. Web design &amp; development, [city], France.</span>
+        <a href="#businesses" data-ph>LinkedIn</a><a href="#businesses" data-ph>GitHub</a><a href="#businesses" data-ph>Mentions légales</a>
+      </footer>
+    </div>
+    <form class="letter" id="letter" action="#businesses" method="post" data-r="feed" aria-label="Write to Nick">
+      <div class="lt-in">
+        <div class="f2">
+          <label class="fld"><span class="fl-l">Name</span><input name="name" id="f-name" autocomplete="name" required></label>
+          <label class="fld"><span class="fl-l">Email</span><input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <fieldset class="need">
+          <legend class="fl-l">What you need</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="need" value="new"><span>A new website<svg class="mk" data-mk="ring2" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M58 5 C86 7 99 30 96 55 C93 83 63 97 38 93 C13 89 1 66 5 41 C9 17 33 4 68 10"/></svg></span></label>
+            <label class="opt"><input type="radio" name="need" value="fix"><span>Fixing the one you have<svg class="mk" data-mk="ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M15.3 20 C37.3 1.7 84 5 96 35 C104 60 82.7 93.3 50 95 C20.7 96.7 2 78.3 3.3 50 C4.3 30 19.3 13.3 42 7.5"/></svg></span></label>
+            <label class="opt"><input type="radio" name="need" value="app"><span>A custom tool or app<svg class="mk" data-mk="ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M15.3 20 C37.3 1.7 84 5 96 35 C104 60 82.7 93.3 50 95 C20.7 96.7 2 78.3 3.3 50 C4.3 30 19.3 13.3 42 7.5"/></svg></span></label>
+            <label class="opt"><input type="radio" name="need" value="unsure"><span>Not sure yet<svg class="mk" data-mk="ring2" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M40 6 C70 2 98 22 95 52 C92 82 66 98 40 94 C14 90 2 70 4 44 C6 20 26 6 54 7"/></svg></span></label>
+          </div>
+        </fieldset>
+        <label class="fld fld-msg"><span class="fl-l">Message</span><textarea name="message" rows="3"></textarea></label>
+        <div class="lt-foot"><button class="btn" type="submit">Send</button><p class="lt-note">This is a mockup: nothing is sent yet.</p></div>
+      </div>
+      <div class="sent" hidden>
+        <svg class="postmark" viewBox="0 0 112 112" aria-hidden="true" focusable="false"><defs><path id="pm-arc" d="M56 56 m-38 0 a38 38 0 1 1 76 0 a38 38 0 1 1 -76 0"/></defs><circle cx="56" cy="56" r="52"/><circle cx="56" cy="56" r="27"/><text><textPath href="#pm-arc">[city] · [today's date] ·</textPath></text></svg>
+        <p class="sent-msg" tabindex="-1">Folded and stamped. This is a mockup, so nothing was actually sent. On the real site I'll reply within [n] days.</p>
+        <button class="lnk sent-again" type="button">Write another letter</button>
+      </div>
+      <div class="flap flap-t" aria-hidden="true"><i></i></div><div class="flap flap-b" aria-hidden="true"><i></i></div>
+    </form>
+    <p class="vh" id="copy-live" aria-live="polite"></p>
+  </div>
+</section>
+
+</div>
+</main>
+
+<nav class="index ui" aria-label="Contents">
+  <ol>
+    <li><a class="ix" data-w="i" href="#i"><span class="ix-w" aria-hidden="true">I</span><span class="ix-l">About</span></a></li>
+    <li><a class="ix" data-w="make" href="#make"><span class="ix-w" aria-hidden="true">make</span><span class="ix-l">How it works</span></a></li>
+    <li><a class="ix" data-w="websites" href="#websites"><span class="ix-w" aria-hidden="true">websites</span><span class="ix-l">Work</span></a></li>
+    <li><a class="ix" data-w="for" href="#for"><span class="ix-w" aria-hidden="true">for</span><span class="ix-l">Services</span></a></li>
+    <li><a class="ix" data-w="small" href="#small"><span class="ix-w" aria-hidden="true">small</span><span class="ix-l">Prices</span></a></li>
+    <li><a class="ix" data-w="businesses" href="#businesses"><span class="ix-w" aria-hidden="true">businesses.</span><span class="ix-l">Contact</span></a></li>
+  </ol>
+  <svg class="mk ix-ring" data-mk="ring2" aria-hidden="true" focusable="false"><path d=""/></svg>
+</nav>
+
+<div class="folio meta ui">
+  <span class="fo-p" aria-hidden="true">p.&nbsp;<span class="odo"><span>1</span></span>&nbsp;/ 7 ·&nbsp;<span class="fo-l">Cover</span></span>
+  <a class="fo-next" href="#i">Next: <span class="fo-nl">&nbsp;About</span></a>
+  <button class="fo-motion" type="button" aria-pressed="true">Motion: <span>&nbsp;on</span></button>
+</div>
+
+<a class="slip ui" href="#cover" aria-haspopup="dialog" aria-label="Menu"><span class="slip-k">Menu</span><span class="slip-s" aria-hidden="true"><span class="sw" data-w="i">I</span> <span class="sw" data-w="make">make</span> <span class="sw" data-w="websites">websites</span> <span class="sw" data-w="for">for</span> <span class="sw" data-w="small">small</span> <span class="sw" data-w="businesses">businesses.</span></span></a>
+
+<dialog class="menu-d" id="menu" aria-label="Contents">
+  <div class="md-in">
+    <div class="md-top"><span class="meta">Contents</span><button class="md-close" type="button">Close</button></div>
+    <ol class="md-list">
+      <li><a href="#cover"><span class="md-word">Cover</span><span class="md-gl">Start</span></a></li>
+      <li><a href="#i"><span class="md-word">I</span><span class="md-gl">About</span></a></li>
+      <li><a href="#make"><span class="md-word">make</span><span class="md-gl">How it works</span></a></li>
+      <li><a href="#websites"><span class="md-word">websites</span><span class="md-gl">Work</span></a></li>
+      <li><a href="#for"><span class="md-word">for</span><span class="md-gl">Services</span></a></li>
+      <li><a href="#small"><span class="md-word">small</span><span class="md-gl">Prices</span></a></li>
+      <li><a href="#businesses"><span class="md-word">businesses.</span><span class="md-gl">Contact</span></a></li>
+    </ol>
+    <div class="md-foot">
+      <a class="btn" href="#businesses" data-quote>Get a quote</a>
+      <a class="lnk" href="#cover" lang="en" aria-current="true">EN</a><a class="lnk to-fr" href="#fr" lang="fr" hreflang="fr">FR</a>
+      <button class="lnk fo-motion" type="button" aria-pressed="true">Motion: <span>&nbsp;on</span></button>
+    </div>
+  </div>
+</dialog>
+
+<div class="crops" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div id="flood" aria-hidden="true"><div class="flood-c"></div></div>
+<div id="fly" aria-hidden="true"></div>
+<p class="vh" id="live" aria-live="polite"></p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/CustomEase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/DrawSVGPlugin.min.js"></script>
+<script>
+(() => {
+'use strict';
+const D = document, H = D.documentElement;
+const $ = (s, r = D) => r.querySelector(s);
+const $$ = (s, r = D) => [...r.querySelectorAll(s)];
+const IDS = ['cover', 'i', 'make', 'websites', 'for', 'small', 'businesses'];
+const LABEL = { cover: 'Cover', i: 'About', make: 'How it works', websites: 'Work', for: 'Services', small: 'Prices', businesses: 'Contact' };
+const WORD = { i: 'I', make: 'make', websites: 'websites', for: 'for', small: 'small', businesses: 'businesses.' };
+const SC = IDS.map(id => D.getElementById(id));
+const G = window.gsap;
+const OK = !!(G && window.ScrollTrigger && window.CustomEase && window.DrawSVGPlugin);
+const store = {
+  get(k, s) { try { return (s ? sessionStorage : localStorage).getItem(k); } catch (e) { return null; } },
+  set(k, v, s) { try { (s ? sessionStorage : localStorage).setItem(k, v); } catch (e) { /* private mode */ } }
+};
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const FINE = matchMedia('(pointer: fine)');
+let motionOff = store.get('nd-motion') === 'off';
+const calm = () => !OK || RM.matches || motionOff;
+const tok = n => getComputedStyle(H).getPropertyValue(n).trim();
+const visibleEl = e => e.getClientRects().length > 0;
+
+/* ---------- interface that works with or without GSAP ---------- */
+const live = $('#live');
+const menu = $('#menu');
+let progFocus = false;
+function focusEl(el) { if (!el) return; progFocus = true; el.focus({ preventScroll: true }); progFocus = false; }
+function frNote() {
+  const n = $('.lang-note');
+  if (menu.open) menu.close();
+  n.textContent = 'La version française arrive bientôt.';
+  clearTimeout(frNote.t); frNote.t = setTimeout(() => { n.textContent = ''; }, 3500);
+}
+function openMenu() {
+  if (typeof menu.showModal !== 'function') { location.hash = '#cover'; return; }
+  menu.showModal();
+  if (!calm()) {
+    G.fromTo($('.md-in', menu), { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .5, ease: 'set', clearProps: 'clipPath' });
+    G.fromTo($$('.md-word', menu), { y: -18, opacity: 0 }, { y: 0, opacity: 1, duration: .34, ease: 'power3.in', stagger: .035, delay: .12, clearProps: 'all' });
+  }
+}
+$('.md-close').addEventListener('click', () => menu.close());
+
+const copyBtn = $('.copy'), stampEl = $('.stamp');
+copyBtn.addEventListener('click', async () => {
+  const txt = $('#email').textContent.trim();
+  let done = false;
+  try { await navigator.clipboard.writeText(txt); done = true; } catch (e) { /* no clipboard permission */ }
+  if (!done) {
+    try {
+      const r = D.createRange(); r.selectNodeContents($('#email'));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      done = D.execCommand('copy');
+    } catch (e) { done = false; }
+  }
+  $('#copy-live').textContent = done ? 'Email address copied' : 'The address is selected. Press Ctrl+C or Cmd+C to copy it.';
+  if (!done) return;
+  if (G && !calm()) {
+    G.killTweensOf(stampEl);
+    G.fromTo(stampEl, { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: .24, ease: 'power3.in' });
+    G.to(stampEl, { opacity: 0, duration: .3, delay: 2.2 });
+  } else {
+    stampEl.style.opacity = 1; clearTimeout(stampEl.t); stampEl.t = setTimeout(() => { stampEl.style.opacity = 0; }, 2200);
+  }
+});
+
+const form = $('#letter'), ltIn = $('.lt-in', form), sent = $('.sent', form);
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  if (!G || calm()) { ltIn.hidden = true; sent.hidden = false; $('.sent-msg').focus(); return; }
+  form.style.minHeight = form.offsetHeight + 'px';
+  const ft = $('.flap-t', form), fb = $('.flap-b', form);
+  const T = G.timeline();
+  T.to(ltIn, { opacity: 0, duration: .2 });
+  T.set([ft, fb], { visibility: 'visible' }, .2);
+  T.fromTo(fb, { rotationX: 0 }, { rotationX: 180, duration: .45, ease: 'turn' }, .2);
+  T.fromTo($('i', fb), { opacity: 0 }, { opacity: .22, duration: .45 }, .2);
+  T.fromTo(ft, { rotationX: 0 }, { rotationX: -180, duration: .45, ease: 'turn' }, .62);
+  T.fromTo($('i', ft), { opacity: 0 }, { opacity: .22, duration: .45 }, .62);
+  T.call(() => { ltIn.hidden = true; sent.hidden = false; G.set([ft, fb], { clearProps: 'all' }); }, null, 1.1);
+  T.fromTo($('.postmark', sent), { scale: 1.5, opacity: 0 }, { keyframes: [{ scale: .96, opacity: 1, duration: .2, ease: 'power3.in' }, { scale: 1, duration: .1 }] }, 1.12);
+  T.fromTo($$('p, button', sent), { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .35, ease: 'set', stagger: .06 }, 1.3);
+  T.call(() => { form.style.minHeight = ''; focusEl($('.sent-msg')); }, null, 1.45);
+});
+$('.sent-again').addEventListener('click', () => {
+  form.reset(); ltIn.hidden = false; sent.hidden = true; form.style.minHeight = '';
+  if (G) G.set([ltIn, $('.postmark', sent), ...$$('p, button', sent)], { clearProps: 'all' });
+  $('#f-name').focus();
+});
+$$('.opt input', form).forEach(inp => inp.addEventListener('change', () => {
+  if (!G || calm() || !inp.checked) return;
+  G.fromTo($('.mk path', inp.parentElement), { drawSVG: '0%' }, { drawSVG: '100%', duration: .5, ease: 'power2.inOut' });
+}));
+$$('.fo-motion').forEach(b => b.addEventListener('click', () => {
+  motionOff = !motionOff;
+  store.set('nd-motion', motionOff ? 'off' : 'on');
+  syncMotionButtons();
+  if (OK) switchMode(decideMode(), true);
+}));
+function syncMotionButtons() {
+  $$('.fo-motion').forEach(b => { b.setAttribute('aria-pressed', String(!calm())); $('span', b).textContent = ' ' + (calm() ? 'off' : 'on'); });
+}
+syncMotionButtons();
+
+if (!OK) {
+  /* a CDN failed: keep the printed page in plain flow, with the menu dialog and the form */
+  H.classList.remove('intro', 'wait', 'stage', 'on-cover', 'slipwait');
+  window.__ndReady = true;
+  D.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    if (a.classList.contains('to-fr')) { e.preventDefault(); frNote(); }
+    else if (a.classList.contains('slip')) { e.preventDefault(); openMenu(); }
+    else if (a.closest('#menu')) menu.close();
+  });
+  return;
+}
+
+/* ---------- motion grammar ---------- */
+G.registerPlugin(ScrollTrigger, CustomEase, DrawSVGPlugin);
+CustomEase.create('set', 'M0,0 C0.16,1 0.3,1 1,1');
+CustomEase.create('turn', 'M0,0 C0.86,0 0.07,1 1,1');
+CustomEase.create('ui', 'M0,0 C0.22,1 0.36,1 1,1');
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+const fly = $('#fly'), floodC = $('.flood-c');
+const sealDot = $('.seal-dot');
+const ixNav = $('.index'), ring = $('.ix-ring'), ringP = $('path', ring);
+const ixRows = {}; $$('.index .ix').forEach(a => { ixRows[a.dataset.w] = a; });
+const coverW = {}; $$('.sentence .w').forEach(a => { coverW[a.dataset.w] = a; });
+const vw = () => innerWidth, vh = () => innerHeight;
+const Q = { fs: 1.24, fx: 1.24, fn: 1.01 };
+const setVH = () => H.style.setProperty('--vh', (innerHeight / 100) + 'px');
+
+function trect(el) { const r = D.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect(); }
+function crect(el, a, b) {
+  const tw = D.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  let n, pos = 0, sN = null, sO = 0, eN = null, eO = 0;
+  while ((n = tw.nextNode())) {
+    const len = n.textContent.length;
+    if (!sN && a < pos + len) { sN = n; sO = a - pos; }
+    if (sN && b <= pos + len) { eN = n; eO = b - pos; break; }
+    pos += len;
+  }
+  if (!sN || !eN) return trect(el);
+  const r = D.createRange(); r.setStart(sN, sO); r.setEnd(eN, eO);
+  return r.getBoundingClientRect();
+}
+function hostOrigin(host) { if (host === fly) return { x: 0, y: 0 }; const r = host.getBoundingClientRect(); return { x: r.left, y: r.top }; }
+
+/* a flying copy of a word, authored at its largest size so it only ever scales down */
+function clone(text, faces, size, host = fly) {
+  const el = D.createElement('div');
+  el.className = 'fl';
+  el.style.fontSize = size.toFixed(2) + 'px';
+  faces.forEach((f, i) => {
+    const s = D.createElement('span');
+    s.className = 'flx ' + f; s.textContent = text;
+    if (i) s.style.opacity = '0';
+    el.appendChild(s);
+  });
+  host.appendChild(el);
+  const o = hostOrigin(host);
+  const L = [...el.children].map(s => { const r = trect(s); return { dx: r.left - o.x, dy: r.top - o.y, w: r.width, h: r.height, el: s }; });
+  return { el, L, o };
+}
+function place(c, L, R) { const s = R.height / L.h; return { x: R.left - c.o.x - L.dx * s, y: R.top - c.o.y - L.dy * s, scale: s }; }
+function flight(T, c, A, B, at, dur, o = {}) {
+  G.set(c.el, { x: A.x, y: A.y, scale: A.scale, rotation: 0 });
+  T.set(c.el, { visibility: 'visible' }, at);
+  T.to(c.el, { x: B.x, duration: dur, ease: o.ex || 'turn' }, at);
+  T.to(c.el, { y: B.y, duration: dur, ease: o.ey || 'set' }, at);
+  T.to(c.el, { scale: B.scale, duration: dur, ease: 'turn' }, at);
+  if (o.rot) T.to(c.el, { keyframes: { rotation: [0, o.rot, 0], easeEach: 'sine.inOut' }, duration: dur }, at);
+  if (c.L.length > 1 && !o.noXf) {
+    const xa = at + dur * (o.xf == null ? .45 : o.xf);
+    T.to(c.L[0].el, { opacity: 0, duration: .18, ease: 'none' }, xa);
+    T.to(c.L[1].el, { opacity: 1, duration: .18, ease: 'none' }, xa);
+  }
+}
+function flyWord(T, text, fromR, toR, at, dur, o = {}) {
+  const faces = o.faces || ['fs'];
+  const size = Math.max(fromR.height / Q[faces[0]], toR.height / Q[faces[faces.length - 1]]);
+  const c = clone(text, faces, size, o.host || fly);
+  flight(T, c, place(c, c.L[0], fromR), place(c, c.L[c.L.length - 1], toR), at, dur, o);
+  if (o.fadeIn) { G.set(c.el, { opacity: 0 }); T.to(c.el, { opacity: 1, duration: .15 }, at); }
+  return c;
+}
+const hideAt = (T, el, at) => T.call(() => el.classList.add('hold'), null, at);
+const land = (T, c, el, at) => T.call(() => { if (el) el.classList.remove('hold'); c.el.remove(); }, null, at);
+
+/* the full stop as a round dot, from the first frame */
+function dotRect(stop) {
+  const r = trect(stop), fs = parseFloat(getComputedStyle(stop).fontSize);
+  const p = D.createElement('span');
+  p.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+  stop.appendChild(p);
+  const base = p.getBoundingClientRect().top; p.remove();
+  const d = fs * .19;
+  return { cx: r.left + r.width * .46, cy: base - d * .52, d };
+}
+function dotFlight(T, a, b, at, dur, D0) {
+  const dot = D.createElement('i');
+  dot.className = 'fl-dot';
+  dot.style.width = dot.style.height = D0 + 'px';
+  fly.appendChild(dot);
+  G.set(dot, { x: a.cx - D0 / 2, y: a.cy - D0 / 2, scale: a.d / D0, transformOrigin: '50% 50%' });
+  T.set(dot, { visibility: 'visible' }, at);
+  T.to(dot, { x: b.cx - D0 / 2, duration: dur, ease: 'turn' }, at);
+  T.to(dot, { y: b.cy - D0 / 2, duration: dur, ease: 'set' }, at);
+  T.to(dot, { scale: b.d / D0, duration: dur, ease: 'turn' }, at);
+  T.set(dot, { visibility: 'hidden' }, at + dur);
+}
+function sealRect() { const r = sealDot.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, d: r.width }; }
+function periodToSeal(T, stop, at, dur, keep) {
+  const a = dotRect(stop), b = sealRect();
+  dotFlight(T, a, b, at, dur, b.d);
+  if (!keep) hideAt(T, stop, at);
+  T.to(sealDot, { scale: 1.12, duration: .16, ease: 'power2.out' }, at + dur - .02);
+  T.to(sealDot, { scale: 1, duration: .22, ease: 'ui' }, at + dur + .14);
+}
+function sealToPeriod(T, stop, at, dur) {
+  const b = dotRect(stop), a = sealRect();
+  dotFlight(T, a, b, at, dur, a.d);
+  T.call(() => stop.classList.remove('hold'), null, at + dur);
+}
+
+/* ---------- pencil marks: authored strokes refitted to each box in pixels ---------- */
+const MK = {
+  ring: 'M15.3 20 C37.3 1.7 84 5 96 35 C104 60 82.7 93.3 50 95 C20.7 96.7 2 78.3 3.3 50 C4.3 30 19.3 13.3 42 7.5',
+  ring2: 'M58 5 C86 7 99 30 96 55 C93 83 63 97 38 93 C13 89 1 66 5 41 C9 17 33 4 68 10',
+  bracket: 'M92 1 C42 2 22 4 26 12 C30 38 20 66 27 88 C30 96 52 98 94 99',
+  arrow: 'M96 96 C70 94 38 74 30 22 M12 38 C20 30 26 24 30 18 C36 26 42 32 50 38',
+  brace: 'M4 2 C38 2 46 9 46 26 C46 43 52 48 94 50 C52 52 46 57 46 74 C46 91 38 98 4 98',
+  under: 'M1 62 C26 44 58 70 99 46',
+  space: 'M52 0 C47 30 54 66 49 100'
+};
+function fitMark(svg) {
+  const key = svg.dataset.mk, p = $('path', svg);
+  if (!key || !p) return;
+  const w = svg.clientWidth, h = svg.clientHeight;
+  if (!w || !h) return;
+  const src = p.dataset.src || MK[key];
+  let n = 0;
+  const d = src.replace(/-?\d*\.?\d+/g, v => (n++ % 2 ? (+v) * h / 100 : (+v) * w / 100).toFixed(1));
+  svg.setAttribute('viewBox', `0 0 ${w.toFixed(1)} ${h.toFixed(1)}`);
+  p.setAttribute('d', d);
+  p.removeAttribute('vector-effect');
+}
+function fitMarks(root = D) {
+  $$('svg.mk[data-mk] path[vector-effect]', root).forEach(p => { p.dataset.src = p.getAttribute('d'); });
+  $$('svg.mk[data-mk]', root).forEach(fitMark);
+}
+function placeRing(id) {
+  const w = $('.ix-w', ixRows[id]), r = trect(w), nr = ixNav.getBoundingClientRect();
+  if (!r.width) return;
+  const px = Math.max(9 + r.width * .07, (30 - r.width) / 2), py = 6;
+  Object.assign(ring.style, {
+    left: (r.left - nr.left - px) + 'px', top: (r.top - nr.top - py) + 'px',
+    width: (r.width + px * 2) + 'px', height: (r.height + py * 2) + 'px', rotate: (id.length % 2 ? -3 : 2) + 'deg'
+  });
+  fitMark(ring);
+}
+/* the How it works sequence line: across the staircase on desktop, down the acrostic on phones */
+function fitSeq() {
+  const s = SC[2], svg = $('.seq', s), p = $('path', svg), steps = $('.steps', s);
+  const sr = steps.getBoundingClientRect();
+  const W = svg.clientWidth, Hh = svg.clientHeight;
+  if (!W || !Hh) return;
+  svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`);
+  let d = '';
+  if (innerWidth >= 1024) {
+    const pts = $$('.tick', s).map((t, k) => {
+      const r = t.getBoundingClientRect(), st = t.parentElement.getBoundingClientRect();
+      return [k ? st.left - sr.left : 1, r.top - sr.top + r.height * .5];
+    });
+    if (pts.length < 4) return;
+    pts.push([W - 4, pts[3][1] + 10]);
+    d = `M${pts[0][0]} ${pts[0][1]}`;
+    for (let k = 1; k < pts.length; k++) {
+      const [x0, y0] = pts[k - 1], [x1, y1] = pts[k], mx = (x0 + x1) / 2;
+      d += ` C${(mx - 20).toFixed(1)} ${(y0 + 2).toFixed(1)} ${(mx + 20).toFixed(1)} ${(y1 - 3).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+    }
+    pts.slice(0, 4).forEach(([x, y], k) => { d += ` M${(x + (k ? 0 : 2)).toFixed(1)} ${(y - 7).toFixed(1)} L${(x + 1.5).toFixed(1)} ${(y + 7).toFixed(1)}`; });
+  } else {
+    const hs = $$('.head', s).map(h => h.getBoundingClientRect());
+    const x = hs[0].left - sr.left + hs[0].width / 2;
+    for (let k = 1; k < hs.length; k++) {
+      const a = hs[k - 1].bottom - sr.top + 8, b = hs[k].top - sr.top - 6;
+      if (b - a < 12) continue;
+      d += ` M${x.toFixed(1)} ${a.toFixed(1)} C${(x + 5).toFixed(1)} ${(a + (b - a) * .33).toFixed(1)} ${(x - 5).toFixed(1)} ${(a + (b - a) * .66).toFixed(1)} ${(x + 1).toFixed(1)} ${b.toFixed(1)}`;
+    }
+  }
+  p.setAttribute('d', d.trim());
+  svg.classList.add('fit');
+}
+
+/* ---------- reveals that belong to typesetting ---------- */
+function words(el) {
+  if (el._w) return el._w;
+  const out = [];
+  (function walk(node) {
+    [...node.childNodes].forEach(ch => {
+      if (ch.nodeType === 3) {
+        if (!ch.textContent.trim()) return;
+        const frag = D.createDocumentFragment();
+        ch.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(part); return; }
+          const sp = D.createElement('span'); sp.className = 'dw'; sp.textContent = part;
+          frag.append(sp); out.push(sp);
+        });
+        ch.replaceWith(frag);
+      } else if (ch.nodeType === 1) {
+        if (ch.matches('.tw, .dw')) out.push(ch);
+        else if (!ch.matches('svg, br')) walk(ch);
+      }
+    });
+  })(el);
+  el._w = out;
+  return out;
+}
+/* an ink roller crossing a block of type */
+function roller(T, el, at, dur) {
+  const host = el.closest('.sc');
+  if (!host) return;
+  const hr = host.getBoundingClientRect(), r = el.getBoundingClientRect();
+  if (r.width < 60 || r.height < 8) return;
+  const d = D.createElement('i');
+  d.className = 'roller' + (host.id === 'businesses' && !el.closest('.letter') ? ' n' : '');
+  d.setAttribute('aria-hidden', 'true');
+  d.style.cssText = `left:${r.left - hr.left - 10}px;top:${r.top - hr.top - 4}px;height:${r.height + 8}px;visibility:hidden`;
+  host.appendChild(d);
+  T.set(d, { visibility: 'visible' }, at);
+  T.to(d, { x: r.width + 10, duration: dur, ease: 'power1.inOut' }, at);
+  T.to(d, { opacity: 0, duration: .12 }, at + dur - .06);
+  T.call(() => d.remove(), null, at + dur + .08);
+}
+const R = {
+  roll: {
+    prep: el => G.set(el, { clipPath: 'inset(0% 100% 0% 0%)' }),
+    play(T, el, at, q) {
+      const dur = q ? .3 : .46;
+      T.to(el, { clipPath: 'inset(0% 0% 0% 0%)', duration: dur, ease: q ? 'power2.out' : 'power1.inOut' }, at);
+      if (!q) roller(T, el, at, dur);
+    }
+  },
+  wipe: {
+    prep: el => G.set(el, { clipPath: 'inset(0% 100% 0% 0%)' }),
+    play: (T, el, at, q) => T.to(el, { clipPath: 'inset(0% 0% 0% 0%)', duration: q ? .3 : .45, ease: 'set' }, at)
+  },
+  drop: {
+    prep(el) {
+      const w = words(el), fs = parseFloat(getComputedStyle(el).fontSize);
+      G.set(w, { opacity: 0, y: -fs * .42, rotation: () => G.utils.random(-3, 3) });
+    },
+    play(T, el, at, q) {
+      const w = words(el), st = q ? .015 : .03;
+      T.to(w, { y: 0, rotation: 0, duration: q ? .24 : .34, ease: 'power3.in', stagger: st }, at);
+      T.to(w, { opacity: 1, duration: .12, ease: 'none', stagger: st }, at);
+    }
+  },
+  press: {
+    prep: el => G.set(el, { opacity: 0, scale: 1.06 }),
+    play: (T, el, at) => T.to(el, { opacity: 1, scale: 1, duration: .2, ease: 'power3.in' }, at)
+  },
+  feed: {
+    prep: el => G.set(el, { clipPath: 'inset(0% 0% 100% 0%)', y: 24, rotation: 1.6 }),
+    play: (T, el, at, q) => T.to(el, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, rotation: 0, duration: q ? .4 : .62, ease: 'set' }, at)
+  },
+  rule: {
+    prep: el => G.set(el, { scaleX: 0, transformOrigin: '0% 50%' }),
+    play: (T, el, at, q) => T.to(el, { scaleX: 1, duration: q ? .35 : .55, ease: 'set' }, at)
+  },
+  draw: {
+    prep: el => G.set($$('path', el), { drawSVG: '0%' }),
+    play: (T, el, at, q) => T.to($$('path', el), { drawSVG: '100%', duration: q ? .3 : .5, ease: 'power2.inOut' }, at)
+  }
+};
+function reveals(T, root, at, q, o = {}) {
+  const skip = o.skip || [];
+  const els = $$('[data-r]', root).filter(e => visibleEl(e) && !skip.some(s => s === e || s.contains(e)));
+  const step = q ? .02 : (o.step || .04), cap = q ? .2 : (o.cap || .45);
+  els.forEach((el, n) => { const r = R[el.dataset.r]; r.prep(el); r.play(T, el, at + Math.min(n * step, cap), q); });
+}
+function clearScene(s) {
+  $$('.roller, .flood-s', s).forEach(e => e.remove());
+  $$('[style]', s).forEach(e => e.removeAttribute('style'));
+  s.removeAttribute('style');
+  $$('.hold', s).forEach(e => e.classList.remove('hold'));
+  s.classList.remove('nobg', 'pre');
+}
+
+/* ---------- the stage: one scene at a time, chosen by native scroll ---------- */
+let mode = null, cur = 0, want = 0, TL = null, introTL = null, lock = false, lastY = 0, pendingO = {}, finding = false;
+const visited = new Set();
+
+function folio(i, instant) {
+  const odo = $('.odo'), next = $('.fo-next');
+  $('.fo-l').textContent = LABEL[IDS[i]];
+  if (i < 6) { next.href = '#' + IDS[i + 1]; next.firstChild.textContent = 'Next:'; $('.fo-nl').textContent = ' ' + LABEL[IDS[i + 1]]; }
+  else { next.href = '#cover'; next.firstChild.textContent = 'Back to the'; $('.fo-nl').textContent = ' cover'; }
+  const n = String(i + 1), old = odo.lastElementChild;
+  if (old && old.textContent === n) return;
+  const s = D.createElement('span'); s.textContent = n;
+  if (instant || calm() || !old) { odo.replaceChildren(s); return; }
+  odo.appendChild(s);
+  const dir = +n > +old.textContent ? 1 : -1;
+  G.fromTo(s, { yPercent: 100 * dir }, { yPercent: 0, duration: .45, ease: 'set' });
+  G.to(old, { yPercent: -100 * dir, duration: .45, ease: 'set', onComplete: () => old.remove() });
+}
+const announce = i => { live.textContent = `${LABEL[IDS[i]]}. Page ${i + 1} of 7.`; };
+const setNight = on => H.classList.toggle('night', !!on);
+const setPrices = on => H.classList.toggle('on-prices', !!on);
+function setCurrent(id) {
+  Object.entries(ixRows).forEach(([w, a]) => { if (w === id) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
+  $$('.slip .sw').forEach(s => s.classList.toggle('cur', s.dataset.w === id));
+  $$('.md-list a').forEach(a => { if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
+}
+function settleIndex(to) {
+  const id = IDS[to];
+  H.classList.toggle('ixon', to !== 0);
+  Object.entries(ixRows).forEach(([w, a]) => {
+    a.classList.remove('wait'); a.classList.toggle('out', w === id);
+    $$('[style]', a).forEach(e => e.removeAttribute('style'));
+  });
+  setCurrent(id);
+  if (to) { placeRing(id); G.set(ringP, { drawSVG: '100%' }); }
+  $$('.sentence .hold').forEach(e => e.classList.remove('hold'));
+  sealDot.removeAttribute('style');
+}
+function ringTo(T, to, at) {
+  T.to(ringP, { drawSVG: '100% 100%', duration: .16, ease: 'power1.in' }, Math.max(0, at - .22));
+  T.call(() => placeRing(IDS[to]), null, at - .03);
+  T.fromTo(ringP, { drawSVG: '0%' }, { drawSVG: '100%', duration: .5, ease: 'power2.inOut', immediateRender: false }, at);
+}
+function focusScene(i) { focusEl(i ? $('h2', SC[i]) : $('#h1')); }
+
+function onScroll() {
+  if (mode !== 'stage' || lock || resizing) return;
+  const y = scrollY, p = y / vh(), dir = y >= lastY ? 1 : -1;
+  lastY = y;
+  let i = dir > 0 ? Math.floor(p + .75) : Math.ceil(p - .75);
+  i = Math.max(0, Math.min(6, i));
+  if (i !== want) request(i, {});
+}
+function request(i, o) {
+  want = i;
+  if (introTL) introTL.progress(1);
+  if (TL) { TL.timeScale(3); pendingO = o || {}; return; }
+  goTo(i, o || {});
+}
+function navigate(i, o = {}) {
+  lock = true;
+  window.scrollTo(0, i * vh());
+  lastY = scrollY;
+  requestAnimationFrame(() => requestAnimationFrame(() => { lock = false; }));
+  if (i === want && !TL) {
+    if (o.fromQuote && i === 6) focusEl($('#f-name'));
+    else if (o.focus) focusScene(i);
+    return;
+  }
+  request(i, o);
+}
+function goTo(to, o = {}) {
+  const from = cur;
+  if (to === from) return;
+  const q = !!o.quick || visited.has(IDS[to]);
+  visited.add(IDS[to]);
+  const T = G.timeline({ onComplete: () => done(from, to, o) });
+  TL = T;
+  SC[to].removeAttribute('hidden');
+  H.classList.toggle('on-cover', to === 0);
+  folio(to); announce(to); setCurrent(IDS[to]); setPrices(to === 5);
+  if (from === 0) signature(T, to, q, o);
+  else if (to === 0) mirror(T, from, q);
+  else hop(T, from, to, q, o);
+  if (to) ringTo(T, to, q ? .3 : .78);
+  if (o.focus && !(o.fromQuote && to === 6)) focusScene(to);
+}
+function done(from, to, o) {
+  TL = null; cur = to;
+  SC[from].classList.remove('is-on'); clearScene(SC[from]);
+  SC[to].classList.add('is-on'); clearScene(SC[to]);
+  settleIndex(to); setNight(to === 6);
+  fly.replaceChildren(); G.set(floodC, { clearProps: 'all' });
+  if (finding) SC.forEach((s, i) => { if (i !== to) s.setAttribute('hidden', 'until-found'); });
+  try { history.replaceState(null, '', '#' + IDS[to]); } catch (e) { /* file: urls */ }
+  if (o.fromQuote && to === 6) focusEl($('#f-name'));
+  if (want !== cur) { const n = Object.assign({}, pendingO, { quick: true }); pendingO = {}; goTo(want, n); }
+}
+
+/* the generic exit, 0.3s at most */
+function exitScene(T, i, at) {
+  const s = SC[i], kids = $$('.sc-in > *', s).filter(visibleEl);
+  if (i === 6) {
+    /* the night drains back into the full stop */
+    const b = sealRect(), R0 = Math.hypot(Math.max(b.cx, vw() - b.cx), Math.max(b.cy, vh() - b.cy)) + 2, Dm = R0 * 2;
+    G.set(floodC, { width: Dm, height: Dm, left: b.cx - R0, top: b.cy - R0, scale: 1, transformOrigin: '50% 50%', visibility: 'visible' });
+    T.call(() => s.classList.add('nobg'), null, at);
+    T.to(kids, { opacity: 0, duration: .2, ease: 'power2.in' }, at);
+    T.to(floodC, { scale: b.d / Dm, duration: .5, ease: 'turn' }, at + .12);
+    T.call(() => setNight(false), null, at + .3);
+    T.call(() => { s.classList.remove('is-on'); clearScene(s); }, null, at + .3);
+    T.set(floodC, { visibility: 'hidden' }, at + .62);
+    return;
+  }
+  T.to(kids, { opacity: 0, y: -10, duration: .24, ease: 'power2.in', stagger: { each: .02, from: 'end' } }, at);
+  T.call(() => { s.classList.remove('is-on'); clearScene(s); }, null, at + .34);
+}
+
+/* where each scene keeps its word at rest, as pieces of the word */
+function anchors(id) {
+  const s = SC[IDS.indexOf(id)];
+  if (id === 'i') {
+    const f = $('.frame', s).getBoundingClientRect(), fs = Math.min(147, f.width * .72);
+    return [{ a: 0, b: 1, rect: { left: f.left - .07 * fs, top: f.top - .27 * fs, height: fs * Q.fs }, faces: ['fs'], fadeIn: true }];
+  }
+  if (id === 'make') return $$('.head', s).map((el, k) => ({ a: k, b: k + 1, el, rect: trect(el), faces: ['fx'] }));
+  if (id === 'websites') return [[0, 3, '.be-web'], [3, 8, '.be-sites']].map(([a, b, sel]) => { const el = $(sel, s); return { a, b, el, rect: trect(el), faces: ['fs'] }; });
+  if (id === 'for') { const el = $('.t-for', s); return [{ a: 0, b: 3, el, rect: trect(el), faces: ['fn', 'fs'] }]; }
+  if (id === 'small') { const el = $('.np-s', s); return [{ a: 0, b: 5, el, rect: trect(el), faces: ['fn', 'fs'] }]; }
+  const el = $('.yb', s);
+  return [{ a: 0, b: 8, el, rect: crect(el, 5, 13), faces: ['fn', 'fs'] }];
+}
+function flyPieces(T, id, pieces, dst, at, dur, onLand) {
+  const text = WORD[id];
+  pieces.forEach((p, k) => {
+    const t = at + k * .02;
+    const c = flyWord(T, text.slice(p.a, p.b), p.rect, crect(dst, p.a, p.b), t, dur, { faces: p.faces, fadeIn: p.fadeIn, xf: .3 });
+    if (p.el) hideAt(T, p.el, t);
+    T.call(() => c.el.remove(), null, t + dur);
+  });
+  if (onLand) T.call(onLand, null, at + (pieces.length - 1) * .02 + dur);
+}
+
+/* THE SIGNATURE: the sentence breaks into the margin, the full stop rolls into the seal */
+function signature(T, to, q, o) {
+  const W = IDS[to], cover = SC[0];
+  const dur = q ? .6 : .9, stag = q ? .03 : .055;
+  const plan = [];
+  IDS.slice(1).forEach((id, k) => {
+    if (id === W) return;
+    const src = $('.wt', coverW[id]), dst = $('.ix-w', ixRows[id]), n = id === 'businesses' ? 10 : WORD[id].length;
+    plan.push({ id, k, src, from: crect(src, 0, n), to: crect(dst, 0, n), text: WORD[id].slice(0, n) });
+  });
+  const src = { el: $('.wt', coverW[W]), kind: 'cover' };
+  H.classList.add('ixon');
+  Object.entries(ixRows).forEach(([w, a]) => { a.classList.toggle('wait', w !== W); a.classList.toggle('out', w === W); });
+  const labs = $$('.ix-l', ixNav);
+  G.set(labs, { opacity: 0, x: -6 });
+  T.to(labs, { opacity: 1, x: 0, duration: .4, ease: 'ui', stagger: .04 }, q ? .2 : .5);
+  T.to($$('.gl', cover), { y: 6, opacity: 0, duration: .22, ease: 'power2.in', stagger: .02 }, 0);
+  T.to([$('.cover-foot', cover), $('.hint', cover)], { opacity: 0, y: 8, duration: .22, ease: 'power2.in' }, 0);
+  T.to($('.ring-small path'), { drawSVG: '100% 100%', duration: .26, ease: 'power1.in' }, 0);
+  plan.forEach(p => {
+    const at = .05 + p.k * stag;
+    const c = flyWord(T, p.text, p.from, p.to, at, dur, { rot: p.k % 2 ? 2.5 : -2.5 });
+    hideAt(T, p.src, at);
+    T.call(() => { ixRows[p.id].classList.remove('wait'); c.el.remove(); }, null, at + dur);
+  });
+  let t0 = .08;
+  if (W !== 'businesses') periodToSeal(T, $('.stop'), q ? .1 : .28, q ? .7 : 1.0);
+  else if (q || o.fromQuote) { periodToSeal(T, $('.stop'), .05, .42); t0 = .42; }
+  T.call(() => SC[to].classList.add('is-on'), null, .06);
+  T.call(() => { cover.classList.remove('is-on'); clearScene(cover); }, null, Math.max(.62, t0 + .1));
+  ACT[W](T, src, t0, q, o);
+}
+
+/* the mirror: the margin files back into the giant line */
+function mirror(T, from, q) {
+  const A = IDS[from], cover = SC[0];
+  const dur = q ? .55 : .8, stag = q ? .03 : .045;
+  const t0 = from === 6 ? .28 : .06;
+  const pieces = anchors(A);
+  exitScene(T, from, 0);
+  const plan = IDS.slice(1).map((id, k) => {
+    const n = id === 'businesses' ? 10 : WORD[id].length, dst = $('.wt', coverW[id]);
+    return { id, k, n, dst, to: crect(dst, 0, n), slot: $('.ix-w', ixRows[id]) };
+  });
+  const foot = [$('.cover-foot', cover), $('.hint', cover)], gls = $$('.gl', cover), rs = $('.ring-small path');
+  plan.forEach(p => p.dst.classList.add('hold'));
+  $('.stop').classList.add('hold');
+  G.set(gls, { opacity: 0, y: 6 }); G.set(foot, { opacity: 0, y: 8 }); G.set(rs, { drawSVG: '0%' });
+  T.call(() => cover.classList.add('is-on'), null, t0);
+  T.to($$('.ix-l', ixNav), { opacity: 0, x: -6, duration: .2, ease: 'power2.in' }, 0);
+  plan.forEach(p => {
+    const at = t0 + (5 - p.k) * stag;
+    T.call(() => ixRows[p.id].classList.add('wait'), null, at);
+    if (p.id === A) {
+      flyPieces(T, A, pieces.map(x => ({ ...x, b: Math.min(x.b, p.n) })), p.dst, at, dur, () => p.dst.classList.remove('hold'));
+    } else {
+      const c = flyWord(T, WORD[p.id].slice(0, p.n), crect(p.slot, 0, p.n), p.to, at, dur, { rot: p.k % 2 ? -2 : 2 });
+      land(T, c, p.dst, at + dur);
+    }
+  });
+  sealToPeriod(T, $('.stop'), t0 + .18, q ? .6 : .85);
+  T.to(gls, { opacity: 1, y: 0, duration: .35, ease: 'set', stagger: .03 }, t0 + (q ? .4 : .62));
+  T.to(foot, { opacity: 1, y: 0, duration: .4, ease: 'set', stagger: .06 }, t0 + (q ? .45 : .7));
+  T.to(rs, { drawSVG: '100%', duration: .55, ease: 'power2.inOut' }, t0 + (q ? .5 : .82));
+}
+
+/* scene to scene: the old word goes home as the new one steps out, like a relay */
+function hop(T, from, to, q, o) {
+  const A = IDS[from], B = IDS[to];
+  const pieces = anchors(A), slotA = $('.ix-w', ixRows[A]);
+  exitScene(T, from, 0);
+  const t0 = from === 6 ? .3 : .14;
+  flyPieces(T, A, pieces, slotA, .02, q ? .5 : .65, () => ixRows[A].classList.remove('out'));
+  T.call(() => ixRows[B].classList.add('out'), null, t0 - .08);
+  T.call(() => SC[to].classList.add('is-on'), null, t0);
+  ACT[B](T, { el: $('.ix-w', ixRows[B]), kind: 'index' }, t0, q, o);
+}
+const srcHide = (T, src, at) => { if (src.kind === 'cover') hideAt(T, src.el, at); };
+
+/* ---------- the acts ---------- */
+const ACT = {
+  /* I : the letter becomes the frame that holds Nick's photo */
+  i(T, src, t0, q) {
+    const s = SC[1], frame = $('.frame', s), fr = frame.getBoundingClientRect();
+    const from = crect(src.el, 0, 1);
+    frame.classList.add('hold');
+    srcHide(T, src, t0);
+    if (q) {
+      const c = flyWord(T, 'I', from, { left: fr.left, top: fr.top, height: fr.width * .7 }, t0, .4);
+      T.to(c.el, { opacity: 0, duration: .15 }, t0 + .3);
+      T.call(() => frame.classList.remove('hold'), null, t0 + .28);
+      T.fromTo(frame, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .4, ease: 'set', immediateRender: false }, t0 + .28);
+      reveals(T, s, t0 + .1, true, { skip: [frame] });
+      return;
+    }
+    reveals(T, s, t0 + .3, false, { skip: [frame] });
+    const fs = Math.min(147, fr.width * .72);
+    const c = flyWord(T, 'I', from, { left: fr.left - .07 * fs, top: fr.top - .27 * fs, height: fs * Q.fs }, t0, .5);
+    const ink = D.createElement('i');
+    ink.className = 'fl-ink';
+    Object.assign(ink.style, { left: fr.left + 'px', top: fr.top + 'px', width: fr.width + 'px', height: fr.height + 'px' });
+    fly.appendChild(ink);
+    G.set(ink, { scaleX: (.13 * fs) / fr.width, scaleY: (.7 * fs) / fr.height, clipPath: 'inset(0% 0% 0% 0%)' });
+    T.set(ink, { visibility: 'visible' }, t0 + .46);
+    T.to(c.el, { opacity: 0, duration: .08 }, t0 + .46);
+    T.to(ink, { scaleY: 1, duration: .38, ease: 'turn' }, t0 + .5);
+    T.to(ink, { scaleX: 1, duration: .34, ease: 'set' }, t0 + .64);
+    T.call(() => frame.classList.remove('hold'), null, t0 + .95);
+    T.to(ink, { clipPath: 'inset(0% 0% 100% 0%)', duration: .42, ease: 'set' }, t0 + .96);
+  },
+
+  /* make : the four letters are spaced apart into the heads of the four steps */
+  make(T, src, t0, q) {
+    const s = SC[2], heads = $$('.head', s), hr = heads.map(trect);
+    const from = [0, 1, 2, 3].map(k => crect(src.el, k, k + 1));
+    const rules = $$('.crule', s).filter(visibleEl), seq = $('.seq path', s), steps = $$('.step', s), rh = $('.rh', s);
+    const box = $('.steps', s).getBoundingClientRect();
+    heads.forEach(h => h.classList.add('hold'));
+    srcHide(T, src, t0);
+    G.set(rules, { scaleY: 0, transformOrigin: '50% 0%' });
+    G.set(seq, { drawSVG: '0%' });
+    R.drop.prep(rh); R.drop.play(T, rh, t0 + (q ? .08 : .36), q);
+    const size = hr[0].height / Q.fx;
+    if (q) {
+      heads.forEach((h, k) => {
+        const at = t0 + Math.abs(k - 1.5) * .03;
+        const c = flyWord(T, 'make'[k], from[k], hr[k], at, .48, { faces: ['fx'] });
+        land(T, c, h, at + .48);
+      });
+    } else {
+      const cs = heads.map((h, k) => clone('make'[k], ['fx'], size));
+      const total = cs.reduce((a, c) => a + c.L[0].w, 0);
+      let x = box.left + box.width / 2 - total / 2;
+      const y = box.top + (hr[1].top - box.top) * .5 + 20;
+      cs.forEach((c, k) => {
+        const mid = { left: x, top: y, height: hr[k].height };
+        x += c.L[0].w;
+        flight(T, c, place(c, c.L[0], from[k]), place(c, c.L[0], mid), t0 + k * .02, .45);
+        const B = place(c, c.L[0], hr[k]), at2 = t0 + .53 + (k === 0 || k === 3 ? .05 : 0);
+        T.to(c.el, { x: B.x, duration: .5, ease: 'turn' }, at2);
+        T.to(c.el, { y: B.y, duration: .5, ease: 'set' }, at2);
+        land(T, c, heads[k], at2 + .5);
+      });
+    }
+    const tw = q ? .26 : .52;
+    T.to(rules, { scaleY: 1, duration: q ? .3 : .45, ease: 'set', stagger: .06 }, t0 + (q ? .2 : .55));
+    T.to(seq, { drawSVG: '100%', duration: q ? .35 : .62, ease: 'power2.inOut' }, t0 + tw);
+    steps.forEach((st, k) => reveals(T, st, t0 + tw + k * (q ? .04 : .1), q, { step: .05, cap: .12 }));
+  },
+
+  /* websites : a proofreader's space mark splits the word, and the work feeds in between */
+  websites(T, src, t0, q) {
+    const s = SC[3], web = $('.be-web', s), sites = $('.be-sites', s), wr = trect(web), sr = trect(sites);
+    const fw = crect(src.el, 0, 3), fsr = crect(src.el, 3, 8), box = $('.sc-in', s).getBoundingClientRect();
+    web.classList.add('hold'); sites.classList.add('hold');
+    srcHide(T, src, t0);
+    reveals(T, s, t0 + (q ? .15 : .45), q, { skip: [web, sites], cap: .5 });
+    const size = wr.height / Q.fs;
+    const cw = clone('web', ['fs'], size), cs = clone('sites', ['fs'], size);
+    if (q) {
+      flight(T, cw, place(cw, cw.L[0], fw), place(cw, cw.L[0], wr), t0, .48);
+      flight(T, cs, place(cs, cs.L[0], fsr), place(cs, cs.L[0], sr), t0 + .02, .48);
+      land(T, cw, web, t0 + .48); land(T, cs, sites, t0 + .5);
+      return;
+    }
+    const total = cw.L[0].w + cs.L[0].w, x0 = box.left + box.width / 2 - total / 2, ym = box.top + box.height * .4 - wr.height / 2;
+    flight(T, cw, place(cw, cw.L[0], fw), place(cw, cw.L[0], { left: x0, top: ym, height: wr.height }), t0, .45);
+    flight(T, cs, place(cs, cs.L[0], fsr), place(cs, cs.L[0], { left: x0 + cw.L[0].w, top: ym, height: wr.height }), t0 + .02, .45);
+    const mk = D.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    mk.setAttribute('class', 'mk'); mk.setAttribute('data-mk', 'space');
+    mk.innerHTML = '<path d=""/>';
+    Object.assign(mk.style, { left: (x0 + cw.L[0].w - 7) + 'px', top: (ym + wr.height * .02) + 'px', width: '14px', height: (wr.height * .95) + 'px' });
+    fly.appendChild(mk); fitMark(mk);
+    const mp = $('path', mk);
+    G.set(mp, { drawSVG: '0%' });
+    T.to(mp, { drawSVG: '100%', duration: .16, ease: 'power2.out' }, t0 + .44);
+    const at2 = t0 + .62;
+    [[cw, wr], [cs, sr]].forEach(([c, r]) => {
+      const B = place(c, c.L[0], r);
+      T.to(c.el, { x: B.x, duration: .52, ease: 'turn' }, at2);
+      T.to(c.el, { y: B.y, duration: .52, ease: 'set' }, at2);
+    });
+    T.to(mk, { opacity: 0, duration: .2 }, at2 + .06);
+    land(T, cw, web, at2 + .52); land(T, cs, sites, at2 + .52);
+  },
+
+  /* for : the missing sort drops into the title, and the loose line locks up */
+  for(T, src, t0, q) {
+    const s = SC[4], h2 = $('.for-t', s), tws = $$('.tw', h2), tf = $('.t-for', h2), fr = trect(tf);
+    const from = crect(src.el, 0, 3), fsz = parseFloat(getComputedStyle(h2).fontSize);
+    tf.classList.add('hold');
+    srcHide(T, src, t0);
+    reveals(T, s, t0 + (q ? .15 : .3), q, { skip: [h2] });
+    const dur = q ? .45 : .62, landAt = t0 + dur;
+    const c = flyWord(T, 'for', from, fr, t0, dur, { faces: ['fs', 'fn'], rot: q ? 0 : -4, xf: .5 });
+    land(T, c, tf, landAt);
+    if (q) return;
+    const iF = tws.indexOf(tf), loose = tws.filter(w => w !== tf);
+    loose.forEach(w => {
+      const d = tws.indexOf(w) - iF;
+      G.set(w, { x: Math.sign(d) * fsz * (.2 + .06 * Math.abs(d)), y: G.utils.random(-4, 4), rotation: G.utils.random(-2.5, 2.5), opacity: 0 });
+    });
+    T.to(loose, { opacity: 1, duration: .2, stagger: .03 }, t0 + .02);
+    T.to(loose, { x: 0, y: 0, rotation: 0, duration: .2, ease: 'power3.in' }, landAt - .03);
+    T.fromTo(h2, { y: 0 }, { y: 2, duration: .05, yoyo: true, repeat: 1, ease: 'power1.inOut', immediateRender: false }, landAt + .17);
+  },
+
+  /* small : lands enormous, then shrinks into the line that says there is no small print */
+  small(T, src, t0, q, o) {
+    const s = SC[5], lab = $('.np-s', s), lr = trect(lab), a = $('.np-a', s), b = $('.np-b', s);
+    const from = crect(src.el, 0, 5), box = $('.sc-in', s).getBoundingClientRect();
+    lab.classList.add('hold');
+    srcHide(T, src, t0);
+    reveals(T, s, t0 + (q ? .12 : .18), q, { step: .045, cap: .55 });
+    if (q || o.fromRibbon) {
+      const c = flyWord(T, 'small', from, lr, t0, .5, { faces: ['fs', 'fn'], xf: .6 });
+      land(T, c, lab, t0 + .5);
+      return;
+    }
+    const big = Math.min(vw() * .15, vh() * .24);
+    const c = clone('small', ['fs', 'fn'], big);
+    const giant = { left: box.left + box.width * .56 - c.L[0].w / 2, top: box.top + box.height * .46 - c.L[0].h / 2, height: c.L[0].h };
+    flight(T, c, place(c, c.L[0], from), place(c, c.L[0], giant), t0, .45, { noXf: true });
+    const at2 = t0 + .55, B = place(c, c.L[1], lr);
+    T.to(c.el, { x: B.x, duration: .55, ease: 'turn' }, at2);
+    T.to(c.el, { y: B.y, duration: .55, ease: 'set' }, at2);
+    T.to(c.el, { scale: B.scale, duration: .55, ease: 'turn' }, at2);
+    T.to(c.L[0].el, { opacity: 0, duration: .15 }, at2 + .38);
+    T.to(c.L[1].el, { opacity: 1, duration: .15 }, at2 + .38);
+    land(T, c, lab, at2 + .55);
+    G.set(a, { clipPath: 'inset(0% 0% 0% 100%)' }); G.set(b, { clipPath: 'inset(0% 100% 0% 0%)' });
+    T.to([a, b], { clipPath: 'inset(0% 0% 0% 0%)', duration: .3, ease: 'set' }, at2 + .5);
+  },
+
+  /* businesses. : two sorts slip off the stick, 'your' slides in, and the full stop floods the page with ink */
+  businesses(T, src, t0, q, o) {
+    const s = SC[6], yb = $('.yb', s), ybr = crect(yb, 0, 13);
+    s.classList.add('nobg');
+    const circle = D.createElement('div'); circle.className = 'flood-s'; s.prepend(circle);
+    if (q || o.fromQuote) {
+      if (src.kind === 'cover') T.to(src.el, { opacity: 0, duration: .2 }, 0);
+      const b = sealRect();
+      floodFrom(T, circle, b.cx, b.cy, b.d, t0, .55);
+      T.call(() => setNight(true), null, t0 + .32);
+      reveals(T, s, t0 + .26, true);
+      T.call(() => { s.classList.remove('nobg'); circle.remove(); }, null, t0 + .58);
+      return;
+    }
+    const S = parseFloat(getComputedStyle($('.sentence')).fontSize) * .9;
+    const el = D.createElement('div');
+    el.className = 'fl fs';
+    el.style.fontSize = S + 'px';
+    el.innerHTML = '<span class="yrw" style="position:absolute;right:100%;top:0;overflow:hidden;white-space:nowrap"><span style="display:inline-block">your&nbsp;</span></span><span>business</span><span style="display:inline-block">e</span><span style="display:inline-block">s</span><span style="display:inline-block">.</span>';
+    fly.appendChild(el);
+    const [yrw, b0, b1, b2, b3] = el.children, yr = yrw.firstElementChild;
+    const rr = D.createRange(); rr.setStartBefore(b0); rr.setEndAfter(b3);
+    const t = rr.getBoundingClientRect();
+    const c = { el, o: { x: 0, y: 0 }, L: [{ dx: t.left, dy: t.top, w: t.width, h: t.height, el }] };
+    const shift = b1.offsetWidth + b2.offsetWidth, yrW = yrw.offsetWidth;
+    const b3r = b3.getBoundingClientRect();
+    const box = $('.sc-in', s).getBoundingClientRect(), cx = box.left + box.width / 2;
+    const mid = { left: cx + (yrW - t.width + shift) / 2, top: box.top + box.height * .42 - t.height / 2, height: t.height };
+    const M = place(c, c.L[0], mid);
+    flight(T, c, place(c, c.L[0], crect(src.el, 0, 11)), M, t0, .42);
+    srcHide(T, src, t0);
+    G.set(yr, { xPercent: 100 });
+    T.to(b2, { rotation: 22, y: vh() * .7, duration: .45, ease: 'power2.in', transformOrigin: '0% 100%' }, t0 + .36);
+    T.to(b1, { rotation: -30, y: vh() * .7, duration: .45, ease: 'power2.in', transformOrigin: '100% 100%' }, t0 + .42);
+    T.to([b1, b2], { opacity: 0, duration: .1 }, t0 + .76);
+    T.to(b3, { x: -shift, duration: .25, ease: 'ui' }, t0 + .5);
+    T.to(yr, { xPercent: 0, duration: .3, ease: 'set' }, t0 + .5);
+    T.to(b3, { scale: 1.6, duration: .1, ease: 'power2.in', transformOrigin: '50% 80%' }, t0 + .72);
+    const pcx = M.x + b3r.left + b3r.width / 2 - shift, pcy = M.y + b3r.top + b3r.height * .76;
+    floodFrom(T, circle, pcx, pcy, S * .3, t0 + .8, .46);
+    T.to(b3, { opacity: 0, duration: .08 }, t0 + .82);
+    T.to(el, { color: tok('--night-ink'), duration: .2 }, t0 + .8);
+    T.call(() => setNight(true), null, t0 + 1.0);
+    yb.classList.add('hold');
+    reveals(T, s, t0 + .92, false, { step: .03, cap: .3 });
+    const ph = { left: M.x + t.left - yrW, top: M.y + t.top, height: t.height };
+    const c2 = clone('your business', ['fn'], ybr.height / Q.fn);
+    c2.el.style.color = tok('--night-ink');
+    flight(T, c2, place(c2, c2.L[0], ph), place(c2, c2.L[0], ybr), t0 + 1.0, .5);
+    G.set(c2.el, { opacity: 0 });
+    T.to(c2.el, { opacity: 1, duration: .14 }, t0 + 1.0);
+    T.to(el, { opacity: 0, duration: .14 }, t0 + 1.0);
+    land(T, c2, yb, t0 + 1.5);
+    T.call(() => { s.classList.remove('nobg'); circle.remove(); }, null, t0 + 1.28);
+  }
+};
+function floodFrom(T, el, cx, cy, d0, at, dur) {
+  const hr = el.parentElement.getBoundingClientRect(), x = cx - hr.left, y = cy - hr.top;
+  const R0 = Math.hypot(Math.max(x, hr.width - x), Math.max(y, hr.height - y)) + 2, Dm = R0 * 2;
+  G.set(el, { width: Dm, height: Dm, left: x - R0, top: y - R0, scale: d0 / Dm, transformOrigin: '50% 50%', visibility: 'hidden' });
+  T.set(el, { visibility: 'visible' }, at);
+  T.to(el, { scale: 1, duration: dur, ease: 'turn' }, at);
+}
+
+/* ---------- flow mode: phones, short screens, calm ---------- */
+let flowCur = -1, sigDone = false;
+let flowY = 0;
+function onFlowScroll() {
+  if (mode !== 'flow') return;
+  const y = scrollY;
+  if (innerWidth < 1024 && Math.abs(y - flowY) > 6) { H.classList.toggle('rib-up', y > flowY && y > 160); flowY = y; }
+  const line = vh() * .4;
+  let idx = 0;
+  SC.forEach((s, i) => { if (s.getBoundingClientRect().top <= line) idx = i; });
+  H.classList.toggle('cover-in', SC[0].getBoundingClientRect().bottom > vh() * .35);
+  if (idx !== flowCur) {
+    flowCur = idx;
+    const id = IDS[idx];
+    setCurrent(id); folio(idx);
+    Object.entries(ixRows).forEach(([w, a]) => a.classList.toggle('out', w === id));
+    if (idx && innerWidth >= 1024) {
+      placeRing(id);
+      if (calm()) G.fromTo(ring, { opacity: 0 }, { opacity: 1, duration: .15, clearProps: 'opacity' });
+      else G.fromTo(ringP, { drawSVG: '0%' }, { drawSVG: '100%', duration: .5, ease: 'power2.inOut' });
+    }
+  }
+  const b = SC[6].getBoundingClientRect();
+  setNight(!SC[6].classList.contains('pre') && b.top < vh() * .5 && b.bottom > vh() * .5);
+}
+function initFlow() {
+  mode = 'flow';
+  H.classList.remove('stage', 'on-cover', 'ixon');
+  H.classList.toggle('calm', calm());
+  flowCur = -1;
+  fitMarks(); fitSeq();
+  G.set(ringP, { drawSVG: '100%' });
+  addEventListener('scroll', onFlowScroll, { passive: true });
+  onFlowScroll();
+  if (calm()) { H.classList.remove('slipwait'); return; }
+  const phone = innerWidth < 1024, fold = vh() * .9;
+  const below = el => el.getBoundingClientRect().top > fold;
+  const handled = new Set();
+  if (phone) phoneActs(below, handled);
+  $$('.sc:not(.sc-cover) [data-r]').forEach(el => {
+    if (!visibleEl(el) || !below(el) || handled.has(el) || el.closest('.sc-biz.pre')) return;
+    const r = R[el.dataset.r];
+    r.prep(el);
+    ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => r.play(G.timeline(), el, 0, false) });
+  });
+  if (!phone) H.classList.remove('slipwait');
+}
+function phoneActs(below, handled) {
+  /* the signature on phones: the sentence cascades down into the Menu slip */
+  if (H.classList.contains('slipwait') && scrollY < 40 && !sigDone) {
+    ScrollTrigger.create({ trigger: SC[0], start: 'top top', end: 'bottom top', onUpdate: st => { if (st.progress > .3 && !sigDone) phoneSig(); } });
+  } else H.classList.remove('slipwait');
+  /* each title plate's word rises out of the slip and performs */
+  SC.slice(1).forEach((s, n) => {
+    const id = IDS[n + 1], plate = $('.plate', s), pw = $('.pw', plate);
+    if (!below(plate)) return;
+    if (id === 'businesses') s.classList.add('pre');
+    if (id === 'for') prepFor(s, handled);
+    G.set(pw, { opacity: 0 });
+    ScrollTrigger.create({ trigger: plate, start: 'top 80%', once: true, onEnter: () => plateAct(id, s, plate, pw) });
+  });
+  /* the acrostic letters fly down from the plate into the steps, the pencil line follows the scroll */
+  const mk = SC[2], steps = $('.steps', mk), seqP = $('.seq path', mk);
+  if (below(steps)) {
+    const heads = $$('.head', mk);
+    G.set(heads, { opacity: 0 });
+    ScrollTrigger.create({ trigger: steps, start: 'top 78%', once: true, onEnter: () => {
+      const pw = $('.plate .pw', mk), T = G.timeline();
+      heads.forEach((h, k) => {
+        const f = crect(pw, k, k + 1), t = trect(h), b = h.getBoundingClientRect(), sc = f.height / t.height;
+        T.fromTo(h, { opacity: 1, transformOrigin: '0 0', x: f.left - b.left - (t.left - b.left) * sc, y: f.top - b.top - (t.top - b.top) * sc, scale: sc },
+          { x: 0, y: 0, scale: 1, duration: .8, ease: 'turn', clearProps: 'transform' }, k * .08);
+      });
+    } });
+  }
+  ScrollTrigger.create({ trigger: steps, start: 'top 70%', end: 'bottom 60%', scrub: true,
+    animation: G.fromTo(seqP, { drawSVG: '0%' }, { drawSVG: '100%', ease: 'none' }) });
+  /* small shrinks into the line under the price title */
+  const sm = SC[5], lab = $('.np-s', sm);
+  if (below(lab)) {
+    lab.classList.add('hold');
+    ScrollTrigger.create({ trigger: lab, start: 'top 85%', once: true, onEnter: () => {
+      const T = G.timeline(), pw = $('.plate .pw', sm);
+      const c = flyWord(T, 'small', trect(pw), trect(lab), 0, .8, { faces: ['fs', 'fn'], xf: .62, host: sm });
+      land(T, c, lab, .8);
+    } });
+  }
+  /* websites: 'sites' waits at the end of the list */
+  handled.add($('.be-sites-end', SC[3]));
+  const se = $('.be-sites-end', SC[3]);
+  if (below(se)) { R.drop.prep(se); ScrollTrigger.create({ trigger: se, start: 'top 90%', once: true, onEnter: () => R.drop.play(G.timeline(), se, 0, false) }); }
+}
+function phoneSig() {
+  sigDone = true;
+  const T = G.timeline({ onComplete: () => { H.classList.remove('slipwait'); $$('.slip .sw').forEach(s => s.removeAttribute('style')); } });
+  IDS.slice(1).forEach((id, k) => {
+    const src = $('.wt', coverW[id]), dst = $(`.slip .sw[data-w="${id}"]`), n = id === 'businesses' ? 10 : WORD[id].length;
+    const at = .05 + k * .05;
+    const c = flyWord(T, WORD[id].slice(0, n), crect(src, 0, n), crect(dst, 0, n), at, .9, { rot: k % 2 ? 3 : -3 });
+    T.call(() => { dst.style.visibility = 'visible'; c.el.remove(); }, null, at + .9);
+  });
+  periodToSeal(T, $('.stop'), .3, .9, true);
+}
+function prepFor(s, handled) {
+  const h2 = $('.for-t', s), tws = $$('.tw', h2), tf = $('.t-for', h2);
+  handled.add(h2);
+  const fsz = parseFloat(getComputedStyle(h2).fontSize);
+  G.set(tws.filter(w => w !== tf), { opacity: 0, x: (i, w) => (tws.indexOf(w) < tws.indexOf(tf) ? -1 : 1) * fsz * .3, rotation: () => G.utils.random(-3, 3) });
+  G.set(tf, { opacity: 0, y: -fsz * .9 });
+  ScrollTrigger.create({ trigger: h2, start: 'top 85%', once: true, onEnter: () => {
+    const T = G.timeline({ onComplete: () => G.set(tws, { clearProps: 'all' }) });
+    T.to(tws.filter(w => w !== tf), { opacity: 1, duration: .25, stagger: .04 }, 0);
+    T.to(tf, { opacity: 1, duration: .1 }, .2);
+    T.to(tf, { y: 0, duration: .38, ease: 'power2.in' }, .2);
+    T.to(tws.filter(w => w !== tf), { x: 0, rotation: 0, duration: .2, ease: 'power3.in' }, .56);
+    T.fromTo(h2, { y: 0 }, { y: 2, duration: .05, yoyo: true, repeat: 1 }, .74);
+  } });
+}
+function plateAct(id, s, plate, pw) {
+  const sw = $(`.slip .sw[data-w="${id}"]`);
+  const to = trect(pw), b = pw.getBoundingClientRect();
+  const from = sw ? trect(sw) : { left: b.left, top: vh(), height: to.height * .2 };
+  const sc = from.height / to.height, rise = id === 'businesses' ? .42 : .7;
+  const T = G.timeline();
+  G.set(pw, { transformOrigin: '0 0', x: from.left - b.left - (to.left - b.left) * sc, y: from.top - b.top - (to.top - b.top) * sc, scale: sc, opacity: 1 });
+  T.to(pw, { x: 0, duration: rise, ease: 'turn' }, 0);
+  T.to(pw, { y: 0, duration: rise, ease: 'set' }, 0);
+  T.to(pw, { scale: 1, duration: rise, ease: 'turn' }, 0);
+  T.set(pw, { clearProps: 'transform' }, rise + .02);
+  if (id === 'websites') {
+    const mk = $('.pw-space', plate), web = $('.pw-web', pw), pr = plate.getBoundingClientRect();
+    T.call(() => {
+      const r = web.getBoundingClientRect();
+      Object.assign(mk.style, { left: (r.right - pr.left - 7) + 'px', top: (r.top - pr.top) + 'px', height: r.height + 'px', opacity: 1 });
+      fitMark(mk);
+      G.fromTo($('path', mk), { drawSVG: '0%' }, { drawSVG: '100%', duration: .2, ease: 'power2.out' });
+    }, null, .74);
+    T.to($('.pw-sites', pw), { x: 30, opacity: 0, duration: .45, ease: 'power2.in' }, .98);
+    T.to(mk, { opacity: 0, duration: .25 }, 1.1);
+  }
+  if (id === 'businesses' && plate.getBoundingClientRect().bottom < vh() * .25) {
+    T.progress(1);
+    s.classList.remove('pre'); onFlowScroll();
+    const T2 = G.timeline();
+    $$('[data-r]', s).filter(visibleEl).forEach((el, n) => { const r = R[el.dataset.r]; r.prep(el); r.play(T2, el, Math.min(n * .03, .2), true); });
+    return;
+  }
+  if (id === 'businesses') {
+    const yrw = $('.yrw', pw), yr = yrw.firstElementChild, ps = $('.ps', pw), pz = $('.pz', pw), pp = $('.pp', pw);
+    T.call(() => { Object.assign(yrw.style, { display: 'inline-block', overflow: 'hidden', width: '0px', verticalAlign: 'bottom', whiteSpace: 'nowrap' }); }, null, .29);
+    const at = .3, shift = () => ps.offsetWidth + pz.offsetWidth;
+    T.to(pz, { rotation: 22, y: vh() * .4, duration: .45, ease: 'power2.in', transformOrigin: '0% 100%' }, at);
+    T.to(ps, { rotation: -30, y: vh() * .4, duration: .45, ease: 'power2.in', transformOrigin: '100% 100%' }, at + .07);
+    T.to([ps, pz], { opacity: 0, duration: .12 }, at + .4);
+    T.to(pp, { x: () => -shift(), duration: .25, ease: 'ui' }, at + .2);
+    T.to(yrw, { width: () => yr.offsetWidth, duration: .3, ease: 'set' }, at + .2);
+    T.to(pp, { scale: 1.6, duration: .1, ease: 'power2.in', transformOrigin: '50% 80%' }, at + .46);
+    const circle = D.createElement('div'); circle.className = 'flood-s'; s.prepend(circle);
+    T.call(() => {
+      const r = pp.getBoundingClientRect(), F = G.timeline();
+      floodFrom(F, circle, r.left + r.width / 2, r.top + r.height * .75, 12, 0, .42);
+    }, null, at + .5);
+    T.to(pp, { opacity: 0, duration: .1 }, at + .58);
+    T.to(pw, { color: tok('--night-ink'), duration: .2 }, at + .58);
+    T.call(() => {
+      s.classList.remove('pre'); circle.remove(); onFlowScroll();
+      const T2 = G.timeline();
+      $$('[data-r]', s).filter(visibleEl).forEach((el, n) => {
+        const r = R[el.dataset.r];
+        r.prep(el);
+        if (el.getBoundingClientRect().top < vh()) r.play(T2, el, Math.min(n * .05, .3), false);
+        else ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => r.play(G.timeline(), el, 0, false) });
+      });
+    }, null, at + .9);
+  }
+}
+
+/* ---------- the intro: the sentence is inked from the first frame, the roller prints the glosses ---------- */
+function runIntro() {
+  if (!H.classList.contains('intro') || calm()) { H.classList.remove('intro', 'wait'); return; }
+  H.classList.remove('wait');
+  const cover = SC[0], gls = $$('.gl', cover), rs = $('.ring-small'), rsp = $('path', rs);
+  const extra = [$('.booking', cover), $('.hint', cover)];
+  const rects = gls.map(g => g.getBoundingClientRect()), hr = $('.sentence').getBoundingClientRect();
+  const x0 = hr.left - 18, x1 = Math.max(hr.right, ...rects.map(r => r.right)) + 18;
+  const top = hr.top - 6, bot = Math.max(hr.bottom, ...rects.map(r => r.bottom)) + 8;
+  const rl = D.createElement('i');
+  rl.className = 'roller';
+  rl.style.cssText = `left:0;top:${top}px;height:${bot - top}px;width:14px`;
+  fly.appendChild(rl);
+  const pr = { x: x0 };
+  G.set(rl, { x: x0, opacity: 0 });
+  const I = introTL = G.timeline({ onComplete: endIntro });
+  I.to(rl, { opacity: 1, duration: .1 }, .05);
+  I.to(pr, { x: x1, duration: .85, ease: 'power1.inOut', onUpdate() {
+    G.set(rl, { x: pr.x });
+    gls.forEach((g, i) => { const r = rects[i], v = Math.max(0, Math.min(1, (pr.x - r.left) / Math.max(1, r.width))); g.style.clipPath = `inset(0 ${((1 - v) * 100).toFixed(1)}% 0 0)`; });
+  } }, .1);
+  I.to(rl, { opacity: 0, duration: .15 }, .9);
+  I.set(rs, { opacity: 1 }, .72);
+  I.fromTo(rsp, { drawSVG: '0%' }, { drawSVG: '100%', duration: .6, ease: 'power2.inOut', immediateRender: false }, .72);
+  I.fromTo(extra, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .45, ease: 'set', stagger: .08, immediateRender: false }, .82);
+  const skip = () => { if (introTL) introTL.timeScale(8); };
+  endIntro.off = () => ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => removeEventListener(ev, skip));
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, skip, { passive: true }));
+}
+function endIntro() {
+  introTL = null;
+  if (endIntro.off) endIntro.off();
+  H.classList.remove('intro', 'wait');
+  $$('.roller', fly).forEach(r => r.remove());
+  const cover = SC[0];
+  [...$$('.gl', cover), $('.ring-small'), $('.ring-small path'), $('.booking', cover), $('.hint', cover)].forEach(e => e.removeAttribute('style'));
+  store.set('nd-set', '1', true);
+}
+
+/* ---------- choosing and switching modes ---------- */
+function fits() {
+  const had = H.classList.contains('stage');
+  H.classList.add('stage');
+  let ok = true;
+  for (const s of SC) {
+    const box = $('.sc-in', s).getBoundingClientRect();
+    for (const el of $$('.sc-in *', s)) {
+      if (el.closest('svg') || !visibleEl(el)) continue;
+      const r = el.getBoundingClientRect();
+      if (r.bottom > box.bottom + 2 || r.right > box.right + 2) { ok = false; break; }
+    }
+    if (!ok) break;
+  }
+  if (!had) H.classList.remove('stage');
+  return ok;
+}
+function decideMode() {
+  if (calm()) return 'flow';
+  return (vw() >= 1024 && vh() >= 700 && fits()) ? 'stage' : 'flow';
+}
+function initStage(start) {
+  mode = 'stage';
+  H.classList.add('stage'); H.classList.remove('calm', 'cover-in', 'slipwait');
+  setVH();
+  SC.forEach((s, i) => s.classList.toggle('is-on', i === start));
+  cur = want = start; visited.clear(); visited.add(IDS[start]);
+  fitMarks(); fitSeq();
+  settleIndex(start); setNight(start === 6); setPrices(start === 5);
+  H.classList.toggle('on-cover', start === 0);
+  folio(start, true);
+  window.scrollTo(0, start * vh()); lastY = scrollY;
+  addEventListener('scroll', onScroll, { passive: true });
+  if (FINE.matches) {
+    ScrollTrigger.create({ trigger: '#main', start: 'top top', end: 'bottom bottom',
+      snap: { snapTo: 1 / 6, duration: { min: .25, max: .6 }, delay: .12, ease: 'power1.inOut', directional: true, inertia: false } });
+  }
+}
+function teardown() {
+  if (TL) { TL.kill(); TL = null; }
+  if (introTL) introTL.progress(1);
+  ScrollTrigger.getAll().forEach(t => t.kill());
+  G.globalTimeline.getChildren().forEach(t => t.kill());
+  removeEventListener('scroll', onScroll); removeEventListener('scroll', onFlowScroll);
+  fly.replaceChildren(); G.set(floodC, { clearProps: 'all' });
+  SC.forEach(s => { clearScene(s); s.removeAttribute('hidden'); });
+  $$('.index [style], .slip [style], .ix-l[style]').forEach(e => e.removeAttribute('style'));
+  sealDot.removeAttribute('style');
+  $$('.hold').forEach(e => e.classList.remove('hold'));
+  H.classList.remove('stage', 'ixon', 'night', 'on-prices', 'on-cover', 'cover-in', 'slipwait');
+  finding = false; mode = null;
+}
+function currentIndex() {
+  if (mode === 'stage') return cur;
+  let idx = 0; SC.forEach((s, i) => { if (s.getBoundingClientRect().top <= vh() * .4) idx = i; });
+  return idx;
+}
+function switchMode(next, force) {
+  if (next === mode && !force) return;
+  const at = currentIndex();
+  teardown();
+  if (next === 'stage') initStage(at);
+  else { initFlow(); if (at) SC[at].scrollIntoView(); else window.scrollTo(0, 0); onFlowScroll(); }
+}
+let rT, lastW = innerWidth, resizing = false;
+addEventListener('resize', () => { resizing = true; clearTimeout(rT); rT = setTimeout(onResize, 160); });
+function onResize() {
+  requestAnimationFrame(() => requestAnimationFrame(() => { resizing = false; }));
+  const wChanged = innerWidth !== lastW; lastW = innerWidth;
+  if (mode === 'flow' && !wChanged) { fitMarks(); fitSeq(); return; }
+  if (TL) TL.progress(1);
+  if (introTL) introTL.progress(1);
+  setVH();
+  const next = decideMode();
+  if (next !== mode) { switchMode(next); return; }
+  fitMarks(); fitSeq();
+  if (mode === 'stage') { want = cur; window.scrollTo(0, cur * vh()); lastY = scrollY; if (cur) placeRing(IDS[cur]); }
+  ScrollTrigger.refresh();
+}
+const onMotionPref = () => { syncMotionButtons(); switchMode(decideMode(), true); };
+if (RM.addEventListener) RM.addEventListener('change', onMotionPref);
+
+/* ---------- links: every word, the ribbon, the seal and the index are plain anchors ---------- */
+D.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  if (a.hasAttribute('data-ph')) { e.preventDefault(); return; }
+  if (a.classList.contains('to-fr')) { e.preventDefault(); frNote(); return; }
+  if (a.classList.contains('slip')) { e.preventDefault(); openMenu(); return; }
+  const id = a.getAttribute('href').slice(1), i = IDS.indexOf(id);
+  if (i < 0) return;
+  e.preventDefault();
+  if (a.closest('#menu')) menu.close();
+  const o = { focus: true, fromQuote: a.hasAttribute('data-quote'), fromRibbon: a.classList.contains('ribbon') };
+  if (o.fromRibbon && !calm()) G.timeline().to(a, { y: 12, duration: .15, ease: 'power2.out' }).to(a, { y: 0, duration: .3, ease: 'ui', clearProps: 'transform' });
+  if (mode === 'stage') { navigate(i, o); return; }
+  SC[i].scrollIntoView();
+  focusScene(i);
+});
+D.addEventListener('focusin', e => {
+  if (mode !== 'stage' || progFocus || menu.open) return;
+  const s = e.target.closest('.sc');
+  if (!s) return;
+  const i = SC.indexOf(s);
+  if (i !== want) navigate(i, {});
+});
+$('#stage').addEventListener('scroll', e => { e.currentTarget.scrollTop = 0; e.currentTarget.scrollLeft = 0; });
+/* find in page: inactive scenes become hidden="until-found" so the browser can reveal them */
+if ('onbeforematch' in D.body) {
+  addEventListener('keydown', e => {
+    if (mode !== 'stage' || !(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'f') return;
+    finding = true;
+    SC.forEach((s, i) => { if (i !== want) s.setAttribute('hidden', 'until-found'); });
+  });
+  SC.forEach((s, i) => s.addEventListener('beforematch', () => { s.removeAttribute('hidden'); navigate(i, { quick: true }); }));
+  addEventListener('pointerdown', () => { if (finding) { finding = false; SC.forEach(s => s.removeAttribute('hidden')); } });
+}
+/* small hovers that need script */
+if (FINE.matches) $$('.notes li').forEach(li => li.addEventListener('mouseenter', () => {
+  if (calm()) return;
+  const p = $('.mk path', li);
+  G.timeline().to(p, { drawSVG: '100% 100%', duration: .28, ease: 'cubic-bezier(.55,0,.75,.2)' }).fromTo(p, { drawSVG: '0%' }, { drawSVG: '100%', duration: .45, ease: 'power2.inOut' });
+}));
+
+/* ---------- boot ---------- */
+function measureQ() { ['fs', 'fx', 'fn'].forEach(f => { const c = clone('Hg', [f], 100); Q[f] = c.L[0].h / 100 || Q[f]; c.el.remove(); }); }
+window.__ndReady = true;
+runIntro();
+let booted = false;
+function boot() {
+  if (booted) return;
+  booted = true;
+  measureQ();
+  const start = Math.max(0, IDS.indexOf(location.hash.slice(1)));
+  const m = decideMode();
+  if (m === 'stage') initStage(start);
+  else { initFlow(); if (start) { SC[start].scrollIntoView(); onFlowScroll(); } }
+  if (D.fonts) D.fonts.addEventListener('loadingdone', () => { fitMarks(); fitSeq(); if (mode === 'stage' && cur) placeRing(IDS[cur]); });
+}
+Promise.race([D.fonts ? D.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1200))]).then(boot);
+})();
+</script>
+</body>
+</html>
