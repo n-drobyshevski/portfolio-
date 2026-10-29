@@ -95,27 +95,27 @@ export const fr: Dict = {
   work: {
     kicker: "Travaux",
     title: "Mes réalisations",
-    count: "3 projets sur {n}",
-    read: "Voir comment ça s’est passé",
+    count: "Projets choisis",
+    read: "Voir en ligne",
     lookCloser: "Regarder de plus près : {client}, {label}",
     items: [
       {
-        kind: "Site de restaurant · Design et code",
-        label: "site de restaurant",
-        slot: "[Capture du site, idéalement sur un téléphone tenu en main]",
-        desc: "[Deux phrases : leur besoin, et ce que vous avez réalisé.]"
+        kind: "Appli web · Design et code",
+        label: "agenda partagé",
+        slot: "[Capture de la vue semaine]",
+        desc: "Un agenda partagé à deux, synchronisé en direct. Le privé reste privé, et les tâches se glissent dans l’agenda."
       },
       {
-        kind: "Appli web",
-        label: "réservation pour un salon de coiffure",
+        kind: "Plateforme web",
+        label: "plateforme d’évaluation des compétences",
         slot: "[Capture d’écran]",
-        desc: "Réservation en ligne pour un salon. [Ce qui a changé pour eux.]"
+        desc: "Créer des tests de compétences, les noter et lire les résultats."
       },
       {
-        kind: "Design",
-        label: "portfolio de photographe",
+        kind: "Appli Android et web",
+        label: "sauvegarde pour boîte à rythmes",
         slot: "[Capture d’écran]",
-        desc: "Portfolio pour un photographe. [Ce qui a changé pour lui.]"
+        desc: "Sauvegarde en USB les sons d’une boîte à rythmes."
       }
     ],
     dialog: {

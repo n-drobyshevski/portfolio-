@@ -35,7 +35,7 @@ In dev, `window.__leaf` exposes `state()`, `goTo(label)` and `seek(t)` for debug
 | Legal notice text | `legal` in the dictionaries, details in `site.legal` |
 | Favicon | `public/favicon.svg` |
 
-Tokens in `{braces}` inside dictionary strings (`{city}`, `{month}`, `{reply}`, `{email}`, `{year}`, `{n}`) are filled from `site.ts`. Keep the copy rules: no em or en dashes in visible text, placeholders in [brackets], plain first-person voice.
+Tokens in `{braces}` inside dictionary strings (`{city}`, `{month}`, `{reply}`, `{email}`, `{year}`) are filled from `site.ts`. Keep the copy rules: no em or en dashes in visible text, placeholders in [brackets], plain first-person voice.
 
 Adding a language means adding a dictionary, extending `Locale` and `locales` in `src/data/site.ts` and `i18n` in `astro.config.mjs`, and adding pages under `src/pages/<code>/`.
 
@@ -60,7 +60,8 @@ Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.t
 Everything in [brackets]:
 
 - Domain: `https://drobyshevski.com` is set in `astro.config.mjs` (robots.txt and the sitemap are generated from it).
-- `src/data/site.ts`: `[month]` / `[mois]`, booking URL `cal.com/[your-handle]` (the link stays hidden until it is real), languages, reply time, `[n]` projects, the three `[Client name]` projects with their quote placeholders, and the legal details (SIRET, postal address, phone). City (Lille), email, Telegram, prices and VAT line are filled in.
+- `src/data/site.ts`: `[month]` / `[mois]`, booking URL `cal.com/[your-handle]` (the link stays hidden until it is real), and the legal details (SIRET, postal address, phone). City (Lille), email, Telegram, languages, reply time, prices, VAT line and the three projects (Planner, SkillSoft, Arc) are filled in.
+- `src/i18n/en.ts` / `fr.ts`: the screenshot slots of the three projects.
 - `src/i18n/en.ts` and `src/i18n/fr.ts`: project screenshots and descriptions (`[Screenshot]`, `[Two sentences: ...]`, `[What changed for them.]`).
 - `src/i18n/fr.ts`: translate every string that starts with `[FR] `.
 - Optional: add an `og:image` (1200 by 630 PNG) in `src/layouts/Base.astro`, and real project screenshots in `src/components/Work.astro` and the dialog.

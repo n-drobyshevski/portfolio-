@@ -34,7 +34,6 @@ export function siteVars(locale: Locale) {
     month: site.bookingFrom[locale],
     reply: site.replyTime[locale],
     email: site.email,
-    n: site.projectsTotal,
     year: new Date().getFullYear(),
     publisher: site.legal.publisher,
     siret: site.legal.siret,
