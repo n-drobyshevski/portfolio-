@@ -39,7 +39,7 @@ export const site = {
     { name: 'Telegram', url: 'https://t.me/ndrobyshevski' },
   ],
   languages: { en: '[English, French]', fr: '[anglais, français]' } as L,
-  replyTime: { en: '[within one working day]', fr: '[sous un jour ouvré]' } as L,
+  replyTime: { en: 'within 72 hours', fr: 'sous 72 heures' } as L,
   /** Number of projects shown in the Work panel ("3 of [n] projects"). */
   projectsTotal: '[n]',
   /** Four price rows. Names and descriptions are in the dictionaries, keyed by id. */
