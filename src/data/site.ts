@@ -30,7 +30,7 @@ export const site = {
   email: 'nicolai.drobyshevski@pm.me',
   telegram: { handle: '@ndrobyshevski', url: 'https://t.me/ndrobyshevski' },
   /** Web3Forms access key (public by design). Get one at web3forms.com; PUBLIC_WEB3FORMS_KEY overrides it. */
-  web3formsKey: '',
+  web3formsKey: '5062091b-6b4c-42be-822a-410df0accc90',
   /** Booking page for the 15-minute call (Cal.com, Calendly, ...). */
   bookingUrl: 'https://cal.com/[your-handle]',
   /** Month projects can start, shown in the imprint and on the cover. */
