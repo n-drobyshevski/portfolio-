@@ -627,6 +627,8 @@ html.leaf-3d .op { opacity: .5; transition: opacity .6s ease; }
 html.leaf-3d.at-poster .op { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { html.leaf-3d .op { transition: none; } }
 
+/* in the 3D leaflet the open sheet reaches near the top, so the imprint sits on one line above it */
+html.leaf-3d .imprint { display: flex; align-items: baseline; gap: 14px; }
 </style>
 </head>
 <body>

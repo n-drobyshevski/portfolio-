@@ -52,15 +52,64 @@
   .open:focus-visible, .thumb a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
   .status { font-family: var(--display); font-size: 14px; font-weight: 600; color: var(--blue); }
   footer { color: var(--muted); font-size: 15px; max-width: 70ch; }
+  .sec { display: flex; flex-direction: column; gap: 20px; }
+  .sec h2.sec-h { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.05; letter-spacing: -.02em; }
+  .opts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .opt { background: var(--paper); padding: 16px 16px 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.06); min-width: 0; }
+  .opt a.shot { display: block; }
+  .opt img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
+  .opt .pair { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; align-items: start; }
+  .opt h3 { margin: 4px 0 0; font-family: var(--display); font-weight: 700; font-size: 24px; letter-spacing: -.015em; }
+  .opt p { margin: 0; font-size: 16px; }
+  .chips { display: flex; gap: 6px; }
+  .chips span { width: 28px; height: 28px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--rule); }
+  .opt .open { margin-top: auto; }
 </style>
 
 <div class="wrap">
   <header>
     <span class="label">Nick Drobyshevski · landing page · round 2</span>
-    <h1>Three ways to make the page an event</h1>
-    <p>Each one is a working prototype: open it, scroll, click the controls, try it on your phone. They share the calm paper colours, the type from A, and the same words, so you are only comparing the idea and the motion.</p>
+    <h1>The Leaflet, in three colours</h1>
+    <p>Same leaflet, same animation, same words. Only the colours change. Open each one and scroll down to the moment the leaflet lies open as a poster: that is where the colours matter most.</p>
   </header>
 
+  <section class="sec" aria-labelledby="colours-h">
+    <h2 class="sec-h" id="colours-h">Pick a colour scheme</h2>
+    <ol class="opts">
+      <li class="opt">
+        <div class="pair">
+          <a class="shot" href="r3-leaflet-riso-blue.html"><img src="img/riso-blue-poster.jpg" alt="Riso Blue: the open leaflet on a pale blue desk with the headline overprinted in sky blue and a cobalt pencil circle"></a>
+          <img src="img/riso-blue-cover.jpg" alt="Riso Blue: the folded cover">
+        </div>
+        <h3>Riso Blue</h3>
+        <div class="chips" aria-hidden="true"><span style="background:#C9D3E0"></span><span style="background:#FAFAF7"></span><span style="background:#172033"></span><span style="background:#2A52C4"></span><span style="background:#C0CDE6"></span><span style="background:#C0453A"></span></div>
+        <p>Pale blue desk, bright white paper, navy ink and a cobalt pencil, like a riso print. Crisp and trustworthy, the most modern of the three.</p>
+        <a class="open" href="r3-leaflet-riso-blue.html">Open Riso Blue</a>
+      </li>
+      <li class="opt">
+        <div class="pair">
+          <a class="shot" href="r3-leaflet-sage-apricot.html"><img src="img/sage-apricot-poster.jpg" alt="Sage and Apricot: the open leaflet on a sage desk with the headline overprinted in apricot and a green pencil circle"></a>
+          <img src="img/sage-apricot-cover.jpg" alt="Sage and Apricot: the folded cover">
+        </div>
+        <h3>Sage &amp; Apricot</h3>
+        <div class="chips" aria-hidden="true"><span style="background:#CDD7C4"></span><span style="background:#FBF7EF"></span><span style="background:#1F261E"></span><span style="background:#2E6245"></span><span style="background:#E2C5AF"></span><span style="background:#E6D3AE"></span></div>
+        <p>Soft sage desk, warm paper, forest-green ink and pencil, apricot overprint and kraft-paper tags. Warm and natural, like a good café menu.</p>
+        <a class="open" href="r3-leaflet-sage-apricot.html">Open Sage &amp; Apricot</a>
+      </li>
+      <li class="opt">
+        <div class="pair">
+          <a class="shot" href="r3-leaflet-night-desk.html"><img src="img/night-desk-poster.jpg" alt="Night Desk: the open cream leaflet on a near-black desk with an ochre pencil circle and marigold tags"></a>
+          <img src="img/night-desk-cover.jpg" alt="Night Desk: the folded cover">
+        </div>
+        <h3>Night Desk</h3>
+        <div class="chips" aria-hidden="true"><span style="background:#1E2422"></span><span style="background:#F4F0E7"></span><span style="background:#1C1B19"></span><span style="background:#84520C"></span><span style="background:#E9C772"></span><span style="background:#D1C4A1"></span></div>
+        <p>Near-black desk, cream paper, an ochre pencil, marigold tags and stamp. The leaflet glows on the dark table: the most dramatic and premium.</p>
+        <a class="open" href="r3-leaflet-night-desk.html">Open Night Desk</a>
+      </li>
+    </ol>
+  </section>
+
+  <h2 class="sec-h">Earlier in round 2</h2>
   <ol>
     <li class="proof">
       <div class="thumb">
