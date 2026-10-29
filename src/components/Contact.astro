@@ -1,0 +1,77 @@
+---
+/* O1: the reply slip, on the back of the leaflet. Posts to Web3Forms when PUBLIC_WEB3FORMS_KEY is set, else mailto. */
+import { useI18n, localePath, type Locale } from '../i18n/utils';
+import { site } from '../data/site';
+import Pencil from './Pencil.astro';
+import { replyArrow } from './marks';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d, t } = useI18n(locale);
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY?.trim() ?? '';
+const hasKey = key !== '';
+const tickPath = [
+  'M3 4C4.3 5.2 8 8.2 11 11C14 13.8 19.3 19.3 21 21',
+  'M20 3C18.7 4.3 14.7 7.5 12 10.5C9.3 13.5 5.3 19.3 4 21',
+];
+const needs = [
+  { value: 'new-website', label: d.contact.needs.newSite },
+  { value: 'fix', label: d.contact.needs.fix },
+  { value: 'app', label: d.contact.needs.app },
+];
+---
+<section class="face face--o face--p1 face--reply" id="contact" aria-labelledby="contact-h">
+  <div class="fc">
+    <p class="kicker" aria-hidden="true"><b>8</b>{d.contact.kicker}</p>
+    <h2 class="h2 h2--reply" id="contact-h">{d.contact.title}</h2>
+    <p class="reply-text">{d.contact.text}</p>
+    <div class="mail">
+      <span class="mail__addr" id="email">{site.email}</span>
+      <span class="mail__ghost" aria-hidden="true">{site.email}</span>
+      <button type="button" class="copy" aria-describedby="email">{d.contact.copy}</button>
+    </div>
+    <p class="mail-note"><Pencil mark={replyArrow} g="reply" />{d.contact.note}</p>
+    <p><a class="call" href={site.bookingUrl}>{d.contact.call}</a></p>
+    <div class="perf" aria-hidden="true"><span class="perf__line"></span><svg class="scissors" viewBox="0 0 28 24"><circle cx="5" cy="6" r="3.6"/><circle cx="5" cy="18" r="3.6"/><path d="M8 8.2 26 18.5M8 15.8 26 5.5"/></svg></div>
+    <div class="coupon-wrap">
+      <div class="coupon">
+        <form class="slip-form" action={hasKey ? 'https://api.web3forms.com/submit' : `mailto:${site.email}`} method="post" enctype={hasKey ? undefined : 'text/plain'}>
+          {hasKey && <input type="hidden" name="access_key" value={key} />}
+          {hasKey && <input type="hidden" name="subject" value={d.contact.mailSubject} />}
+          {hasKey && <input type="hidden" name="from_name" value={site.name} />}
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <p class="slip-title">{d.contact.slipTitle}</p>
+          <div class="row2">
+            <label class="fld"><span class="fld__l">{d.contact.name}</span><input name="name" autocomplete="name" required /><span class="fld__err" aria-live="polite"></span></label>
+            <label class="fld"><span class="fld__l">{d.contact.email}</span><input name="email" type="email" autocomplete="email" required /><span class="fld__err" aria-live="polite"></span></label>
+          </div>
+          <fieldset class="ticks">
+            <legend>{d.contact.needLegend}</legend>
+            {needs.map((n) => (
+              <label class="tick"><input type="checkbox" name="need" value={n.value} /><span class="tick__box"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{tickPath.map((p) => <path d={p} />)}</svg></span>{n.label}</label>
+            ))}
+          </fieldset>
+          <label class="fld fld--msg"><span class="fld__l">{d.contact.message}</span><textarea name="message" rows="3"></textarea></label>
+          <div class="send-row"><button class="btn btn--send" type="submit">{d.contact.send}</button><p class="send-note">{hasKey ? d.contact.noteForm : d.contact.noteMailto}</p></div>
+          <p class="send-status" role="status" hidden></p>
+        </form>
+        <div class="sent" hidden>
+          <p class="sent__h" tabindex="-1">{d.contact.sentHead}</p>
+          <p>{d.contact.sentText}</p>
+          <p class="sent__mock">{t(d.contact.sentReply)}</p>
+        </div>
+      </div>
+      <svg class="postmark" viewBox="0 0 128 128" aria-hidden="true" focusable="false" {...{ hidden: true }}>
+        <defs><path id="pm-ring" d="M64 64m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0"/></defs>
+        <circle cx="64" cy="64" r="60" stroke-width="2.4"/><circle cx="64" cy="64" r="55" stroke-width="1"/><circle cx="64" cy="64" r="37" stroke-width="1.2"/>
+        <text font-size="9.5" letter-spacing="2"><textPath href="#pm-ring" textLength="290" lengthAdjust="spacing">{d.contact.postmarkRing}</textPath></text>
+        <text class="pm-date" x="64" y="62" text-anchor="middle" font-size="11"></text>
+        <text x="64" y="78" text-anchor="middle" font-size="8.5" letter-spacing="1.5">{site.initials}</text>
+      </svg>
+    </div>
+    <footer class="colophon">
+      <p>{t(d.colophon.text)}</p>
+      <p class="colophon__links">{site.socials.map((s) => <a href={s.url}>{s.name}</a>)}<a href={localePath(locale, 'mentions-legales')}>{d.contents.legal}</a></p>
+    </footer>
+  </div>
+  <div class="shade" aria-hidden="true"></div>
+</section>

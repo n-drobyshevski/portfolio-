@@ -1,0 +1,102 @@
+---
+import '@fontsource-variable/schibsted-grotesk/wght.css';
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource/fragment-mono/latin-400.css';
+import '../styles/tokens.css';
+import '../styles/palette.css';
+import '../styles/furniture.css';
+import '../styles/panels.css';
+import '../styles/leaflet-3d.css';
+import '../styles/responsive.css';
+import '../styles/refinements.css';
+import { useI18n, localePath, otherLocale, type Locale } from '../i18n/utils';
+import { site, locales } from '../data/site';
+
+interface Props {
+  locale: Locale;
+  /** Page path without language, e.g. "" for the leaflet or "mentions-legales". */
+  path?: string;
+  title?: string;
+  description?: string;
+  /** "leaflet" runs the pre-paint mode script; "plain" is a flat page (legal notice, 404). */
+  variant?: 'leaflet' | 'plain';
+  noindex?: boolean;
+}
+const { locale, path = '', variant = 'leaflet', noindex = false } = Astro.props;
+const { d, t } = useI18n(locale);
+const title = Astro.props.title ?? d.meta.title;
+const description = Astro.props.description ?? t(d.meta.description);
+
+const origin = Astro.site ?? new URL('https://yourdomain.com');
+const abs = (p: string) => new URL(p, origin).href;
+const canonical = abs(localePath(locale, path));
+const alternates = locales.map((l) => ({ l, href: abs(localePath(l, path)) }));
+const hreflang: Record<string, string> = { en: 'en-GB', fr: 'fr-FR' };
+const other = otherLocale(locale);
+
+/* JSON-LD: leave out anything that is still a [placeholder] */
+const real = (v: string) => (v && !v.includes('[') ? v : undefined);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.name,
+  url: abs(localePath(locale)),
+  description,
+  email: real(site.email),
+  image: abs('/favicon.svg'),
+  areaServed: { '@type': 'Country', name: site.region },
+  address: { '@type': 'PostalAddress', addressLocality: real(site.city[locale]), addressCountry: 'FR' },
+  availableLanguage: ['English', 'French'],
+  sameAs: site.socials.map((s) => real(s.url)).filter(Boolean),
+  founder: { '@type': 'Person', name: site.name },
+};
+/* Before first paint: pick the mode (3D leaflet, strip or calm) and arm a watchdog,
+   so a script that never arrives falls back to the readable flat strip instead of a frozen fold. */
+const prePaint = `(function () {
+  var d = document.documentElement, off = false, seen = false;
+  d.classList.add('js');
+  try { off = localStorage.getItem('leaflet-motion') === 'off'; } catch (e) {}
+  try { seen = sessionStorage.getItem('leaflet-intro') === '1'; } catch (e) {}
+  if (off) d.classList.add('motion-off');
+  if (off || matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('calm');
+  else {
+    if (matchMedia('(min-width: 1100px) and (min-height: 740px)').matches) d.classList.add('leaf-3d');
+    if (!seen && !location.hash) d.classList.add('intro');
+  }
+  if (location.hash && d.classList.contains('leaf-3d')) {
+    window.__leafHash = location.hash;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+  setTimeout(function () { if (!window.__leafReady) d.classList.remove('leaf-3d', 'intro'); }, 3000);
+})();`;
+const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
+---
+<!doctype html>
+<html lang={locale}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="theme-color" content="#C9D3E0">
+{noindex && <meta name="robots" content="noindex">}
+{!noindex && <link rel="canonical" href={canonical}>}
+{!noindex && alternates.map((a) => <link rel="alternate" hreflang={hreflang[a.l]} href={a.href}>)}
+{!noindex && <link rel="alternate" hreflang="x-default" href={abs(localePath('en', path))}>}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content={site.name}>
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:locale" content={d.meta.ogLocale}>
+<meta property="og:locale:alternate" content={other === 'fr' ? 'fr_FR' : 'en_GB'}>
+<meta name="twitter:card" content="summary">
+<script is:inline type="application/ld+json" set:html={jsonLdText}></script>
+{variant === 'leaflet' && <script is:inline set:html={prePaint}></script>}
+</head>
+<body>
+<slot />
+</body>
+</html>

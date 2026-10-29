@@ -1,0 +1,11 @@
+---
+import type { Mark } from './marks';
+interface Props {
+  mark: Mark;
+  /** Draw group: marks in a group are drawn together when their fold lands (see src/scripts/leaflet.ts). */
+  g?: string;
+  class?: string;
+}
+const { mark, g, class: cls = '' } = Astro.props;
+---
+<svg class={`pencil ${cls}`.trim()} data-g={g} viewBox={mark.viewBox} preserveAspectRatio="none" aria-hidden="true" focusable="false">{mark.paths.map((d) => <path class="pm" d={d} />)}</svg>

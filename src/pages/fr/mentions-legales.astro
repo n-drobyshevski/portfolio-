@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import LegalNotice from '../../components/LegalNotice.astro';
+import { getDict } from '../../i18n/utils';
+---
+<Base locale="fr" path="mentions-legales" variant="plain" title={getDict('fr').meta.legalTitle}>
+  <LegalNotice locale="fr" />
+</Base>

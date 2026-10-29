@@ -1,0 +1,16 @@
+---
+import { getDict, type Locale } from '../i18n/utils';
+interface Props {
+  locale: Locale;
+  /** URLs of the same page in each language. */
+  hrefs: Record<Locale, string>;
+  class?: string;
+}
+const { locale, hrefs, class: cls = 'langs' } = Astro.props;
+const d = getDict(locale);
+---
+<div class={cls} role="group" aria-label={d.ui.language}>
+  <a class="lang" href={hrefs.en} hreflang="en" lang="en" data-lang-link aria-current={locale === 'en' ? 'true' : undefined}>EN</a>
+  <span aria-hidden="true">/</span>
+  <a class="lang" href={hrefs.fr} hreflang="fr" lang="fr" data-lang-link aria-current={locale === 'fr' ? 'true' : undefined}>FR</a>
+</div>

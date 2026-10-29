@@ -1,0 +1,87 @@
+/* ---------- 3D leaflet mode (wide screens with motion) ---------- */
+html.leaf-3d .wrap { padding: 0; height: 680vh; }
+html.leaf-3d .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: clip; perspective: 2400px; perspective-origin: 50% 46%; }
+html.leaf-3d .camera {
+  position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d;
+  transform: scale(1.08) rotateZ(-1.2deg) translate(calc(var(--W) / -2), calc(var(--H) / -2));
+}
+html.leaf-3d.intro .camera { transform: translate3d(18px, -4vh, 0) scale(1.145) rotateX(14deg) rotateZ(-6.5deg) translate(calc(var(--W) / -2), calc(var(--H) / -2)); }
+html.leaf-3d .sheet { position: absolute; left: 0; top: 0; width: 0; height: 0; max-width: none; margin: 0; background: none; box-shadow: none; transform-style: preserve-3d; }
+html.leaf-3d .face {
+  position: absolute; left: 0; top: 0; width: var(--W); height: var(--H); padding: 32px 34px 30px;
+  transform-origin: 0 50%; -webkit-backface-visibility: hidden; backface-visibility: hidden; box-shadow: none;
+}
+html.leaf-3d .face--p3 { width: calc(var(--W) - 3px); }
+html.leaf-3d .face--p4 { width: calc(var(--W) - 6px); }
+html.leaf-3d .face--i { overflow: clip; }
+html.leaf-3d .face--o { overflow: visible; }
+html.leaf-3d .face--valley { box-shadow: none !important; }
+html.leaf-3d .face--p3, html.leaf-3d .face--p4 { opacity: 0; }
+html.leaf-3d #contact { transform: translateZ(-.5px) translateX(calc(var(--W) / 2)) rotateY(180deg) translateX(calc(var(--W) / -2)); }
+html.leaf-3d #work { transform: translateX(var(--W)) rotateY(-176deg); }
+html.leaf-3d #cover { transform: translateX(var(--W)) rotateY(-176deg) translateZ(-.5px) translateX(calc(var(--W) / 2)) rotateY(180deg) translateX(calc(var(--W) / -2)); }
+html.leaf-3d .fc { height: 100%; display: flex; flex-direction: column; }
+html.leaf-3d .fc > * { flex-shrink: 0; }
+html.leaf-3d .face--reply .kicker { margin-bottom: 14px; }
+html.leaf-3d .h2--reply { margin-bottom: 10px; }
+html.leaf-3d .face--reply .mail { margin-top: 12px; }
+html.leaf-3d .tick { min-height: 36px; }
+html.leaf-3d .fld--msg textarea { line-height: 26px; min-height: 78px; background-size: 10px 26px; }
+html.leaf-3d .send-row { margin-top: 8px; }
+html.leaf-3d .colophon a { min-height: 30px; }
+html.leaf-3d .op-word { display: none; }
+html.leaf-3d .shade { display: block; will-change: opacity; }
+html.leaf-3d .cast {
+  display: block; position: absolute; top: -60px; bottom: -60px; right: -90px; width: 90px; z-index: 3;
+  background: rgb(var(--sh) / 1); box-shadow: 0 0 46px 34px rgb(var(--sh) / 1); opacity: 0; pointer-events: none; will-change: transform, opacity;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+html.leaf-3d .op {
+  display: block; position: absolute; top: 0; left: 0; width: var(--sheetW); height: 100%; pointer-events: none; z-index: 0;
+  font: 800 var(--opfs, calc(var(--W) * .376)) / .84 var(--sans); letter-spacing: -.035em; color: var(--overprint); white-space: nowrap;
+}
+html.leaf-3d #work .op { left: calc(var(--W) * -1); }
+html.leaf-3d #services .op { left: calc(var(--W) * -2); }
+html.leaf-3d #prices .op { left: calc(var(--W) * -3 + 3px); }
+.op__l { position: absolute; left: calc(var(--sheetW) * .035); }
+.op__l:first-child { top: 26%; }
+.op__l + .op__l { top: 50%; }
+html.leaf-3d .face--cover { box-shadow: 1px 0 0 var(--crease-dark), 2px 0 0 var(--paper-hi), 3px 0 0 var(--crease-dark), 4px 0 0 var(--paper), 5px 0 0 var(--crease); }
+html.leaf-3d .dsh { display: block; position: absolute; left: 0; top: 0; width: var(--W); height: var(--H); pointer-events: none; opacity: 0; transform-origin: 0 50%; }
+.dsh--sharp { box-shadow: 0 1px 2px rgb(var(--sh) / .5), 0 10px 22px rgb(var(--sh) / .42); }
+.dsh--soft { background: rgb(var(--sh) / .5); border-radius: 16px; box-shadow: 0 0 44px 22px rgb(var(--sh) / .5); }
+html.leaf-3d .edge { display: block; position: absolute; left: 0; top: 0; width: 3px; height: var(--H); background: var(--crease-dark); opacity: 0; transform-origin: 0 50%; }
+html.leaf-3d .poster-loop { display: block; position: absolute; left: 0; top: 0; width: 100px; height: 100px; transform-origin: 0 0; opacity: 0; pointer-events: none; }
+.poster-loop svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.poster-loop path { stroke-width: 3.2 !important; }
+html.leaf-3d .open-tab {
+  position: absolute; left: -18px; top: 50%; z-index: 5; width: 44px; height: 112px; margin-top: -56px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 0 0 4px;
+  border: 0; border-radius: 4px 0 0 4px; background: var(--paper); color: var(--ink);
+  box-shadow: -1px 0 0 var(--crease-dark), 0 -1px 0 var(--crease), 0 1px 0 var(--crease);
+  font: 600 13px/1 var(--sans); letter-spacing: .02em;
+}
+html.leaf-3d .open-tab span { writing-mode: vertical-rl; transform: rotate(180deg); }
+html.leaf-3d .open-tab svg { width: 18px; height: 18px; fill: none; stroke: var(--pencil); stroke-width: 1.6; stroke-linecap: round; }
+html.leaf-3d .open-tab:hover { color: var(--pencil-deep); }
+html.at-poster .face { cursor: zoom-in; }
+html.leaf-3d .scroll-hint { display: block; position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); font: 400 12px var(--mono); letter-spacing: .08em; color: var(--ink-soft); white-space: nowrap; }
+
+/* face layouts at fixed panel size */
+html.leaf-3d .cover__book { display: none; }
+html.leaf-3d .cover__h1 { margin-top: calc(var(--H) * .2); }
+html.leaf-3d .cover__imprint { margin-top: auto; }
+html.leaf-3d .photo { margin-top: auto; margin-bottom: auto; padding-top: 22px; }
+html.leaf-3d .w1 .print { width: 100%; }
+html.leaf-3d #prices .fine { margin-top: auto; padding-top: 12px; }
+html.leaf-3d .points li { padding: 14px 0; }
+html.leaf-3d #why .h2 { margin-bottom: 26px; }
+html.leaf-3d .slip { margin-top: auto; }
+html.leaf-3d .h2--reply { margin-top: 0; }
+html.leaf-3d .colophon { margin-top: auto; padding-top: 8px; }
+
+/* the strip: furniture and panels between phone and wide screens */
+html.strip .face--cover .fc { min-height: min(640px, calc(100svh - 230px)); display: flex; flex-direction: column; }
+html.strip .cover__imprint, html.calm .cover__imprint { margin-top: auto; padding-top: 40px; }
+html:not(.leaf-3d) .cover__book { display: block; }
+

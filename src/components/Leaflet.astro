@@ -1,0 +1,93 @@
+---
+/* The leaflet: eight faces on one sheet, plus the script that folds, turns and draws it. */
+import { useI18n, fill, type Locale } from '../i18n/utils';
+import { site } from '../data/site';
+import Desk from './Desk.astro';
+import Cover from './Cover.astro';
+import About from './About.astro';
+import Why from './Why.astro';
+import Work from './Work.astro';
+import How from './How.astro';
+import Services from './Services.astro';
+import Prices from './Prices.astro';
+import Contact from './Contact.astro';
+import LooseDialog from './LooseDialog.astro';
+import Pencil from './Pencil.astro';
+import { stripLoop } from './marks';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d, t } = useI18n(locale);
+
+/* everything the script needs in the page's language, passed as JSON (no runtime language swapping) */
+const data = {
+  lang: locale,
+  email: site.email,
+  ui: {
+    motionOn: d.ui.motionOn,
+    motionOff: d.ui.motionOff,
+    motionReduced: d.ui.motionReduced,
+    marksOn: fill(d.contents.marks, { state: d.contents.on }),
+    marksOff: fill(d.contents.marks, { state: d.contents.off }),
+  },
+  folio: d.folio.names,
+  works: site.projects.map((p, i) => ({
+    slot: d.work.items[i].slot,
+    meta: `${p.year} · ${d.work.items[i].kind}`,
+    name: p.client,
+    text: d.work.items[i].desc,
+    quote: p.quote ? { text: p.quote.text[locale], by: p.quote.by[locale] } : null,
+    url: p.url ?? '',
+  })),
+  dialog: { count: d.work.dialog.count, caseStudyNote: d.work.dialog.caseStudyNote },
+  contact: {
+    copy: d.contact.copy,
+    copied: d.contact.copied,
+    selected: d.contact.selected,
+    copiedLive: d.contact.copiedLive,
+    selectedLive: d.contact.selectedLive,
+    errName: d.contact.errName,
+    errEmail: d.contact.errEmail,
+    errEmailBad: d.contact.errEmailBad,
+    errSend: t(d.contact.errSend),
+    mailtoStatus: t(d.contact.mailtoStatus),
+    sending: d.contact.sending,
+    sentLive: d.contact.sentLive,
+    subject: d.contact.mailSubject,
+    needs: d.contact.mailNeeds,
+    months: d.contact.months,
+  },
+};
+const json = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+<Desk locale={locale} />
+
+<main class="wrap" id="top">
+  <div class="stage">
+    <div class="camera">
+      <div class="sheet">
+        <div class="dsh dsh--soft" aria-hidden="true"></div>
+        <div class="dsh dsh--sharp" aria-hidden="true"></div>
+        <Cover locale={locale} />
+        <About locale={locale} />
+        <Why locale={locale} />
+        <Work locale={locale} />
+        <How locale={locale} />
+        <Services locale={locale} />
+        <Prices locale={locale} />
+        <Contact locale={locale} />
+        <div class="edge" aria-hidden="true"></div>
+        <div class="poster-loop" aria-hidden="true"><Pencil mark={stripLoop} g="poster" /></div>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">{d.ui.scrollHint}</div>
+  </div>
+</main>
+
+<LooseDialog locale={locale} />
+
+<p class="sr-only" aria-live="polite" id="live"></p>
+
+<script is:inline type="application/json" id="leaflet-data" set:html={json}></script>
+<script>
+  import '../scripts/leaflet';
+</script>

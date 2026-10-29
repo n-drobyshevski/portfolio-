@@ -1,0 +1,66 @@
+:root {
+  /* LAYOUT CONCEPT: "LE DEPLIANT", THE LEAFLET.
+     The site is one printed 4-panel roll-fold leaflet lying on a grey desk.
+     No header and no stacked sections: scrolling opens it one crease at a time,
+     the open inside spread reads as a poster, then the whole sheet turns over
+     to show the reply slip on its back. The desk furniture (imprint, shop tags,
+     rubber stamp, folio) is the navigation. */
+  color-scheme: light;
+  --desk: #D5D5CD;
+  --desk-veil: rgb(213 213 205 / .76);
+  --paper: #F2EFE8;
+  --paper-hi: #FBFAF5;
+  --print: #E6E1D5;
+  --ink: #1E1D1B;
+  --ink-soft: #4F4B45;
+  --pencil: #38506C;
+  --pencil-deep: #2A3C56;
+  --rubric: #7E4B45;
+  --overprint: #CCC4A3;
+  --overprint-strong: #BDB38F;
+  --note: #E3DFC6;
+  --tag: #E7DFC4;
+  --string: #77736A;
+  --crease: #D5CFC3;
+  --crease-dark: #B8B1A3;
+  --sh: 30 29 27; /* shadow ink, as rgb channels of --ink */
+  --desk-ink: var(--ink);           /* inks for furniture that sits on the desk, not on paper */
+  --desk-ink-soft: var(--ink-soft);
+  --desk-pencil: var(--pencil);
+  --desk-pencil-deep: var(--pencil-deep);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .12 0 0 0 0 .11 0 0 0 0 .1 1.2 0 0 0 -.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  --grain-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.5 0 0 0 1.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+
+  --sans: "Schibsted Grotesk Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "Newsreader Variable", Georgia, "Times New Roman", serif;
+  --mono: "Fragment Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --ui: cubic-bezier(.22, 1, .36, 1);
+
+  --ts: 1;                          /* type scale, lowered by the fit check (body never under 16px) */
+  --fs: calc(17px * var(--ts));
+  --h1k: 21.4;                      /* cover h1 size in cqi, so the longest line fills the panel */
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  --sb: env(safe-area-inset-bottom, 0px);
+  --H: min(calc(100vh - 112px), 860px);
+  --W: min(calc(var(--H) * .62), calc((100vw - 176px) / 2));
+  --sheetW: calc(var(--W) * 4 - 9px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--desk); -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; scroll-padding-bottom: 128px; }
+body {
+  margin: 0; background: var(--desk); color: var(--ink);
+  font: 400 var(--fs)/1.45 var(--serif); font-optical-sizing: auto;
+  overflow-x: clip; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+p, h1, h2, h3, ol, ul, figure, blockquote, dl, dd, fieldset { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+fieldset { border: 0; min-width: 0; }
+a { color: var(--pencil); }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+

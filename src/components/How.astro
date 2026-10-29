@@ -1,0 +1,23 @@
+---
+import { useI18n, type Locale } from '../i18n/utils';
+import Pencil from './Pencil.astro';
+import { freeLoop } from './marks';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d } = useI18n(locale);
+const { s1, s2, s3, s4 } = d.how;
+---
+<!-- O4: how it works -->
+<section class="face face--o face--p4 face--valley" id="how" aria-labelledby="how-h">
+  <div class="fc">
+    <p class="kicker" aria-hidden="true"><b>5</b>{d.how.kicker}</p>
+    <h2 class="h2" id="how-h">{d.how.title}</h2>
+    <ol class="steps">
+      <li><span class="step-n" aria-hidden="true">1</span><div><h3>{s1.h}</h3><p>{s1.pre}<span class="mk mk--loop">{s1.mark}<Pencil mark={freeLoop} g="work" /></span>{s1.post}</p></div></li>
+      <li><span class="step-n" aria-hidden="true">2</span><div><h3>{s2.h}</h3><p>{s2.p}</p></div></li>
+      <li><span class="step-n" aria-hidden="true">3</span><div><h3>{s3.h}</h3><p>{s3.p}</p></div></li>
+      <li><span class="step-n" aria-hidden="true">4</span><div><h3>{s4.h}</h3><p>{s4.p}</p></div></li>
+    </ol>
+  </div>
+  <div class="shade" aria-hidden="true"></div>
+</section>

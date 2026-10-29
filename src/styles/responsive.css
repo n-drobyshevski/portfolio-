@@ -1,0 +1,128 @@
+/* ---------- phones and narrow screens ---------- */
+@media (max-width: 1099px) {
+  :root { --ts: .97; }
+  .wrap { padding: 0 var(--gr) calc(96px + var(--sb)) var(--gl); }
+  .imprint, .crops, .folio__btn, .folio__label, .colophon__sep { display: none; }
+  .controls { position: static; display: flex; justify-content: flex-end; gap: 6px; padding: 4px var(--gr) 4px var(--gl); }
+  .sheet { max-width: 640px; }
+  .face { padding: 30px 22px 36px; }
+  .h2 { font-size: 30px; }
+  .h2--reply { font-size: 38px; }
+  .cover__h1 { margin-top: 48px; }
+  .cover__acts .btn { width: 100%; }
+  .face--cover .fc { min-height: calc(100svh - 132px); display: flex; flex-direction: column; }
+  .cover__imprint { margin-top: auto; padding-top: 36px; }
+  .points .pencil--bracket, .menu .pencil--bracket { right: -16px; }
+  .row2 { grid-template-columns: 1fr; }
+  .wrow { grid-template-columns: 96px 1fr; gap: 14px; }
+  .mrow__top h3, .mrow__top .price { font-size: 17px !important; }
+  .mrow__top { gap: 6px; }
+
+  .furn {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; align-items: center; gap: 6px;
+    padding: 8px var(--gr) calc(8px + var(--sb)) var(--gl); background: var(--paper);
+    box-shadow: 0 -1px 0 var(--crease), 0 -12px 24px -16px rgb(var(--sh) / .4);
+  }
+  .tag, .stamp, .folio { position: static; transform: none; }
+  .tag { width: auto; flex: none; }
+  .tag::before, .tag__shadow { display: none; }
+  .tag__card { height: 44px; margin: 0; padding: 0 10px; clip-path: none; background: none; justify-content: center; font-size: 15px; }
+  .tag__card::before, .tag__card::after { display: none; }
+  .tag:hover .tag__card, .tag:focus-visible .tag__card { transform: none; }
+  .stamp { flex: 1; width: auto; height: 44px; border-radius: 2px; background: var(--pencil); color: var(--paper); transform: none !important; }
+  .stamp__ink, .stamp::before { display: none; }
+  .stamp__txt { width: auto; font-size: 15px; }
+  .folio { margin-left: 0; }
+  .contents { margin: 0; position: static; }
+  .contents > summary { box-shadow: inset 0 0 0 1px var(--ink-soft); background: none; padding: 0 12px; }
+  .contents__card { position: fixed; left: var(--gl); right: var(--gr); width: auto; bottom: calc(68px + var(--sb)); max-height: calc(100svh - 120px); overflow: auto; }
+  .colophon { flex-direction: column; align-items: flex-start; }
+  .colophon__links a { min-height: 44px; }
+  .loose__wrap { display: block; padding: 0; }
+  .loose__print { width: 100%; transform: none; aspect-ratio: 4 / 3; }
+  .loose__card { width: auto; margin: -24px 12px 24px; transform: none; padding: 26px 22px 20px; }
+  .loose__close { right: max(12px, env(safe-area-inset-right, 0px)); top: 12px; }
+}
+@media (min-width: 1100px) and (max-width: 1399px) {
+  html:not(.leaf-3d) .folio__label { display: none; }
+  html:not(.leaf-3d) .imprint__line { display: none; }
+}
+@media (max-width: 380px) {
+  .tag__card { padding: 0 6px; font-size: 14px; }
+  .stamp__txt { font-size: 14px; }
+}
+
+/* phone intro start pose (only while html.intro is set; a watchdog removes it if scripts never arrive) */
+html.js.intro:not(.leaf-3d) .face--cover { transform: perspective(900px) translateY(-20px) rotate(-4deg) rotateX(10deg); transform-origin: 50% 0; }
+
+/* calm proof: reduced motion or "Animations: off" */
+html.calm .pencil path { filter: none; }
+
+/* language re-ink */
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) { animation: reink 650ms cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes reink { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) { animation: fadein 180ms linear both; }
+  @keyframes fadein { from { opacity: 0; } }
+  .tag__card, .stamp, .print, .btn, .toc a .t { transition: none !important; }
+}
+html.calm ::view-transition-new(root) { animation: fadein2 180ms linear both; }
+@keyframes fadein2 { from { opacity: 0; } }
+@property --dog { syntax: "<length>"; inherits: true; initial-value: 0px; }
+/* short laptop screens: tighten spacing (not type) so the 3D leaflet still fits */
+@media (max-height: 880px) {
+  html.leaf-3d .h2--reply { font-size: 36px; margin-bottom: 6px; }
+  html.leaf-3d .face--reply .kicker { margin-bottom: 8px; }
+  html.leaf-3d .face--reply .mail { margin-top: 6px; }
+  html.leaf-3d .call { min-height: 36px; }
+  html.leaf-3d .perf { height: 18px; margin: 2px 0; }
+  html.leaf-3d .perf__line { top: 8px; }
+  html.leaf-3d .scissors { height: 18px; }
+  html.leaf-3d .fld { min-height: 40px; }
+  html.leaf-3d .fld input { min-height: 36px; padding: 6px 0 4px; }
+  html.leaf-3d .ticks { margin-top: 4px; }
+  html.leaf-3d .tick { min-height: 30px; }
+  html.leaf-3d .fld--msg .fld__l { padding-top: 6px; }
+  html.leaf-3d .fld--msg textarea { min-height: 52px; }
+  html.leaf-3d .send-row { margin-top: 4px; }
+  html.leaf-3d .colophon a { min-height: 24px; }
+  html.leaf-3d .w1 .print { aspect-ratio: 425 / 170; }
+  html.leaf-3d .w-name { margin-top: 10px; }
+  html.leaf-3d .wrow { margin-top: 8px; padding-top: 8px; }
+  html.leaf-3d .work-head { margin-bottom: 10px; }
+  html.leaf-3d .points li { padding: 10px 0; }
+  html.leaf-3d .kicker { margin-bottom: 12px; }
+  html.leaf-3d .h2 { margin-bottom: 14px; }
+  html.leaf-3d .sub { margin: -8px 0 10px; }
+  html.leaf-3d .menu li { padding: 7px 0 8px; }
+  html.leaf-3d #prices .fine { padding-top: 6px; }
+  html.leaf-3d .pto { margin-top: 0; }
+}
+/* the overprint poster line sits back while you read, and inks up fully once the leaflet lies open as a poster */
+html.leaf-3d .op { opacity: .25; transition: opacity .6s ease; }
+html.leaf-3d.at-poster .op { opacity: .6; }
+@media (prefers-reduced-motion: reduce) { html.leaf-3d .op { transition: none; } }
+
+/* in the 3D leaflet the open sheet reaches near the top, so the imprint sits on one line above it */
+html.leaf-3d .imprint { display: flex; align-items: baseline; gap: 14px; }
+
+/* furniture on the desk takes the desk inks, so a dark desk stays readable */
+.crops path { stroke: var(--desk-ink-soft); }
+.imprint__name { color: var(--desk-ink); }
+.imprint__name:hover { color: var(--desk-pencil-deep); }
+.imprint__line, .langs, .lang, .motion { color: var(--desk-ink-soft); }
+.lang[aria-current="true"], .motion b { color: var(--desk-ink); }
+.lang:hover, .motion:hover { color: var(--desk-pencil-deep); }
+.imprint :focus-visible, .controls :focus-visible { outline-color: var(--desk-pencil); }
+html.leaf-3d .scroll-hint { color: var(--desk-ink-soft); }
+@media (min-width: 1100px) {
+  .stamp { color: var(--desk-pencil); }
+  .stamp__ink circle, .stamp::before { stroke: var(--desk-pencil); border-color: var(--desk-pencil); }
+  .stamp__ink text { fill: var(--desk-pencil); }
+  .folio { color: var(--desk-ink-soft); }
+  .folio__btn, .folio__label b { color: var(--desk-ink); }
+  .folio__btn:hover { color: var(--desk-pencil-deep); }
+  .stamp:focus-visible, .folio :focus-visible, .tag:focus-visible { outline-color: var(--desk-pencil); }
+}
+

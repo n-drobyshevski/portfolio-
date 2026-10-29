@@ -1,0 +1,25 @@
+---
+import { useI18n, type Locale } from '../i18n/utils';
+import Pencil from './Pencil.astro';
+import { under } from './marks';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d } = useI18n(locale);
+const { s1, s2, s3 } = d.services;
+---
+<!-- I3: services -->
+<section class="face face--i face--p3" id="services" aria-labelledby="services-h">
+  <div class="op" aria-hidden="true"><span class="op__l">{d.cover.h1a} {d.cover.h1b}.</span></div>
+  <div class="fc">
+    <p class="kicker" aria-hidden="true"><b>6</b>{d.services.kicker}</p>
+    <h2 class="h2 h2--s" id="services-h">{d.services.title}</h2>
+    <ul class="svc">
+      <li><h3>{s1.h}</h3><p>{s1.p}</p></li>
+      <li><h3>{s2.h}</h3><p>{s2.pre}<span class="mk mk--under">{s2.mark}<Pencil mark={under} g="menu" /></span>{s2.post}</p></li>
+      <li><h3>{s3.h}</h3><p>{s3.p}</p></li>
+    </ul>
+    <p class="slip">{d.services.slip}</p>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+  <div class="shade" aria-hidden="true"></div>
+</section>

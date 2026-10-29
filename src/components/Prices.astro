@@ -1,0 +1,32 @@
+---
+import { useI18n, type Locale } from '../i18n/utils';
+import { site } from '../data/site';
+import Pencil from './Pencil.astro';
+import { bracket } from './marks';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d } = useI18n(locale);
+---
+<!-- I4: prices -->
+<section class="face face--i face--p4" id="prices" aria-labelledby="prices-h">
+  <div class="op" aria-hidden="true"><span class="op__l">{d.cover.h1a} {d.cover.h1b}.</span></div>
+  <div class="fc">
+    <p class="kicker" aria-hidden="true"><b>7</b><span>{d.prices.kicker}</span></p>
+    <h2 class="h2" id="prices-h">{d.prices.title}</h2>
+    <p class="sub">{d.prices.sub}</p>
+    <ul class="menu">
+      {site.prices.map((row) => (
+        <li>
+          <div class="mrow__top"><h3>{d.prices.rows[row.id].name}</h3><span class="lead" aria-hidden="true"></span><p class="price">{locale === 'fr' ? `${d.prices.from} ${row.amount} €` : `${d.prices.from} €${row.amount}`}</p></div>
+          <p class="mrow__d">{d.prices.rows[row.id].desc}</p>
+          {row.featured && <p class="pick">{d.prices.pick}</p>}
+          {row.featured && <Pencil mark={bracket} g="menu" class="pencil--bracket" />}
+        </li>
+      ))}
+    </ul>
+    <p class="fine">{d.prices.fine}</p>
+    <p class="vat">{site.vat[locale]}</p>
+    <a class="pto" href="#contact" aria-label={d.prices.ptoLabel}><span aria-hidden="true">{d.prices.pto}</span><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M2 5c9-4 19-2 24 9M26 14l-5.2-1M26 14l1.2-5.2"/></svg></a>
+  </div>
+  <div class="shade" aria-hidden="true"></div>
+</section>

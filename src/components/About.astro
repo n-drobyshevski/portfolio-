@@ -1,0 +1,25 @@
+---
+import { useI18n, type Locale } from '../i18n/utils';
+import { site } from '../data/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d, t } = useI18n(locale);
+---
+<!-- I1: hello -->
+<section class="face face--i face--p1" id="about" aria-labelledby="about-h">
+  <div class="op" aria-hidden="true"><span class="op__l">{d.cover.h1a} <span class="op__small">{d.cover.h1b}</span>.</span></div>
+  <div class="fc">
+    <span class="op-word" aria-hidden="true">{d.cover.h1a}</span>
+    <h2 class="kicker" id="about-h"><b aria-hidden="true">2</b><span>{d.about.kicker}</span></h2>
+    <p class="intro">{d.about.intro}</p>
+    <dl class="facts">
+      <div><dt>{d.about.based}</dt><dd>{t(site.city[locale])}, {site.region}</dd></div>
+      <div><dt>{d.about.languages}</dt><dd>{site.languages[locale]}</dd></div>
+      <div><dt>{d.about.replies}</dt><dd>{site.replyTime[locale]}</dd></div>
+      <div><dt>{d.about.worksWith}</dt><dd>{d.about.worksWithValue}</dd></div>
+    </dl>
+    <p class="about-note">{d.about.note}</p>
+  </div>
+  <div class="cast" aria-hidden="true"></div>
+  <div class="shade" aria-hidden="true"></div>
+</section>

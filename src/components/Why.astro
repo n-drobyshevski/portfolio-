@@ -1,0 +1,21 @@
+---
+import { useI18n, type Locale } from '../i18n/utils';
+import Pencil from './Pencil.astro';
+import { wave, bracket } from './marks';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { d } = useI18n(locale);
+---
+<!-- O3: why one person -->
+<section class="face face--o face--p3 face--valley" id="why" aria-labelledby="why-h">
+  <div class="fc">
+    <p class="kicker" aria-hidden="true"><b>3</b>{d.why.kicker}</p>
+    <h2 class="h2" id="why-h">{d.why.title}</h2>
+    <ol class="points">
+      <li><span class="num" aria-hidden="true">1</span><p>{d.why.p1.pre}<span class="mk mk--wave">{d.why.p1.mark}<Pencil mark={wave} g="hello" /></span>{d.why.p1.post}</p></li>
+      <li><span class="num" aria-hidden="true">2</span><p>{d.why.p2}</p></li>
+      <li><span class="num" aria-hidden="true">3</span><p>{d.why.p3}</p><Pencil mark={bracket} g="hello" class="pencil--bracket" /></li>
+    </ol>
+  </div>
+  <div class="shade" aria-hidden="true"></div>
+</section>
