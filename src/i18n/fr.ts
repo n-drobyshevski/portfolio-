@@ -7,12 +7,12 @@ import type { Dict } from './en';
 
 export const fr: Dict = {
   meta: {
-    title: "Nick Drobyshevski | Fait comme il faut. Identité visuelle, sites, applis et bots",
-    description: "Nick Drobyshevski, design et développement web pour les petites entreprises à {city}, France.",
+    title: "Nicolai Drobyshevski | Fait comme il faut. Identité visuelle, sites, applis et bots",
+    description: "Nicolai Drobyshevski, design et développement web pour les petites entreprises à {city}, France.",
     ogLocale: "fr_FR",
-    ogImageAlt: "Nick Drobyshevski : « Fait comme il faut. »",
-    legalTitle: "Mentions légales | Nick Drobyshevski",
-    notFoundTitle: "Page introuvable | Nick Drobyshevski"
+    ogImageAlt: "Nicolai Drobyshevski : « Fait comme il faut. »",
+    legalTitle: "Mentions légales | Nicolai Drobyshevski",
+    notFoundTitle: "Page introuvable | Nicolai Drobyshevski"
   },
   ui: {
     skip: "Passer l’intro",
@@ -34,7 +34,7 @@ export const fr: Dict = {
     work: "Travaux",
     prices: "Tarifs",
     quote: "Demander un devis",
-    stampRing: "NICK DROBYSHEVSKI · WEB DESIGN · FRANCE ·"
+    stampRing: "NICOLAI DROBYSHEVSKI · DESIGN WEB · LILLE ·"
   },
   folio: {
     page: "Page",
@@ -73,7 +73,7 @@ export const fr: Dict = {
   },
   about: {
     kicker: "À propos",
-    intro: "Bonjour, moi c’est Nick. Je crée des identités visuelles et je développe des sites, des applis et des bots pour les boutiques, les cafés, les artisans et tous ceux qui ont une bonne idée. Vous avez affaire à moi du premier échange à la mise en ligne, et je reste disponible ensuite.",
+    intro: "Bonjour, moi c’est Nicolai. Je crée des identités visuelles et je développe des sites, des applis et des bots pour les boutiques, les cafés, les artisans et tous ceux qui ont une bonne idée. Vous avez affaire à moi du premier échange à la mise en ligne, et je reste disponible ensuite.",
     based: "Basé à",
     languages: "Langues",
     replies: "Réponse",
@@ -249,7 +249,7 @@ export const fr: Dict = {
     postmarkRing: "RECEIVED · REÇU · RECEIVED · REÇU ·"
   },
   colophon: {
-    text: "© {year} Nick Drobyshevski. Design et développement web, {city}, France."
+    text: "© {year} Nicolai Drobyshevski. Design et développement web, {city}, France."
   },
   notFound: {
     title: "Page introuvable.",

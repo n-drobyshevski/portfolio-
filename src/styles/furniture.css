@@ -1,4 +1,4 @@
-/* ---------- pencil marks (Nick's blue pencil) ---------- */
+/* ---------- pencil marks (Nicolai's blue pencil) ---------- */
 .pencil { position: absolute; overflow: visible; pointer-events: none; transition: opacity .2s; }
 .pencil path { fill: none; stroke: var(--pencil); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 html:not(.lite) .pencil path { filter: url(#graphite); }

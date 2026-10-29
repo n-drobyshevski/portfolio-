@@ -1,4 +1,4 @@
-# Nick Drobyshevski: freelance site
+# Nicolai Drobyshevski: freelance site
 
 A bilingual (English at `/`, French at `/fr/`) static site for a freelance designer and developer who makes branding, websites, apps and bots for small businesses in France. It is "The Leaflet": one printed roll-fold leaflet on a desk that opens as you scroll (3D on wide screens, a flat strip on phones, a calm mode for reduced motion, and a readable no-JS fallback). Palette: Riso Blue. Slogan: "Made properly." / "Fait comme il faut."
 

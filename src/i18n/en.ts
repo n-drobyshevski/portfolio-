@@ -5,12 +5,12 @@
  */
 export const en = {
   meta: {
-    title: 'Nick Drobyshevski | Made properly. Branding, websites, apps and bots',
-    description: 'Nick Drobyshevski, web design and development for small businesses in {city}, France.',
+    title: 'Nicolai Drobyshevski | Made properly. Branding, websites, apps and bots',
+    description: 'Nicolai Drobyshevski, web design and development for small businesses in {city}, France.',
     ogLocale: 'en_GB',
-    ogImageAlt: 'Nick Drobyshevski: Made properly.',
-    legalTitle: 'Legal notice | Nick Drobyshevski',
-    notFoundTitle: 'Page not found | Nick Drobyshevski',
+    ogImageAlt: 'Nicolai Drobyshevski: Made properly.',
+    legalTitle: 'Legal notice | Nicolai Drobyshevski',
+    notFoundTitle: 'Page not found | Nicolai Drobyshevski',
   },
   ui: {
     skip: 'Skip intro',
@@ -32,7 +32,7 @@ export const en = {
     work: 'Work',
     prices: 'Prices',
     quote: 'Get a quote',
-    stampRing: 'NICK DROBYSHEVSKI · WEB DESIGN · FRANCE ·',
+    stampRing: 'NICOLAI DROBYSHEVSKI · WEB DESIGN · LILLE ·',
   },
   folio: {
     page: 'Page',
@@ -72,7 +72,7 @@ export const en = {
   about: {
     kicker: 'About',
     intro:
-      "Hi, I'm Nick. I design brands and build websites, apps and bots for shops, cafés, trades and anyone with a good idea. You deal with me from the first chat to launch day, and I'm still around after.",
+      "Hi, I'm Nicolai. I design brands and build websites, apps and bots for shops, cafés, trades and anyone with a good idea. You deal with me from the first chat to launch day, and I'm still around after.",
     based: 'Based in',
     languages: 'Languages',
     replies: 'Replies',
@@ -219,7 +219,7 @@ export const en = {
     postmarkRing: 'RECEIVED · REÇU · RECEIVED · REÇU ·',
   },
   colophon: {
-    text: '© {year} Nick Drobyshevski. Web design & development, {city}, France.',
+    text: '© {year} Nicolai Drobyshevski. Web design & development, {city}, France.',
   },
   notFound: {
     title: 'Page not found.',

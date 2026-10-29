@@ -22,7 +22,7 @@ export interface Project {
 }
 
 export const site = {
-  name: 'Nick Drobyshevski',
+  name: 'Nicolai Drobyshevski',
   initials: 'N.D.',
   /** Production URL lives in astro.config.mjs (site). */
   city: { en: 'Lille', fr: 'Lille' } as L,
@@ -38,8 +38,8 @@ export const site = {
   socials: [
     { name: 'Telegram', url: 'https://t.me/ndrobyshevski' },
   ],
-  languages: { en: '[English, French]', fr: '[anglais, français]' } as L,
-  replyTime: { en: 'within 72 hours', fr: 'sous 72 heures' } as L,
+  languages: { en: 'English, French, Russian', fr: 'Français, anglais, russe' } as L,
+  replyTime: { en: 'within 48 hours', fr: 'sous 48 heures' } as L,
   /** Number of projects shown in the Work panel ("3 of [n] projects"). */
   projectsTotal: '[n]',
   /** Four price rows. Names and descriptions are in the dictionaries, keyed by id. */
