@@ -54,7 +54,7 @@ export const site = {
   /** Projects for the Work panel and the loose-print dialog: the first gets the big print, the rest are rows. Kind, description and screenshot text are in the dictionaries, in the same order. */
   projects: [
     { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026', image: '/work/planner.webp' },
-    { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft.webp' },
+    { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft-app.webp' },
     { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo', image: '/work/arc.webp' },
     { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026', image: '/work/translator.svg' },
   ] as Project[],
