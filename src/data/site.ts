@@ -49,11 +49,12 @@ export const site = {
   ] as { id: PriceId; amount: L; featured?: boolean }[],
   /** Shown under the prices; keep or replace with your own VAT mention. */
   vat: { en: 'VAT not applicable, art. 293 B du CGI.', fr: 'TVA non applicable, art. 293 B du CGI.' } as L,
-  /** Three projects for the Work panel and the loose-print dialog (keep exactly three). Kind, description and screenshot text are in the dictionaries. */
+  /** Projects for the Work panel and the loose-print dialog: the first gets the big print, the rest are rows. Kind, description and screenshot text are in the dictionaries, in the same order. */
   projects: [
     { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026' },
     { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026' },
     { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo' },
+    { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026' },
   ] as Project[],
   /** Legal notice details (mentions légales). */
   legal: {

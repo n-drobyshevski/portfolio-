@@ -22,7 +22,7 @@ In dev, `window.__leaf` exposes `state()`, `goTo(label)` and `seek(t)` for debug
 
 | What | Where |
 | --- | --- |
-| Name, city, email, booking URL, socials, languages, reply time, 4 prices, 3 projects, legal details | `src/data/site.ts` |
+| Name, city, email, booking URL, socials, languages, reply time, 4 prices, projects, legal details | `src/data/site.ts` |
 | All visible text, English | `src/i18n/en.ts` (defines the shape) |
 | All visible text, French | `src/i18n/fr.ts` (same keys; lines starting with `[FR] ` are English waiting for translation) |
 | Helpers (`fill`, `useI18n`, `localePath`) | `src/i18n/utils.ts` |
@@ -60,8 +60,8 @@ Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.t
 Everything in [brackets]:
 
 - Domain: `https://drobyshevski.com` is set in `astro.config.mjs` (robots.txt and the sitemap are generated from it).
-- `src/data/site.ts`: `[month]` / `[mois]`, booking URL `cal.com/[your-handle]` (the link stays hidden until it is real), and the legal details (SIRET, postal address, phone). City (Lille), email, Telegram, languages, reply time, prices, VAT line and the three projects (Planner, SkillSoft, Arc) are filled in.
-- `src/i18n/en.ts` / `fr.ts`: the screenshot slots of the three projects.
+- `src/data/site.ts`: `[month]` / `[mois]`, booking URL `cal.com/[your-handle]` (the link stays hidden until it is real), and the legal details (SIRET, postal address, phone). City (Lille), email, Telegram, languages, reply time, prices, VAT line and the four projects (Planner, SkillSoft, Arc, Telegram translator) are filled in.
+- `src/i18n/en.ts` / `fr.ts`: the screenshot slots of the four projects.
 - `src/i18n/en.ts` and `src/i18n/fr.ts`: project screenshots and descriptions (`[Screenshot]`, `[Two sentences: ...]`, `[What changed for them.]`).
 - `src/i18n/fr.ts`: translate every string that starts with `[FR] `.
 - Optional: add an `og:image` (1200 by 630 PNG) in `src/layouts/Base.astro`, and real project screenshots in `src/components/Work.astro` and the dialog.

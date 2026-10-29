@@ -114,7 +114,13 @@ export const en = {
         kind: 'Android & web app',
         label: 'drum machine backup app',
         slot: '[Screenshot]',
-        desc: "Backs up a drum machine's sounds over USB, from a phone or a browser.",
+        desc: "Backs up a drum machine's sounds over USB, from a phone.",
+      },
+      {
+        kind: 'Telegram bot · AI',
+        label: 'Telegram translation bot',
+        slot: '[Screenshot]',
+        desc: 'Translates Russian Telegram channels into English, post by post, with AI.',
       },
     ],
     dialog: {

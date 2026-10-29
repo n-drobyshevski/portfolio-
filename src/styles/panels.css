@@ -109,6 +109,7 @@ html.strip .shade { display: block; }
 .wrow .print { aspect-ratio: 4 / 3; }
 .wrow:nth-of-type(2) .print { transform: rotate(.5deg); }
 .wrow:nth-of-type(3) .print { transform: rotate(-.4deg); }
+.wrow:nth-of-type(4) .print { transform: rotate(.3deg); }
 .wrow .print .slot { inset: 6px; font-size: 10.5px; padding: 4px; }
 .wrow .w-text { font-size: calc(16px * var(--ts)) !important; }
 

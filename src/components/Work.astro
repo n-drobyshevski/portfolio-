@@ -6,8 +6,8 @@ import { stripLoop, arrow } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
-const [p1, p2, p3] = site.projects;
-const [i1, i2, i3] = d.work.items;
+const [p1, ...rest] = site.projects;
+const i1 = d.work.items[0];
 const look = (client: string, label: string) => t(d.work.lookCloser, { client, label });
 ---
 <!-- I2: recent work -->
@@ -24,14 +24,15 @@ const look = (client: string, label: string) => t(d.work.lookCloser, { client, l
       <p class="w-text">{i1.desc}</p>
       {p1.url && <p class="read"><a href={p1.url} target="_blank" rel="noopener">{d.work.read}</a><Pencil mark={arrow} g="work" class="pencil--arrow" /></p>}
     </article>
-    <article class="wrow" id="work-2" aria-labelledby="w2-h">
-      <button type="button" class="print print--btn" data-work="1"><span class="paper" aria-hidden="true"></span><span class="slot">{i2.slot}</span><span class="sr-only">{look(p2.client[locale], i2.label)}</span><span class="dog" aria-hidden="true"></span></button>
-      <div><h3 class="w-name" id="w2-h">{p2.client[locale]}</h3><p class="meta">{p2.year} · {i2.kind}</p><p class="w-text">{i2.desc}</p></div>
-    </article>
-    <article class="wrow" id="work-3" aria-labelledby="w3-h">
-      <button type="button" class="print print--btn" data-work="2"><span class="paper" aria-hidden="true"></span><span class="slot">{i3.slot}</span><span class="sr-only">{look(p3.client[locale], i3.label)}</span><span class="dog" aria-hidden="true"></span></button>
-      <div><h3 class="w-name" id="w3-h">{p3.client[locale]}</h3><p class="meta">{p3.year} · {i3.kind}</p><p class="w-text">{i3.desc}</p></div>
-    </article>
+    {rest.map((p, k) => {
+      const n = k + 2, it = d.work.items[k + 1];
+      return (
+        <article class="wrow" id={`work-${n}`} aria-labelledby={`w${n}-h`}>
+          <button type="button" class="print print--btn" data-work={k + 1}><span class="paper" aria-hidden="true"></span><span class="slot">{it.slot}</span><span class="sr-only">{look(p.client[locale], it.label)}</span><span class="dog" aria-hidden="true"></span></button>
+          <div><h3 class="w-name" id={`w${n}-h`}>{p.client[locale]}</h3><p class="meta">{p.year} · {it.kind}</p><p class="w-text">{it.desc}</p></div>
+        </article>
+      );
+    })}
   </div>
   <div class="cast" aria-hidden="true"></div>
   <div class="shade" aria-hidden="true"></div>

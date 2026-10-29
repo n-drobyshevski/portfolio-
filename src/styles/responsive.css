@@ -87,7 +87,6 @@ html.calm ::view-transition-new(root) { animation: fadein2 180ms linear both; }
   html.leaf-3d .fld--msg textarea { min-height: 52px; }
   html.leaf-3d .send-row { margin-top: 4px; }
   html.leaf-3d .colophon a { min-height: 24px; }
-  html.leaf-3d .w1 .print { aspect-ratio: 425 / 170; }
   html.leaf-3d .w-name { margin-top: 10px; }
   html.leaf-3d .wrow { margin-top: 8px; padding-top: 8px; }
   html.leaf-3d .work-head { margin-bottom: 10px; }
@@ -126,3 +125,10 @@ html.leaf-3d .scroll-hint { color: var(--desk-ink-soft); }
   .stamp:focus-visible, .folio :focus-visible, .tag:focus-visible { outline-color: var(--desk-pencil); }
 }
 
+
+/* on shorter screens the featured project sits beside its print, so four projects fit on one panel */
+@media (max-height: 920px) {
+  html.leaf-3d .w1 { display: grid; grid-template-columns: 40% 1fr; column-gap: 18px; align-items: start; }
+  html.leaf-3d .w1 .print { grid-row: 1 / span 4; aspect-ratio: 4 / 3; }
+  html.leaf-3d .w1 .w-name { margin-top: 0; }
+}

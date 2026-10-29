@@ -116,6 +116,12 @@ export const fr: Dict = {
         label: "sauvegarde pour boîte à rythmes",
         slot: "[Capture d’écran]",
         desc: "Sauvegarde en USB les sons d’une boîte à rythmes."
+      },
+      {
+        kind: "Bot Telegram · IA",
+        label: "bot de traduction Telegram",
+        slot: "[Capture d’écran]",
+        desc: "Traduit des chaînes Telegram russes en anglais, post par post, avec l’IA."
       }
     ],
     dialog: {
