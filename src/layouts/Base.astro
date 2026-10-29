@@ -33,7 +33,7 @@ const schema = Astro.props.schema ?? (variant === 'leaflet' ? 'business' : 'webp
 const title = Astro.props.title ?? d.meta.title;
 const description = Astro.props.description ?? t(d.meta.description);
 
-const origin = Astro.site ?? new URL('https://yourdomain.com');
+const origin = Astro.site ?? new URL('https://drobyshevski.com');
 const abs = (p: string) => new URL(p, origin).href;
 const canonical = abs(localePath(locale, path));
 const alternates = locales.map((l) => ({ l, href: abs(localePath(l, path)) }));

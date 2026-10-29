@@ -1,10 +1,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Replace with the real domain before deploying. (A literal "https://[yourdomain].com" is not a valid URL,
-// so the placeholder is "yourdomain.com".) For GitHub Pages under a sub-path also set `base`.
+// Production domain. For GitHub Pages under a sub-path also set `base`.
 export default defineConfig({
-  site: 'https://yourdomain.com',
+  site: 'https://drobyshevski.com',
   output: 'static',
   trailingSlash: 'ignore',
   build: { format: 'directory' },

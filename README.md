@@ -59,7 +59,7 @@ Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.t
 
 Everything in [brackets]:
 
-- `astro.config.mjs` and `public/robots.txt`: the real domain (currently `https://yourdomain.com`).
+- Domain: `https://drobyshevski.com` is set in `astro.config.mjs` (robots.txt and the sitemap are generated from it).
 - `src/data/site.ts`: `[month]` / `[mois]`, booking URL `cal.com/[your-handle]` (the link stays hidden until it is real), languages, reply time, `[n]` projects, the three `[Client name]` projects with their quote placeholders, and the legal details (SIRET, postal address, phone). City (Lille), email, Telegram, prices and VAT line are filled in.
 - `src/i18n/en.ts` and `src/i18n/fr.ts`: project screenshots and descriptions (`[Screenshot]`, `[Two sentences: ...]`, `[What changed for them.]`).
 - `src/i18n/fr.ts`: translate every string that starts with `[FR] `.
