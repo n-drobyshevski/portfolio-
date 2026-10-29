@@ -35,8 +35,6 @@ export const site = {
   bookingFrom: { en: '[month]', fr: '[mois]' } as L,
   socials: [
     { name: 'Telegram', url: 'https://t.me/ndrobyshevski' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/[your-handle]' },
-    { name: 'GitHub', url: 'https://github.com/[your-handle]' },
   ],
   languages: { en: '[English, French]', fr: '[anglais, français]' } as L,
   replyTime: { en: '[within one working day]', fr: '[sous un jour ouvré]' } as L,

@@ -49,7 +49,7 @@ On Vercel or GitHub Actions, set it in the project's environment variables befor
 
 ## Deploy
 
-Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.txt` is generated from it). Then run `npm run build && node scripts/check-launch.mjs`: it fails while `yourdomain.com` or a `[placeholder]` inside an `href` is still in the built pages. Links whose URL still contains `[brackets]` (booking, LinkedIn, GitHub) are rendered without an `href` until you replace them in `src/data/site.ts`. `public/og.png` and `public/apple-touch-icon.png` come from `node scripts/make-social-images.mjs`; replace them with real artwork if you like. `vercel.json` sets long-lived caching for `/_astro/*`.
+Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.txt` is generated from it). Then run `npm run build && node scripts/check-launch.mjs`: it fails while `yourdomain.com` or a `[placeholder]` inside an `href` is still in the built pages. Links whose URL still contains `[brackets]` (the booking link) are rendered without an `href` until you replace them in `src/data/site.ts`. `public/og.png` and `public/apple-touch-icon.png` come from `node scripts/make-social-images.mjs`; replace them with real artwork if you like. `vercel.json` sets long-lived caching for `/_astro/*`.
 
 **Vercel:** import the repository. Framework preset Astro, build `npm run build`, output `dist`. Add `PUBLIC_WEB3FORMS_KEY` under Environment Variables. `404.html` is served automatically.
 
@@ -60,7 +60,7 @@ Before deploying, set `site` in `astro.config.mjs` to the real domain (`robots.t
 Everything in [brackets]:
 
 - `astro.config.mjs` and `public/robots.txt`: the real domain (currently `https://yourdomain.com`).
-- `src/data/site.ts`: `[city]` / `[ville]`, `[month]` / `[mois]`, email `hello@[yourdomain].com`, booking URL `cal.com/[your-handle]`, LinkedIn and GitHub `[your-handle]`, languages, reply time, `[n]` projects, four `[price]` amounts, the VAT line, the three `[Client name]` projects with their quote placeholders, and the legal details (publisher, SIRET, address, phone, publication director, host).
+- `src/data/site.ts`: `[month]` / `[mois]`, booking URL `cal.com/[your-handle]` (the link stays hidden until it is real), languages, reply time, `[n]` projects, the three `[Client name]` projects with their quote placeholders, and the legal details (SIRET, postal address, phone). City (Lille), email, Telegram, prices and VAT line are filled in.
 - `src/i18n/en.ts` and `src/i18n/fr.ts`: project screenshots and descriptions (`[Screenshot]`, `[Two sentences: ...]`, `[What changed for them.]`).
 - `src/i18n/fr.ts`: translate every string that starts with `[FR] `.
 - Optional: add an `og:image` (1200 by 630 PNG) in `src/layouts/Base.astro`, and real project screenshots in `src/components/Work.astro` and the dialog.
