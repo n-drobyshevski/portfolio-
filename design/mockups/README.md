@@ -15,6 +15,7 @@ Animated prototypes: A's print feel with calmer colours, no header bar, the stru
 
 - `r2-press.html` (Print Run): every scene is printed on a riso press and delivered onto a tabbed pile that works as the menu.
 - `r2-sentence.html` (The Sentence): the headline's words break out of the line to become the menu, and each word opens its own page.
+- `r2-leaflet.html` (The Leaflet): a roll-fold leaflet that unfolds crease by crease in 3D, lies open as a poster, then turns over to show the reply slip.
 - `index.html` is the overview page published as a claude.ai Artifact. It has no `<!doctype>` because the Artifact host wraps it.
 
 All copy in `[brackets]` is a placeholder for real content (photo, projects, prices, city).
