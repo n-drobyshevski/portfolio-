@@ -111,6 +111,10 @@ html.strip .shade { display: block; }
 .wrow:nth-of-type(3) .print { transform: rotate(-.4deg); }
 .wrow:nth-of-type(4) .print { transform: rotate(.3deg); }
 .wrow .print .slot { inset: 6px; font-size: 10.5px; padding: 4px; }
+/* a screenshot fills the print; inside .paper it keeps the dog-ear fold */
+.print .shot, .loose__print .shot { position: absolute; inset: 5px; width: calc(100% - 10px); height: calc(100% - 10px); object-fit: cover; object-position: top center; }
+.loose__print .shot { inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); }
+.shot[hidden], .slot[hidden] { display: none; }
 .wrow .w-text { font-size: calc(16px * var(--ts)) !important; }
 
 /* how */

@@ -29,6 +29,7 @@ interface WorkData {
   text: string;
   quote: { text: string; by: string } | null;
   url: string;
+  image: string;
 }
 interface Config {
   lang: string;
@@ -872,7 +873,9 @@ function init(CFG: Config) {
   const lRead = $('#loose-read'), lReadA = $<HTMLAnchorElement>('#loose-read a'), lQuote = $('#loose-quote');
   function fillLoose(i: number) {
     const w = WORKS[i];
-    $('#loose-slot').textContent = w.slot; $('#loose-meta').textContent = w.meta; $('#loose-h').textContent = w.name;
+    $('#loose-slot').textContent = w.slot;
+    const img = $<HTMLImageElement>('#loose-img');
+    img.hidden = !w.image; $('#loose-slot').hidden = !!w.image; if (w.image) img.src = w.image; else img.removeAttribute('src'); $('#loose-meta').textContent = w.meta; $('#loose-h').textContent = w.name;
     $('#loose-text').textContent = w.text;
     lQuote.hidden = !w.quote;
     if (w.quote) { $('p', lQuote).textContent = w.quote.text; $('footer', lQuote).textContent = w.quote.by; }

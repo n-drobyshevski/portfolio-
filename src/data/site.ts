@@ -19,6 +19,8 @@ export interface Project {
   quote?: { text: L; by: L };
   /** Optional link to the live project. When empty the "See it live" link stays hidden. */
   url?: string;
+  /** Optional screenshot in public/, 16:10. Without one the print shows the slot text. */
+  image?: string;
 }
 
 export const site = {
@@ -52,8 +54,8 @@ export const site = {
   /** Projects for the Work panel and the loose-print dialog: the first gets the big print, the rest are rows. Kind, description and screenshot text are in the dictionaries, in the same order. */
   projects: [
     { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026' },
-    { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026' },
-    { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo' },
+    { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft.webp' },
+    { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo', image: '/work/arc.webp' },
     { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026' },
   ] as Project[],
   /** Legal notice details (mentions légales). */

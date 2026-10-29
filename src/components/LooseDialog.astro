@@ -10,7 +10,7 @@ const i = d.work.items[0];
 ---
 <dialog class="loose" aria-labelledby="loose-h">
   <div class="loose__wrap">
-    <div class="loose__print"><span class="slot" id="loose-slot">{i.slot}</span><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i><i class="pc pc--br"></i></div>
+    <div class="loose__print"><span class="slot" id="loose-slot" hidden={!!p.image}>{i.slot}</span><img class="shot" id="loose-img" alt="" width="1200" height="750" src={p.image} hidden={!p.image} /><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i><i class="pc pc--br"></i></div>
     <div class="loose__card">
       <p class="meta" id="loose-meta">{p.year} · {i.kind}</p>
       <h2 id="loose-h">{p.client[locale]}</h2>

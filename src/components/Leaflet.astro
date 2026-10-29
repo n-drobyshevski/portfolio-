@@ -37,6 +37,7 @@ const data = {
     text: d.work.items[i].desc,
     quote: p.quote ? { text: p.quote.text[locale], by: p.quote.by[locale] } : null,
     url: p.url ?? '',
+    image: p.image ?? '',
   })),
   dialog: { count: d.work.dialog.count, caseStudyNote: d.work.dialog.caseStudyNote },
   contact: {
