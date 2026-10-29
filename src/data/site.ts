@@ -19,7 +19,7 @@ export interface Project {
   quote?: { text: L; by: L };
   /** Optional link to the live project. When empty the "See it live" link stays hidden. */
   url?: string;
-  /** Optional screenshot in public/, 16:10. Without one the print shows the slot text. */
+  /** Optional screenshot or animated SVG in public/, 16:10. Without one the print shows the slot text. */
   image?: string;
 }
 
@@ -56,7 +56,7 @@ export const site = {
     { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026' },
     { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft.webp' },
     { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo', image: '/work/arc.webp' },
-    { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026' },
+    { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026', image: '/work/translator.svg' },
   ] as Project[],
   /** Legal notice details (mentions légales). */
   legal: {
