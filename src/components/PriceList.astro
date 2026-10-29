@@ -1,0 +1,85 @@
+---
+/* The full price list, printed on a flat sheet like the legal notice. */
+import { localePath, type Locale } from '../i18n/utils';
+import { site } from '../data/site';
+import { priceGroups, terms, mediator, validFrom, type PriceItem } from '../data/pricelist';
+import PlainPage from './PlainPage.astro';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const fr = locale === 'fr';
+const nb = ' ';
+const T = fr
+  ? { title: 'Tarifs', intro: 'Prix de départ. Un devis gratuit fixe le prix exact de votre projet.', service: 'Prestation', included: 'Inclus', lead: 'Délai', price: 'Prix', from: 'dès', terms: 'Conditions', quote: 'Demander un devis', back: 'Retour au dépliant' }
+  : { title: 'Price list', intro: 'Starting rates. A free quote sets the exact price of your project.', service: 'Service', included: 'Included', lead: 'Lead time', price: 'Price', from: 'from', terms: 'Terms', quote: 'Ask for a quote', back: 'Back to the leaflet' };
+const num = (n: number) => n.toLocaleString(fr ? 'fr-FR' : 'en-GB').replace(/\s/g, nb);
+const amount = (it: PriceItem) => {
+  if (typeof it.amount === 'string') return it.amount.replace(' ', nb);
+  const v = fr ? `${num(it.amount)}${nb}€` : `€${num(it.amount)}`;
+  return it.from ? `${T.from} ${v}` : v;
+};
+---
+<PlainPage locale={locale} path="prices">
+  <div class="plist">
+    <h1 class="h2">{T.title}</h1>
+    <p class="plist__meta">{validFrom[locale]}</p>
+    <p class="plist__intro">{T.intro} {site.vat[locale]}</p>
+    {priceGroups.map((g) => (
+      <section class="plist__group" aria-labelledby={`pl-${g.id}`}>
+        <h2 id={`pl-${g.id}`}>{g.title[locale]}</h2>
+        <div class="plist__scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{T.service}</th>
+                {g.id !== 'rates' && <th scope="col">{T.included}</th>}
+                {g.lead && <th scope="col">{T.lead}</th>}
+                <th scope="col" class="num">{T.price}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {g.items.map((it) => (
+                <tr>
+                  <th scope="row">{it.name[locale]}</th>
+                  {g.id !== 'rates' && <td>{it.included[locale]}</td>}
+                  {g.lead && <td class="lead">{it.lead?.[locale]}</td>}
+                  <td class="num">{amount(it)}{it.unit && <span class="unit"> {it.unit[locale]}</span>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {g.note && <p class="plist__note">{g.note[locale]}</p>}
+      </section>
+    ))}
+    <section class="plist__group" aria-labelledby="pl-terms">
+      <h2 id="pl-terms">{T.terms}</h2>
+      <ul class="plist__terms">{terms[locale].map((t) => <li>{t}</li>)}</ul>
+      <p class="plist__note">{mediator[locale]}</p>
+    </section>
+    <p class="plist__acts">
+      <a class="btn" href={`${localePath(locale)}#contact`}>{T.quote}</a>
+      <a class="link-drawn" href={localePath(locale)}>{T.back}</a>
+    </p>
+  </div>
+</PlainPage>
+
+<style>
+  .plist { max-width: 860px; }
+  .plist__meta { margin-top: 4px; font: 400 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .plist__intro { margin-top: 14px; max-width: 62ch; color: var(--ink-soft); }
+  .plist__group { margin-top: 40px; }
+  .plist__group h2 { font: 700 22px/1.2 var(--sans); letter-spacing: -.01em; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  .plist__scroll { overflow-x: auto; }
+  table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 16px; }
+  thead th { padding: 10px 12px 8px 0; text-align: left; font: 400 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); border-bottom: 1px solid var(--crease-dark); }
+  tbody th { padding: 12px 16px 12px 0; text-align: left; vertical-align: top; font: 600 16px/1.3 var(--sans); width: 30%; }
+  tbody td { padding: 12px 16px 12px 0; vertical-align: top; line-height: 1.45; }
+  tbody tr { border-bottom: 1px solid var(--crease); }
+  .lead { white-space: nowrap; color: var(--ink-soft); }
+  .num { text-align: right; padding-right: 0; white-space: nowrap; font: 500 15px/1.4 var(--mono); font-variant-numeric: tabular-nums; }
+  thead th.num { font: 400 11px/1.3 var(--mono); text-align: right; padding-right: 0; }
+  .unit { color: var(--ink-soft); font-size: 13px; }
+  .plist__note { margin-top: 12px; font-size: 15px; color: var(--ink-soft); }
+  .plist__terms { margin: 14px 0 0; padding-left: 18px; display: grid; gap: 6px; }
+  .plist__acts { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px; }
+</style>

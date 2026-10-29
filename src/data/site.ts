@@ -25,7 +25,7 @@ export const site = {
   name: 'Nick Drobyshevski',
   initials: 'N.D.',
   /** Production URL lives in astro.config.mjs (site). */
-  city: { en: '[city]', fr: '[ville]' } as L,
+  city: { en: "Villeneuve d'Ascq", fr: "Villeneuve d'Ascq" } as L,
   region: 'France',
   email: 'hello@[yourdomain].com',
   /** Booking page for the 15-minute call (Cal.com, Calendly, ...). */
@@ -42,13 +42,13 @@ export const site = {
   projectsTotal: '[n]',
   /** Four price rows. Names and descriptions are in the dictionaries, keyed by id. */
   prices: [
-    { id: 'onePage', amount: { en: '[price]', fr: '[prix]' } },
-    { id: 'business', amount: { en: '[price]', fr: '[prix]' }, featured: true },
-    { id: 'app', amount: { en: '[price]', fr: '[prix]' } },
-    { id: 'branding', amount: { en: '[price]', fr: '[prix]' } },
+    { id: 'onePage', amount: { en: '280', fr: '280' } },
+    { id: 'business', amount: { en: '660', fr: '660' }, featured: true },
+    { id: 'app', amount: { en: '240', fr: '240' } },
+    { id: 'branding', amount: { en: '150', fr: '150' } },
   ] as { id: PriceId; amount: L; featured?: boolean }[],
   /** Shown under the prices; keep or replace with your own VAT mention. */
-  vat: { en: '[Prices TTC, or: TVA non applicable, art. 293 B du CGI]', fr: '[Prix TTC, ou : TVA non applicable, art. 293 B du CGI]' } as L,
+  vat: { en: 'VAT not applicable, art. 293 B du CGI.', fr: 'TVA non applicable, art. 293 B du CGI.' } as L,
   /** Three placeholder projects for the Work panel and the loose-print dialog (keep exactly three). */
   projects: [
     {
@@ -65,11 +65,11 @@ export const site = {
   ] as Project[],
   /** Legal notice details (mentions légales). */
   legal: {
-    publisher: '[Nick Drobyshevski, entrepreneur individuel]',
+    publisher: 'Nicolai Drobyshevski EI (entrepreneur individuel)',
     siret: '[SIRET 000 000 000 00000]',
-    address: '[Adresse, code postal, ville]',
+    address: "[Adresse], 59650 Villeneuve d'Ascq",
     phone: '[Téléphone]',
-    director: '[Directeur de la publication]',
+    director: 'Nicolai Drobyshevski',
     host: '[Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis]',
   },
 };

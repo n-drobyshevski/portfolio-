@@ -1,5 +1,5 @@
 ---
-import { useI18n, type Locale } from '../i18n/utils';
+import { useI18n, localePath, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import Pencil from './Pencil.astro';
 import { bracket } from './marks';
@@ -26,7 +26,10 @@ const { d } = useI18n(locale);
     </ul>
     <p class="fine">{d.prices.fine}</p>
     <p class="vat">{site.vat[locale]}</p>
-    <a class="pto" href="#contact" aria-label={d.prices.ptoLabel}><span aria-hidden="true">{d.prices.pto}</span><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M2 5c9-4 19-2 24 9M26 14l-5.2-1M26 14l1.2-5.2"/></svg></a>
+    <div class="price-foot">
+      <a class="full-list" href={localePath(locale, 'prices')}>{d.prices.full}</a>
+      <a class="pto" href="#contact" aria-label={d.prices.ptoLabel}><span aria-hidden="true">{d.prices.pto}</span><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M2 5c9-4 19-2 24 9M26 14l-5.2-1M26 14l1.2-5.2"/></svg></a>
+    </div>
   </div>
   <div class="shade" aria-hidden="true"></div>
 </section>

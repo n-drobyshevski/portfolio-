@@ -160,25 +160,26 @@ export const en = {
   prices: {
     kicker: 'Prices',
     title: 'Prices',
-    sub: "Fixed before I start. I don't bill by the hour.",
+    sub: 'Starting prices. A free quote fixes the exact one.',
     from: 'from',
     pick: 'Most of my clients pick this one.',
     rows: {
       onePage: {
         name: 'One-page website',
-        desc: 'Your business on one page: what you do, photos, prices, opening hours, a contact form and a map.',
+        desc: 'One page on a ready-made design, with your text, your photos and a contact form.',
       },
       business: {
         name: 'Business website',
-        desc: 'Up to six pages you can edit yourself, a booking or quote form, and Google set up properly so people find you.',
+        desc: 'Three to five pages on a proven base, with a contact form, a map and your legal notice.',
       },
       app: {
         name: 'App or bot',
-        desc: 'Bookings, accounts, payments, or a bot for the repetitive bits. Fixed price after a first call.',
+        desc: 'Telegram bots, bookings, automations and simple web tools for the repetitive bits.',
       },
-      branding: { name: 'Branding', desc: 'Logo, colours and fonts, ready for print and screens.' },
+      branding: { name: 'Branding', desc: 'A logo with two proposals and SVG and PNG files, or a small brand guide.' },
     },
-    fine: 'Every price includes two rounds of changes, a month of help after launch, and full ownership of everything I make for you.',
+    fine: 'Two rounds of changes included. 30% deposit on order, the rest on delivery. Everything is yours once paid.',
+    full: 'Full price list',
     pto: 'P.T.O.',
     ptoLabel: 'Please turn over: write to me',
   },
@@ -245,6 +246,7 @@ export const en = {
         h: 'Cookies',
         p: ['This site does not set tracking cookies. The leaflet remembers two small preferences in your browser (animations on or off, and that you have seen the intro).'],
       },
+      { h: 'Consumer mediation', p: ['Private clients can refer a dispute free of charge to the consumer mediator CM2C, 49 rue de Ponthieu, 75008 Paris, www.cm2c.net.'] }
     ],
   },
 };

@@ -170,28 +170,29 @@ export const fr: Dict = {
   prices: {
     kicker: "Tarifs",
     title: "Tarifs",
-    sub: "Fixés avant de commencer. Je ne facture pas à l’heure.",
+    sub: "Prix de départ. Le devis gratuit fixe le prix exact.",
     from: "dès",
     pick: "Le choix de la plupart de mes clients.",
     rows: {
       onePage: {
         name: "Site d’une page",
-        desc: "Votre activité sur une page : services, photos, tarifs, horaires, contact et plan."
+        desc: "Une page sur un modèle prêt, avec vos textes, vos photos et un formulaire."
       },
       business: {
         name: "Site vitrine",
-        desc: "Jusqu’à six pages que vous modifiez, un formulaire de devis ou de réservation, et une fiche Google soignée."
+        desc: "3 à 5 pages sur une base éprouvée, avec formulaire, plan et mentions légales."
       },
       app: {
         name: "Appli ou bot",
-        desc: "Réservations, comptes, paiements ou bot pour les tâches répétitives. Prix fixe après un premier appel."
+        desc: "Bots Telegram, réservations, automatisations et outils web pour les tâches répétitives."
       },
       branding: {
         name: "Identité visuelle",
-        desc: "Logo, couleurs et polices, prêts pour l’impression et les écrans."
+        desc: "Logo avec deux propositions et fichiers SVG et PNG, ou mini charte graphique."
       }
     },
-    fine: "Chaque tarif comprend deux séries de retouches, un mois d’accompagnement après la mise en ligne et la pleine propriété de tout ce que je crée pour vous.",
+    fine: "Deux séries de modifications incluses. Acompte de 30 % à la commande, solde à la livraison. Tout vous appartient une fois payé.",
+    full: "Grille tarifaire complète",
     pto: "T.S.V.P.",
     ptoLabel: "Tournez s’il vous plaît : écrivez-moi"
   },
@@ -299,7 +300,8 @@ export const fr: Dict = {
         p: [
           "Ce site ne dépose aucun cookie de suivi. Le dépliant enregistre seulement deux préférences dans votre navigateur : l’activation ou non des animations, et le fait que vous ayez déjà vu l’introduction."
         ]
-      }
+      },
+      { h: "Médiation de la consommation", p: ["Les clients particuliers peuvent recourir gratuitement au médiateur de la consommation : CM2C, 49 rue de Ponthieu, 75008 Paris, www.cm2c.net."] }
     ]
   }
 };
