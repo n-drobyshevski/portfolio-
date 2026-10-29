@@ -663,6 +663,10 @@ html.leaf-3d .op { z-index: 2; mix-blend-mode: multiply; }
 .cover__place { text-wrap: pretty; }
 html.leaf-3d .op { --opfs: calc(var(--W) * .5); }
 #about .op-word { --k: 36; } #work .op-word { --k: 22.3; }
+
+/* lockup: "Made" is scaled up so both lines fill the panel width */
+.cover__h1 .l:first-child { font-size: calc(var(--h1a, 1.6) * 1em); line-height: .86; }
+html.leaf-3d .cover__h1 { margin-top: calc(var(--H) * .14); }
 </style>
 </head>
 <body>
@@ -1738,6 +1742,7 @@ html.leaf-3d .op { --opfs: calc(var(--W) * .5); }
     lang = l; d.lang = l;
     $$('[data-fr]').forEach(el => { if (el.dataset.en === undefined) el.dataset.en = el.textContent; el.textContent = l === 'fr' ? el.dataset.fr : el.dataset.en; });
     d.style.setProperty('--h1k', l === 'fr' ? 14.3 : 21.4);
+    d.style.setProperty('--h1a', l === 'fr' ? 3.65 : 1.6);
     langBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
     const f = FOLIO[folioCur || 'cover']; folioName.textContent = l === 'fr' ? f[2] : f[1];
     motionLabel();
