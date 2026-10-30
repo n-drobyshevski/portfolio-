@@ -45,7 +45,10 @@ html:not(.js) .skip, html.calm .skip { display: none; }
 html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 
 /* shop tags on strings: one-tap Work and Prices */
-.tag { position: fixed; top: 0; z-index: 21; display: block; width: 62px; text-decoration: none; color: var(--ink); transform-origin: 50% 0; }
+.tag {
+  position: fixed; top: 0; z-index: 21; display: block; width: 62px; text-decoration: none; color: var(--ink); transform-origin: 50% 0;
+  --tag-cut: polygon(22% 0, 78% 0, 100% 16%, 100% 100%, 0 100%, 0 16%); /* the card's outline, which its shadow shares */
+}
 .tag--work { right: 106px; }
 .tag--prices { right: 34px; }
 .tag::before { content: ""; display: block; width: 1px; margin: 0 auto; background: var(--string); height: var(--str, 46px); }
@@ -53,13 +56,13 @@ html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 .tag__card {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   height: 92px; padding: 0 4px 14px; margin-top: -8px;
-  background: var(--tag); clip-path: polygon(22% 0, 78% 0, 100% 16%, 100% 100%, 0 100%, 0 16%);
+  background: var(--tag); clip-path: var(--tag-cut);
   font: 600 14px/1 var(--sans); letter-spacing: -.005em;
   transition: transform .35s var(--ui);
 }
 .tag__card::before { content: ""; position: absolute; top: 10px; left: 50%; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: var(--desk); box-shadow: 0 0 0 2.5px var(--paper-hi); }
 .tag__card::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 34px; border-top: 1px dashed var(--crease-dark); }
-.tag__shadow { position: absolute; left: 4px; right: -4px; top: calc(var(--str, 46px) - 2px); height: 92px; background: rgb(var(--sh) / .14); border-radius: 3px; z-index: -1; }
+.tag__shadow { position: absolute; left: 4px; right: -4px; top: calc(var(--str, 46px) - 2px); height: 92px; background: rgb(var(--sh) / .14); clip-path: var(--tag-cut); z-index: -1; }
 .tag:hover .tag__card, .tag:focus-visible .tag__card, .tag[aria-current="page"] .tag__card { transform: translateY(6px); }
 .tag:focus-visible { outline-offset: -2px; }
 
