@@ -55,7 +55,7 @@ export const site = {
   vat: { en: 'VAT not applicable, art. 293 B du CGI.', fr: 'TVA non applicable, art. 293 B du CGI.' } as L,
   /** Projects for the Work panel and the loose-print dialog: the first gets the big print, the rest are rows. Kind, descriptions and screenshot text are in the dictionaries, in the same order; pop-up screenshots are in gallery.ts. */
   projects: [
-    { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026', image: '/work/planner-phones.webp' },
+    { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026', image: '/work/planner-tasks.webp' },
     { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft-results.webp' },
     { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo', image: '/work/arc-device.webp' },
     { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026', image: '/work/translator.svg' },

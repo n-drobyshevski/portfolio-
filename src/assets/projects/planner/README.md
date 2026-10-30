@@ -1,4 +1,4 @@
-00-cover-phones.webp: Cover: the week and the tasks on two phones
+00-cover-tasks.webp: Cover: a task dragged from the tasks rail onto the week
 01-week.webp: Week view with shared and personal events, recurring standups and a partner overlay
 02-week-dark.webp: Week view in the dark theme
 03-month.webp: Month view with recurring events across the month
