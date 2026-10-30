@@ -499,7 +499,7 @@ function init(CFG: Config) {
 
   /* ---------- gestures: pull the paper sideways to turn the leaflet ----------
      A sideways swipe on a trackpad, or a drag with the mouse or a finger, moves through the same scroll as the wheel,
-     so the paper follows the hand; pulling to the left opens it further, as in a book. Letting go of a drag turns to
+     so the paper follows the hand; pulling to the right opens it, the way the cover's free edge lifts and swings over. Letting go of a drag turns to
      the next page that way (or back, after a nudge); a swipe settles through the scroll's own snap. */
   const pxPerDx = () => innerHeight * 1.15 / (S.W || 500); // a pull across one panel is about one turn
   const maxY = () => document.documentElement.scrollHeight - innerHeight;
@@ -509,7 +509,7 @@ function init(CFG: Config) {
     const dx = e.deltaX * unit;
     if (Math.abs(dx) <= Math.abs(e.deltaY * unit)) return;
     e.preventDefault(); // and so no sideways overscroll or browser back-swipe either
-    window.scrollTo(0, clamp(0, maxY(), scrollY + dx * pxPerDx()));
+    window.scrollTo(0, clamp(0, maxY(), scrollY - dx * pxPerDx()));
   }, { passive: false });
 
   interface Drag { id: number; x: number; y: number; y0: number; on: boolean; lx: number; lt: number; vx: number }
@@ -534,7 +534,7 @@ function init(CFG: Config) {
     const dt = e.timeStamp - drag.lt;
     if (dt > 0) drag.vx = .7 * drag.vx + .3 * (e.clientX - drag.lx) / dt;
     drag.lx = e.clientX; drag.lt = e.timeStamp;
-    window.scrollTo(0, clamp(0, maxY(), drag.y0 - dx * pxPerDx()));
+    window.scrollTo(0, clamp(0, maxY(), drag.y0 + dx * pxPerDx()));
   });
   function endDrag(e: PointerEvent) {
     if (!drag || e.pointerId !== drag.id) return;
@@ -544,7 +544,7 @@ function init(CFG: Config) {
     // the click that ends a drag is not a click (on the poster it would zoom in)
     dragClick = true; setTimeout(() => { dragClick = false; }, 0);
     const dx = e.clientX - g.x, flick = e.timeStamp - g.lt < 80 && Math.abs(g.vx) > .45;
-    const dir = flick ? -Math.sign(g.vx) : Math.abs(dx) > 40 ? -Math.sign(dx) : 0;
+    const dir = flick ? Math.sign(g.vx) : Math.abs(dx) > 40 ? Math.sign(dx) : 0;
     const t = (scrollY - st.start) / (st.end - st.start) * T;
     let to: LabelName = currentLabel();
     if (dir > 0) to = ORDER.find(n => LABELS[n] > t + 1) || 'reply';
