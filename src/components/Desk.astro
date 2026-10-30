@@ -77,6 +77,7 @@ const toc = [
         <ol class="toc">
           {toc.map((i) => <li><a href={i.href}><span class="t">{i.label}</span><span class="lead" aria-hidden="true"></span><span class="n">{i.n}</span></a></li>)}
         </ol>
+        <a class="contents__quote" href={`${home}#contact`}>{d.nav.quoteShort}</a>
         <div class="contents__opts">
           <button type="button" class="marks-toggle" aria-pressed="true">{fill(d.contents.marks, { state: d.contents.on })}</button>
           {site.socials.map((s) => <a href={liveUrl(s.url)}>{s.name}</a>)}

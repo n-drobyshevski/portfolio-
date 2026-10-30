@@ -42,19 +42,18 @@
   .contents > summary svg { width: 16px; height: 12px; }
   .contents[open] > summary { background: var(--ink); color: var(--paper); }
   .furn__here {
-    order: 2; flex: 1; min-width: 0; padding: 0 10px var(--bar-pad); box-shadow: inset 1px 0 0 var(--crease);
+    order: 2; flex: 1; min-width: 0; padding: 0 var(--gr) var(--bar-pad) 10px; box-shadow: inset 1px 0 0 var(--crease);
     display: block; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     font: 400 11.5px/var(--bar) var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft);
   }
-  .stamp {
-    order: 3; flex: none; width: auto; height: auto; padding: 0 calc(var(--gr) + 2px) var(--bar-pad) 16px;
-    display: flex; align-items: center; border-radius: 0; border-left: 1.5px dashed var(--ink-soft);
-    background: var(--note); color: var(--pencil-deep); transform: none !important;
+  /* the free quote lives in the Contents card, as a tear-off stub */
+  .stamp { display: none; }
+  .contents__quote {
+    display: flex; align-items: center; min-height: 52px; margin: 14px -22px 0; padding: 0 22px;
+    border-top: 1.5px dashed var(--ink-soft); background: var(--note); color: var(--pencil-deep); text-decoration: none;
+    font: italic 500 19px/1 var(--serif);
   }
-  .stamp:active { background: var(--overprint); }
-  .stamp__ink, .stamp::before, .stamp__txt { display: none; }
-  .stamp__short { display: block; position: relative; white-space: nowrap; font: italic 500 17px/1 var(--serif); }
-  .stamp__short::after { content: "\00a0→"; font: 700 17px/1 var(--sans); font-style: normal; }
+  .contents__quote::after { content: "\00a0→"; font: 700 19px/1 var(--sans); font-style: normal; }
   .contents__card { position: fixed; left: var(--gl); right: var(--gr); width: auto; bottom: calc(var(--bar) + var(--bar-pad) + 12px); max-height: calc(100svh - 112px); overflow: auto; }
   .colophon { flex-direction: column; align-items: flex-start; }
   .colophon__links a { min-height: 44px; }
@@ -72,10 +71,7 @@
   html:not(.leaf-3d) .folio__label { display: none; }
   html:not(.leaf-3d) .imprint__line { display: none; }
 }
-@media (max-width: 380px) {
-  .furn__here { display: none; }
-  .stamp { margin-left: auto; }
-}
+
 
 /* phone intro start pose (only while html.intro is set; a watchdog removes it if scripts never arrive) */
 html.js.intro:not(.leaf-3d) .face--cover { transform: perspective(900px) translateY(-20px) rotate(-4deg) rotateX(10deg); transform-origin: 50% 0; }
