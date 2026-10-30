@@ -1,21 +1,27 @@
 ---
-/* Desk furniture: the controls and shortcuts that sit around the leaflet on the desk. */
+/* Desk furniture: the controls and shortcuts that sit around the leaflet on the desk.
+   On a loose insert (the full price list) the same furniture leads back into the leaflet instead of turning its pages. */
 import { useI18n, localePath, fill, liveUrl, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import LangSwitch from './LangSwitch.astro';
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+interface Props {
+  locale: Locale;
+  /** Page path of a loose insert, e.g. "prices"; leave out on the leaflet itself. */
+  insert?: string;
+}
+const { locale, insert } = Astro.props;
 const { d, t } = useI18n(locale);
-const hrefs = { en: localePath('en'), fr: localePath('fr') };
+const home = insert ? localePath(locale) : '';
+const hrefs = { en: localePath('en', insert), fr: localePath('fr', insert) };
 const toc = [
-  { href: '#about', label: d.contents.about, n: 2 },
-  { href: '#work', label: d.contents.work, n: 4 },
-  { href: '#services', label: d.contents.services, n: 6 },
-  { href: '#prices', label: d.contents.prices, n: 7 },
-  { href: '#contact', label: d.contents.contact, n: 8 },
+  { href: `${home}#about`, label: d.contents.about, n: 2 },
+  { href: `${home}#work`, label: d.contents.work, n: 4 },
+  { href: `${home}#services`, label: d.contents.services, n: 6 },
+  { href: `${home}#prices`, label: d.contents.prices, n: 7 },
+  { href: `${home}#contact`, label: d.contents.contact, n: 8 },
 ];
 ---
-<button class="skip" type="button" hidden>{d.ui.skip}</button>
+{!insert && <button class="skip" type="button" hidden>{d.ui.skip}</button>}
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <filter id="graphite" x="-10%" y="-30%" width="120%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.7" xChannelSelector="R" yChannelSelector="G"/></filter>
@@ -29,19 +35,19 @@ const toc = [
 </div>
 
 <div class="imprint">
-  <a class="imprint__name" href="#cover">{site.name}</a>
+  <a class="imprint__name" href={insert ? home : '#cover'}>{site.name}</a>
   <p class="imprint__line">{t(d.imprintLine)}</p>
 </div>
 
 <div class="controls">
   <LangSwitch locale={locale} hrefs={hrefs} />
-  <button type="button" class="motion" aria-pressed="true"><span>{d.ui.motionLabel}</span>&nbsp;<b>{d.ui.motionOn}</b></button>
+  {!insert && <button type="button" class="motion" aria-pressed="true"><span>{d.ui.motionLabel}</span>&nbsp;<b>{d.ui.motionOn}</b></button>}
 </div>
 
 <nav class="furn" aria-label={d.ui.shortcuts}>
-  <a class="tag tag--work" href="#work"><span class="tag__shadow" aria-hidden="true"></span><span class="tag__card">{d.nav.work}</span></a>
-  <a class="tag tag--prices" href="#prices"><span class="tag__shadow" aria-hidden="true"></span><span class="tag__card">{d.nav.prices}</span></a>
-  <a class="stamp" href="#contact">
+  <a class="tag tag--work" href={`${home}#work`}><span class="tag__shadow" aria-hidden="true"></span><span class="tag__card">{d.nav.work}</span></a>
+  <a class="tag tag--prices" href={insert === 'prices' ? '#top' : `${home}#prices`} aria-current={insert === 'prices' ? 'page' : undefined}><span class="tag__shadow" aria-hidden="true"></span><span class="tag__card">{d.nav.prices}</span></a>
+  <a class="stamp" href={`${home}#contact`}>
     <svg class="stamp__ink" viewBox="0 0 108 108" aria-hidden="true" focusable="false">
       <defs><path id="stamp-ring" d="M54 54m-40.5 0a40.5 40.5 0 1 1 81 0a40.5 40.5 0 1 1-81 0"/></defs>
       <circle cx="54" cy="54" r="51" stroke-width="2.4"/><circle cx="54" cy="54" r="47" stroke-width="1"/><circle cx="54" cy="54" r="32" stroke-width="1.2"/>
@@ -50,9 +56,15 @@ const toc = [
     <span class="stamp__txt">{d.nav.quote}</span>
   </a>
   <div class="folio">
-    <button class="folio__btn folio__prev" type="button" aria-label={d.ui.prevPage}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5"/></svg></button>
-    <p class="folio__label"><span class="folio__pg"><span>{d.folio.page}</span> <b class="odo"><span class="odo__d">1</span></b> <span>{d.folio.of}</span> · </span><b class="folio__name">{d.folio.names.cover}</b></p>
-    <button class="folio__btn folio__next" type="button" aria-label={d.ui.nextPage}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="m5 2 5 5-5 5"/></svg></button>
+    {insert ? (
+      <a class="folio__back" href={`${home}#${insert}`} aria-label={d.ui.backToLeaflet}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5"/></svg><span>{d.ui.leaflet}</span></a>
+    ) : (
+      <>
+        <button class="folio__btn folio__prev" type="button" aria-label={d.ui.prevPage}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5"/></svg></button>
+        <p class="folio__label"><span class="folio__pg"><span>{d.folio.page}</span> <b class="odo"><span class="odo__d">1</span></b> <span>{d.folio.of}</span> · </span><b class="folio__name">{d.folio.names.cover}</b></p>
+        <button class="folio__btn folio__next" type="button" aria-label={d.ui.nextPage}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="m5 2 5 5-5 5"/></svg></button>
+      </>
+    )}
     <details class="contents">
       <summary><svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 1h14M0 5h14M0 9h9"/></svg><span>{d.contents.title}</span></summary>
       <div class="contents__card">

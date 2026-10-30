@@ -43,6 +43,10 @@ html[lang="fr"] { --h1k: 14.3; --h1a: 3.65; }
 .plain-top.plain--wide, .plain--wide .sheet { max-width: 760px; }
 .plain--wide .face { --fp: 48px; padding-top: 44px; padding-bottom: 48px; }
 @media (max-width: 600px) { .plain--wide .face { --fp: 20px; padding-top: 30px; padding-bottom: 32px; } }
+/* an insert lies on the leaflet's desk: room for the imprint above it, and a sheet that keeps clear of the furniture */
+.plain--insert { padding-top: 72px; }
+@media (min-width: 1100px) { .plain--insert .sheet { max-width: min(760px, 100vw - 580px); } }
+@media (max-width: 1099px) { .plain--insert { padding-top: 4px; padding-bottom: calc(96px + var(--sb)); } }
 .plain-wrap .h2 { font-size: 34px; }
 .legal h2 { margin: 22px 0 6px; font: 600 19px/1.2 var(--sans); letter-spacing: -.01em; }
 .legal p, .legal li { margin-top: 6px; }

@@ -60,7 +60,7 @@ html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 .tag__card::before { content: ""; position: absolute; top: 10px; left: 50%; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: var(--desk); box-shadow: 0 0 0 2.5px var(--paper-hi); }
 .tag__card::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 34px; border-top: 1px dashed var(--crease-dark); }
 .tag__shadow { position: absolute; left: 4px; right: -4px; top: calc(var(--str, 46px) - 2px); height: 92px; background: rgb(var(--sh) / .14); border-radius: 3px; z-index: -1; }
-.tag:hover .tag__card, .tag:focus-visible .tag__card { transform: translateY(6px); }
+.tag:hover .tag__card, .tag:focus-visible .tag__card, .tag[aria-current="page"] .tag__card { transform: translateY(6px); }
 .tag:focus-visible { outline-offset: -2px; }
 
 .stamp {
@@ -88,6 +88,10 @@ html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 .odo { display: inline-block; position: relative; overflow: hidden; vertical-align: top; height: 1.3em; line-height: 1.3em; min-width: .62em; }
 .odo__d { display: inline-block; }
 html:not(.js) .folio__btn, html:not(.js) .folio__label { display: none; }
+/* on a loose insert the folio leads back to the leaflet */
+.folio__back { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px 0 14px; color: var(--desk-ink); text-decoration: none; font: 400 12px var(--mono); letter-spacing: .02em; }
+.folio__back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.folio__back:hover { color: var(--desk-pencil-deep); }
 
 .contents { position: relative; margin-left: 10px; }
 .contents > summary {

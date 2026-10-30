@@ -2,7 +2,7 @@
 @media (max-width: 1099px) {
   :root { --ts: .97; }
   .wrap { padding: 0 var(--gr) calc(96px + var(--sb)) var(--gl); }
-  .imprint, .crops, .folio__btn, .folio__label, .colophon__sep { display: none; }
+  .imprint, .crops, .folio__btn, .folio__label, .folio__back, .colophon__sep { display: none; }
   .controls { position: static; display: flex; justify-content: flex-end; gap: 6px; padding: 4px var(--gr) 4px var(--gl); }
   .sheet { max-width: 640px; }
   .face { padding: 30px 22px 36px; }
@@ -28,7 +28,8 @@
   .tag::before, .tag__shadow { display: none; }
   .tag__card { height: 44px; margin: 0; padding: 0 10px; clip-path: none; background: none; justify-content: center; font-size: 15px; }
   .tag__card::before, .tag__card::after { display: none; }
-  .tag:hover .tag__card, .tag:focus-visible .tag__card { transform: none; }
+  .tag:hover .tag__card, .tag:focus-visible .tag__card, .tag[aria-current="page"] .tag__card { transform: none; }
+  .tag[aria-current="page"] .tag__card { box-shadow: inset 0 -2px 0 var(--pencil); }
   .stamp { flex: 1; width: auto; height: 44px; border-radius: 2px; background: var(--pencil); color: var(--paper); transform: none !important; }
   .stamp__ink, .stamp::before { display: none; }
   .stamp__txt { width: auto; font-size: 15px; }

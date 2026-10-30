@@ -26,6 +26,8 @@ export const en = {
     prevPage: 'Previous page',
     nextPage: 'Next page',
     home: 'Back to the cover',
+    leaflet: 'Leaflet',
+    backToLeaflet: 'Back to the leaflet',
   },
   imprintLine: 'Booking projects for {month}',
   nav: {

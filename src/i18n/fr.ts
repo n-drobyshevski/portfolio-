@@ -27,7 +27,9 @@ export const fr: Dict = {
     scrollHint: "Faites défiler pour ouvrir",
     prevPage: "Page précédente",
     nextPage: "Page suivante",
-    home: "Retour à la couverture"
+    home: "Retour à la couverture",
+    leaflet: "Dépliant",
+    backToLeaflet: "Retour au dépliant"
   },
   imprintLine: "Nouveaux projets à partir de {month}",
   nav: {

@@ -1,29 +1,35 @@
 ---
-/* The full price list, printed on a flat sheet like the legal notice: each service reads like a menu line
-   (name, dotted leader, price), with what is included and the lead time under it, so it works at any width. */
-import { localePath, type Locale } from '../i18n/utils';
+/* The full price list: a loose insert lying on the leaflet's desk, set like the leaflet's Prices panel
+   (kicker, menu lines with a dotted leader, pencil marks), with what is included and the lead time under each line. */
+import { useI18n, localePath, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import { priceGroups, terms, mediator, validFrom, type PriceItem } from '../data/pricelist';
 import PlainPage from './PlainPage.astro';
+import Pencil from './Pencil.astro';
+import { bracket, freeLoop, linkLine } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
+const { d } = useI18n(locale);
 const fr = locale === 'fr';
 const nb = ' ';
 const T = fr
-  ? { title: 'Tarifs', intro: 'Prix de départ. Un devis gratuit fixe le prix exact de votre projet.', nav: 'Rubriques', lead: 'Délai', from: 'dès', terms: 'Conditions', pitch: 'Chaque projet commence par un devis gratuit.', quote: 'Demander un devis', back: 'Retour au dépliant' }
-  : { title: 'Price list', intro: 'Starting rates. A free quote sets the exact price of your project.', nav: 'Sections', lead: 'Lead time', from: 'from', terms: 'Terms', pitch: 'Every project starts with a free quote.', quote: 'Ask for a quote', back: 'Back to the leaflet' };
+  ? { title: 'Tarifs', insert: 'Encart', intro: ['Prix de départ. Un devis ', 'gratuit', ' fixe le prix exact de votre projet.'], nav: 'Rubriques', lead: 'Délai', from: 'dès', terms: 'Conditions', pitch: 'Chaque projet commence par un devis gratuit.', quote: 'Demander un devis', back: 'Retour au dépliant' }
+  : { title: 'Price list', insert: 'Insert', intro: ['Starting rates. A ', 'free', ' quote sets the exact price of your project.'], nav: 'Sections', lead: 'Lead time', from: 'from', terms: 'Terms', pitch: 'Every project starts with a free quote.', quote: 'Ask for a quote', back: 'Back to the leaflet' };
 const num = (n: number) => n.toLocaleString(fr ? 'fr-FR' : 'en-GB').replace(/\s/g, nb);
 const value = (it: PriceItem) => {
   if (typeof it.amount === 'string') return it.amount.replace(' ', nb);
-  return fr ? `${num(it.amount)}${nb}€` : `€${num(it.amount)}`;
+  const v = fr ? `${num(it.amount)}${nb}€` : `€${num(it.amount)}`;
+  return it.from ? `${T.from} ${v}` : v;
 };
 const two = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<PlainPage locale={locale} path="prices" wide>
+<PlainPage locale={locale} path="prices" wide insert>
   <div class="plist">
+    <p class="plist__mast"><a href={localePath(locale)}>{site.name}</a></p>
+    <p class="kicker" aria-hidden="true"><b>7</b><span>{d.prices.kicker} · {T.insert}</span></p>
     <h1 class="h2">{T.title}</h1>
     <p class="plist__meta">{validFrom[locale]}</p>
-    <p class="plist__intro">{T.intro} {site.vat[locale]}</p>
+    <p class="plist__intro">{T.intro[0]}<span class="mk mk--loop">{T.intro[1]}<Pencil mark={freeLoop} /></span>{T.intro[2]} {site.vat[locale]}</p>
 
     <nav class="plist__nav" aria-label={T.nav}>
       <ul>
@@ -41,7 +47,7 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
               <div class="it__top">
                 <h3>{it.name[locale]}</h3>
                 <span class="it__dots" aria-hidden="true"></span>
-                <p class="it__price">{it.from && <span class="it__soft">{T.from} </span>}<b>{value(it)}</b>{it.unit && <span class="it__soft it__unit"> {it.unit[locale]}</span>}</p>
+                <p class="it__price">{value(it)}{it.unit && <span class="it__unit"> {it.unit[locale]}</span>}</p>
               </div>
               {it.included[locale] && <p class="it__desc">{it.included[locale]}</p>}
               {it.lead && (
@@ -50,6 +56,8 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
                   <span class="sr-only">{T.lead}{fr ? `${nb}:` : ':'} </span>{it.lead[locale]}
                 </p>
               )}
+              {it.featured && <p class="pick">{d.prices.pick}</p>}
+              {it.featured && <Pencil mark={bracket} class="pencil--bracket" />}
             </li>
           ))}
         </ul>
@@ -63,11 +71,14 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
       <p class="plist__note">{mediator[locale]}</p>
     </section>
 
-    <div class="plist__quote">
-      <p>{T.pitch}</p>
-      <a class="btn" href={`${localePath(locale)}#contact`}>{T.quote}</a>
+    <div class="plist__slip">
+      <div class="perf" aria-hidden="true"><span class="perf__line"></span><svg class="scissors" viewBox="0 0 28 24"><circle cx="5" cy="6" r="3.6"/><circle cx="5" cy="18" r="3.6"/><path d="M8 8.2 26 18.5M8 15.8 26 5.5"/></svg></div>
+      <div class="plist__quote">
+        <p>{T.pitch}</p>
+        <a class="btn" href={`${localePath(locale)}#contact`}>{T.quote}</a>
+      </div>
     </div>
-    <p class="plist__back"><a class="link-drawn" href={localePath(locale)}>{T.back}</a></p>
+    <p class="plist__back"><a class="link-drawn" href={`${localePath(locale)}#prices`}><span>{T.back}</span><Pencil mark={linkLine} /></a></p>
   </div>
 </PlainPage>
 
@@ -118,11 +129,48 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     list.addEventListener('scroll', ends, { passive: true });
     ends();
     update();
+
+    /* EN / FR carry the section being read, so the other language opens at the same place */
+    document.querySelectorAll<HTMLAnchorElement>('[data-lang-link]').forEach((a) => {
+      const base = a.getAttribute('href') || '';
+      a.addEventListener('click', () => {
+        if (a.getAttribute('aria-current') !== 'true') a.setAttribute('href', current ? `${base}#${current}` : base);
+      });
+    });
+  }
+
+  /* Contents: the same folded card as on the leaflet, opening up from the folio */
+  const details = document.querySelector<HTMLDetailsElement>('.contents');
+  const summary = details?.querySelector('summary');
+  const card = details?.querySelector<HTMLElement>('.contents__card');
+  if (details && summary && card) {
+    const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const folded = { transform: 'perspective(900px) translateY(12px) rotateX(-80deg)', opacity: 0 };
+    const flat = { transform: 'none', opacity: 1 };
+    const open = () => {
+      details.open = true;
+      if (still()) card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
+      else card.animate([folded, flat], { duration: 550, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+    };
+    const close = () => {
+      if (!details.open) return;
+      if (still()) { details.open = false; return; }
+      card.animate([flat, folded], { duration: 320, easing: 'cubic-bezier(.55, 0, 1, .45)', fill: 'forwards' }).onfinish = (e) => {
+        details.open = false;
+        (e.target as Animation).cancel();
+      };
+    };
+    summary.addEventListener('click', (e) => { e.preventDefault(); if (details.open) close(); else open(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && details.open) { close(); summary.focus(); } });
+    document.addEventListener('pointerdown', (e) => { if (details.open && !details.contains(e.target as Node)) close(); });
   }
 </script>
 
 <style>
   .plist { container-type: inline-size; }
+  .plist__mast { display: none; margin-bottom: 26px; font: 600 15px/1.2 var(--sans); letter-spacing: -.01em; }
+  .plist__mast a { color: var(--ink); text-decoration: none; }
+  @media (max-width: 1099px) { .plist__mast { display: block; } }
   .plist__meta { margin-top: 6px; font: 400 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
   .plist__intro { margin-top: 14px; max-width: 58ch; color: var(--ink-soft); }
 
@@ -147,15 +195,16 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
   .plist__n { font: 400 12px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft); }
 
   /* one service: name ······ price, then what is included and the lead time */
-  .it { display: grid; grid-template-columns: 1fr auto; column-gap: 32px; padding: 16px 0 17px; border-bottom: 1px solid var(--crease); }
+  .it { position: relative; display: grid; grid-template-columns: 1fr auto; column-gap: 32px; padding: 13px 0 15px; border-bottom: 1px solid var(--crease); }
   .it__top { grid-column: 1 / -1; display: flex; align-items: last baseline; gap: 10px; }
-  .it h3 { flex: 0 1 auto; font: 600 18px/1.25 var(--sans); letter-spacing: -.01em; }
-  .it__dots { flex: 1 1 20px; min-width: 20px; border-bottom: 1.5px dotted var(--ink-soft); opacity: .45; transform: translateY(-4px); transition: border-color .2s, opacity .2s; }
-  .it:hover .it__dots { border-color: var(--pencil); opacity: 1; }
-  .it__price { flex: none; white-space: nowrap; font: 700 18px/1.25 var(--sans); letter-spacing: -.01em; }
-  .it__price b { font-weight: 700; }
-  .it__soft { font: italic 400 15px/1 var(--serif); letter-spacing: 0; color: var(--ink-soft); }
-  .it__desc { grid-column: 1; margin-top: 6px; max-width: 54ch; font-size: 16px; line-height: 1.45; color: var(--ink-soft); }
+  .it h3 { flex: 0 1 auto; font: 600 19px/1.2 var(--sans); letter-spacing: -.01em; }
+  .it__dots { flex: 1 1 20px; min-width: 20px; border-bottom: 1.5px dotted var(--ink-soft); transform: translateY(-4px); transition: border-color .2s; }
+  .it:hover .it__dots { border-color: var(--pencil); }
+  .it__price { flex: none; white-space: nowrap; font: 700 19px/1.2 var(--sans); letter-spacing: -.01em; }
+  .it__unit { font: 400 15px/1 var(--sans); letter-spacing: 0; color: var(--ink-soft); }
+  .it__desc { grid-column: 1; margin-top: 4px; max-width: 54ch; font-size: 16px; line-height: 1.42; color: var(--ink-soft); }
+  .it .pick { grid-column: 1; }
+  .it :global(.pencil--bracket) { right: max(-24px, calc(2px - var(--fp))); top: 12px; width: 16px; height: calc(100% - 22px); }
   .it__lead { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; white-space: nowrap; font: 400 12px/1.3 var(--mono); letter-spacing: .02em; color: var(--ink-soft); }
   .it__lead svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; }
 
@@ -166,7 +215,8 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
 
   .plist__note { margin-top: 12px; max-width: 64ch; font-size: 15px; line-height: 1.45; color: var(--ink-soft); }
 
-  .plist__quote { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 48px; padding: 22px 24px; border: 1.5px dashed var(--crease-dark); }
+  .plist__slip { margin-top: 48px; }
+  .plist__quote { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 14px; }
   .plist__quote p { max-width: 24ch; font: 600 20px/1.25 var(--sans); letter-spacing: -.01em; }
   .plist__back { margin-top: 18px; }
 
@@ -175,17 +225,16 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     .it__desc { grid-column: 1; }
     .it__lead { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
     .terms { columns: 1; }
-    .plist__quote { padding: 20px; }
     .plist__quote .btn { width: 100%; }
+    .it h3, .it__price { font-size: 17px; }
   }
   @container (max-width: 340px) {
-    .it h3, .it__price { font-size: 17px; }
     .it__price { text-align: right; }
     .it__unit { display: block; margin-top: 2px; }
   }
   @media (prefers-reduced-motion: no-preference) { :global(html) { scroll-behavior: smooth; } }
   @media print {
-    .plist__nav, .plist__quote, .plist__back { display: none; }
+    .plist__nav, .plist__slip, .plist__back { display: none; }
     .it { break-inside: avoid; }
   }
 </style>

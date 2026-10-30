@@ -15,6 +15,8 @@ export interface PriceItem {
   unit?: L;
   /** True when the amount is a starting price ("from"). */
   from?: boolean;
+  /** The one most clients pick, marked in pencil like on the leaflet. */
+  featured?: boolean;
 }
 
 export interface PriceGroup {
@@ -40,7 +42,7 @@ export const priceGroups: PriceGroup[] = [
     items: [
       { name: { en: 'Express site', fr: 'Site express' }, included: { en: 'One page on a ready-made template, with your text and photos, form, 1 revision round', fr: 'Une page sur un modèle prêt, avec vos textes et photos, formulaire, 1 série de modifications' }, lead: { en: '3 days', fr: '3 jours' }, amount: 280, from: true },
       { name: { en: 'Landing page', fr: 'Landing page' }, included: { en: 'One page, mobile friendly, contact form, basic SEO', fr: 'Une page, adaptée au mobile, formulaire de contact, référencement de base' }, lead: { en: '1 week', fr: '1 sem.' }, amount: 350, from: true },
-      { name: { en: 'Showcase website', fr: 'Site vitrine essentiel' }, included: { en: '3 to 5 pages on a proven base, form, map, legal notice', fr: '3 à 5 pages sur une base éprouvée, formulaire, carte, mentions légales' }, lead: { en: '2 weeks', fr: '2 sem.' }, amount: 660, from: true },
+      { name: { en: 'Showcase website', fr: 'Site vitrine essentiel' }, included: { en: '3 to 5 pages on a proven base, form, map, legal notice', fr: '3 à 5 pages sur une base éprouvée, formulaire, carte, mentions légales' }, lead: { en: '2 weeks', fr: '2 sem.' }, amount: 660, from: true, featured: true },
       { name: { en: 'Custom website', fr: 'Site vitrine sur mesure' }, included: { en: 'Design made for you, 5 to 8 pages, animations, basic SEO', fr: 'Design créé pour vous, 5 à 8 pages, animations, référencement de base' }, lead: { en: '3 to 5 weeks', fr: '3 à 5 sem.' }, amount: 1320, from: true },
       { name: { en: 'Small online shop', fr: 'Petite boutique en ligne' }, included: { en: 'Up to 20 products on Shopify or WooCommerce, online payment, subscriptions paid by the client', fr: 'Jusqu’à 20 produits sur Shopify ou WooCommerce, paiement en ligne, abonnements à la charge du client' }, lead: { en: '3 to 4 weeks', fr: '3 à 4 sem.' }, amount: 990, from: true },
       { name: { en: 'Website launch', fr: 'Mise en ligne d’un site' }, included: { en: 'Domain, hosting and launch for a site built elsewhere', fr: 'Nom de domaine, hébergement et mise en ligne pour un site déjà réalisé ailleurs' }, lead: { en: '2 to 3 days', fr: '2 à 3 jours' }, amount: 100, from: true },
