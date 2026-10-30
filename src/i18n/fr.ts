@@ -27,6 +27,7 @@ export const fr: Dict = {
     scrollHint: "Faites défiler pour ouvrir",
     tapOpen: "Touchez pour déplier",
     clickOpen: "Cliquez pour déplier",
+    scrollDown: "Faites défiler",
     prevPage: "Page précédente",
     nextPage: "Page suivante",
     home: "Retour à la couverture",

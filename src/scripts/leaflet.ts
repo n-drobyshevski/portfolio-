@@ -677,6 +677,21 @@ function init(CFG: Config) {
   openTab.addEventListener('blur', () => setPeek(false));
   openTab.addEventListener('click', () => { setPeek(false); goTo('hello', { dur: 1.1 }); });
 
+  /* after the phone intro: a small note that the leaflet goes on below; it leaves at the first scroll */
+  function showScrollCue() {
+    const cue = $('.scroll-cue');
+    if (!cue || scrollY > 20) return;
+    gsap.set(cue, { autoAlpha: 0, y: 8 });
+    cue.hidden = false;
+    gsap.to(cue, { autoAlpha: 1, y: 0, duration: .4, ease: 'power2.out', delay: .5 });
+    const hide = () => {
+      if (scrollY < 20) return;
+      removeEventListener('scroll', hide);
+      gsap.to(cue, { autoAlpha: 0, y: 8, duration: .25, onComplete: () => { cue.hidden = true; gsap.set(cue, { clearProps: 'all' }); } });
+    };
+    addEventListener('scroll', hide, { passive: true });
+  }
+
   /* ---------- intro on phones: the leaflet lands closed and waits; a tap unfolds two panels, then it zooms in to the cover ---------- */
   let finishUnfold: (() => void) | null = null; // lands the intro at once (a mode change, a shortcut)
   function unfoldIntro(unfolded: Set<HTMLElement>, after: () => void) {
@@ -750,6 +765,7 @@ function init(CFG: Config) {
       unfolding = false; finishUnfold = null;
       setFolio(PANEL_FOLIO[currentPanel().id]);
       after();
+      showScrollCue();
     }
     btn.addEventListener('click', open, { once: true });
     addEventListener('wheel', block, { passive: false });

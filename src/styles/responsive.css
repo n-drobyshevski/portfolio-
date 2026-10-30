@@ -99,6 +99,17 @@ html.js.intro:not(.leaf-3d) .face--cover { box-shadow: 0 1px 1px rgb(var(--sh) /
 @keyframes unfold-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px) rotate(14deg); } }
 .unfold__click { display: none; }
 @media (hover: hover) and (pointer: fine) { .unfold__tap { display: none; } .unfold__click { display: inline; } }
+/* after the unfold: the rest of the leaflet is below */
+.scroll-cue {
+  position: fixed; left: 50%; bottom: calc(46px + max(0px, var(--sb) - 14px) + 16px); z-index: 20; display: inline-flex; align-items: center; gap: 7px;
+  min-height: 34px; padding: 0 13px 0 10px; border-radius: 2px; background: var(--paper); color: var(--ink); white-space: nowrap; pointer-events: none;
+  transform: translateX(-50%); font: 400 11.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 10px 20px -10px rgb(var(--sh) / .5);
+}
+.scroll-cue[hidden] { display: none; }
+.scroll-cue svg { width: 14px; height: 14px; fill: none; stroke: var(--pencil); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; animation: cue-bob 1.4s ease-in-out infinite; }
+@keyframes cue-bob { 0%, 100% { transform: none; } 50% { transform: translateY(3px); } }
+@media (min-width: 1100px) { .scroll-cue { bottom: 28px; } }
 
 /* calm proof: reduced motion or "Animations: off" */
 html.calm .pencil path { filter: none; }

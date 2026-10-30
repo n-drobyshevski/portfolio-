@@ -25,6 +25,7 @@ export const en = {
     scrollHint: 'Scroll to open',
     tapOpen: 'Tap to unfold',
     clickOpen: 'Click to unfold',
+    scrollDown: 'Scroll down',
     prevPage: 'Previous page',
     nextPage: 'Next page',
     home: 'Back to the cover',
