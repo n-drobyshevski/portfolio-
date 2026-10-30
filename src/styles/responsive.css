@@ -29,9 +29,9 @@
   }
   .furn::before { content: ""; position: absolute; left: 0; right: 0; top: 0; border-top: 1.5px dashed var(--ink-soft); pointer-events: none; }
   /* the scissors sit in a little gap in the perforation */
-  .furn::after { content: ""; position: absolute; z-index: 1; left: calc(var(--gl) - 4px); top: -9px; width: 30px; height: 18px; background: var(--paper-hi); pointer-events: none; }
+  .furn::after { content: ""; position: absolute; z-index: 1; left: calc(var(--gl) - 3px); top: -6px; width: 22px; height: 12px; background: var(--paper-hi); pointer-events: none; }
   .folio::before {
-    content: ""; position: absolute; z-index: 2; left: calc(var(--gl) - 2px); top: -9px; width: 26px; height: 18px; pointer-events: none;
+    content: ""; position: absolute; z-index: 2; left: calc(var(--gl) - 1px); top: -6px; width: 18px; height: 12px; pointer-events: none;
     background: var(--ink-soft); -webkit-mask: var(--scissors) center / contain no-repeat; mask: var(--scissors) center / contain no-repeat;
   }
   .tag { display: none; }
