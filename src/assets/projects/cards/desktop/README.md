@@ -2,6 +2,7 @@
 
 Sample French-English vocabulary with the interface shown in English. 1440x900 @2. Local-only mode, AI mocked; chat widgets rendered in a mocked MCP Apps host.
 
+- 00-cover.webp: Cover: the desktop library with the phone review card in front
 - 01-review.webp: Review with the card revealed and the grading buttons, sidebar with themes
 - 02-add-suggestions.webp: Quick add: dictionary match plus suggestions (AI mocked)
 - 03-word-detail.webp: A verb in the library detail pane with origin, and the full conjugation table open

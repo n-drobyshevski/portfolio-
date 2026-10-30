@@ -25,6 +25,7 @@ import trDashboard from '../assets/projects/translator/02-dashboard.webp';
 import trDetail from '../assets/projects/translator/04-event-detail.webp';
 import trManager from '../assets/projects/translator/05-message-manager.webp';
 import trLogs from '../assets/projects/translator/10-logs.webp';
+import kCover from '../assets/projects/cards/desktop/00-cover.webp';
 import kReview from '../assets/projects/cards/desktop/01-review.webp';
 import kAdd from '../assets/projects/cards/desktop/02-add-suggestions.webp';
 import kWord from '../assets/projects/cards/desktop/03-word-detail.webp';
@@ -72,10 +73,10 @@ export const galleries: Record<string, Shot[]> = {
     { src: trLogs, caption: { en: 'Live log with retries', fr: 'Journal en direct avec relances' } },
   ],
   cards: [
+    { src: kCover, caption: { en: 'On a computer and on a phone', fr: 'Sur ordinateur et sur téléphone' } },
     { src: kReview, caption: { en: 'Review card with grading', fr: 'Carte de révision et notation' } },
     { src: kAdd, caption: { en: 'Quick add with suggestions', fr: 'Ajout rapide avec suggestions' } },
     { src: kWord, caption: { en: 'Conjugation of a verb', fr: 'La conjugaison d’un verbe' } },
-    { src: kProgress, caption: { en: 'Progress and study calendar', fr: 'Progrès et calendrier d’étude' } },
     { src: kChatCards, caption: { en: 'Cards inside a chat with Claude', fr: 'Les cartes dans une conversation avec Claude' } },
     { src: kChatExercise, caption: { en: 'An exercise inside the chat', fr: 'Un exercice dans la conversation' } },
   ],
