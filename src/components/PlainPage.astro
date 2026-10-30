@@ -7,15 +7,17 @@ interface Props {
   locale: Locale;
   /** Page path without language, used for the language links. */
   path?: string;
+  /** A wider sheet, for pages with more to lay out (the price list). */
+  wide?: boolean;
 }
-const { locale, path = '' } = Astro.props;
+const { locale, path = '', wide = false } = Astro.props;
 const hrefs = { en: localePath('en', path), fr: localePath('fr', path) };
 ---
-<header class="plain-top">
+<header class:list={['plain-top', { 'plain--wide': wide }]}>
   <a href={localePath(locale)}>{site.name}</a>
   <LangSwitch locale={locale} hrefs={hrefs} class="langs" />
 </header>
-<main class="plain-wrap" id="top">
+<main class:list={['plain-wrap', { 'plain--wide': wide }]} id="top">
   <div class="sheet">
     <section class="face">
       <div class="fc"><slot /></div>

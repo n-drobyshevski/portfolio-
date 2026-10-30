@@ -20,7 +20,9 @@ export interface PriceItem {
 export interface PriceGroup {
   id: string;
   title: L;
-  /** Whether the group has a lead-time column. */
+  /** Shorter title for the section bar, when the title is long. */
+  nav?: L;
+  /** Whether the group's items give a lead time. */
   lead?: boolean;
   items: PriceItem[];
   note?: L;
@@ -69,6 +71,7 @@ export const priceGroups: PriceGroup[] = [
   {
     id: 'bots',
     title: { en: 'Bots and automation', fr: 'Bots et automatisation' },
+    nav: { en: 'Bots', fr: 'Bots' },
     items: [
       { name: { en: 'Simple Telegram bot', fr: 'Bot Telegram simple' }, included: { en: 'Menu, answers to common questions, notifications', fr: 'Menu, réponses aux questions fréquentes, notifications' }, amount: 240, from: true },
       { name: { en: 'Advanced Telegram bot', fr: 'Bot Telegram avancé' }, included: { en: 'Bookings or orders, database, admin area', fr: 'Prise de rendez-vous ou de commandes, base de données, espace d’administration' }, amount: 500, from: true },

@@ -39,7 +39,10 @@ html[lang="fr"] { --h1k: 14.3; --h1a: 3.65; }
 .plain-top .lang-link { font: 400 12px var(--mono); color: var(--desk-ink-soft); padding: 0 6px; }
 .plain-wrap { padding: 12px var(--gr) 72px var(--gl); }
 .plain-wrap .sheet { max-width: 640px; }
-.plain-wrap .face { padding: 36px 28px 40px; }
+.plain-wrap .face { --fp: 28px; padding: 36px var(--fp) 40px; }
+.plain-top.plain--wide, .plain--wide .sheet { max-width: 760px; }
+.plain--wide .face { --fp: 48px; padding-top: 44px; padding-bottom: 48px; }
+@media (max-width: 600px) { .plain--wide .face { --fp: 20px; padding-top: 30px; padding-bottom: 32px; } }
 .plain-wrap .h2 { font-size: 34px; }
 .legal h2 { margin: 22px 0 6px; font: 600 19px/1.2 var(--sans); letter-spacing: -.01em; }
 .legal p, .legal li { margin-top: 6px; }

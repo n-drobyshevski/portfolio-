@@ -1,5 +1,6 @@
 ---
-/* The full price list, printed on a flat sheet like the legal notice. */
+/* The full price list, printed on a flat sheet like the legal notice: each service reads like a menu line
+   (name, dotted leader, price), with what is included and the lead time under it, so it works at any width. */
 import { localePath, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import { priceGroups, terms, mediator, validFrom, type PriceItem } from '../data/pricelist';
@@ -7,79 +8,187 @@ import PlainPage from './PlainPage.astro';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const fr = locale === 'fr';
-const nb = ' ';
+const nb = ' ';
 const T = fr
-  ? { title: 'Tarifs', intro: 'Prix de départ. Un devis gratuit fixe le prix exact de votre projet.', service: 'Prestation', included: 'Inclus', lead: 'Délai', price: 'Prix', from: 'dès', terms: 'Conditions', quote: 'Demander un devis', back: 'Retour au dépliant' }
-  : { title: 'Price list', intro: 'Starting rates. A free quote sets the exact price of your project.', service: 'Service', included: 'Included', lead: 'Lead time', price: 'Price', from: 'from', terms: 'Terms', quote: 'Ask for a quote', back: 'Back to the leaflet' };
+  ? { title: 'Tarifs', intro: 'Prix de départ. Un devis gratuit fixe le prix exact de votre projet.', nav: 'Rubriques', lead: 'Délai', from: 'dès', terms: 'Conditions', pitch: 'Chaque projet commence par un devis gratuit.', quote: 'Demander un devis', back: 'Retour au dépliant' }
+  : { title: 'Price list', intro: 'Starting rates. A free quote sets the exact price of your project.', nav: 'Sections', lead: 'Lead time', from: 'from', terms: 'Terms', pitch: 'Every project starts with a free quote.', quote: 'Ask for a quote', back: 'Back to the leaflet' };
 const num = (n: number) => n.toLocaleString(fr ? 'fr-FR' : 'en-GB').replace(/\s/g, nb);
-const amount = (it: PriceItem) => {
+const value = (it: PriceItem) => {
   if (typeof it.amount === 'string') return it.amount.replace(' ', nb);
-  const v = fr ? `${num(it.amount)}${nb}€` : `€${num(it.amount)}`;
-  return it.from ? `${T.from} ${v}` : v;
+  return fr ? `${num(it.amount)}${nb}€` : `€${num(it.amount)}`;
 };
+const two = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<PlainPage locale={locale} path="prices">
+<PlainPage locale={locale} path="prices" wide>
   <div class="plist">
     <h1 class="h2">{T.title}</h1>
     <p class="plist__meta">{validFrom[locale]}</p>
     <p class="plist__intro">{T.intro} {site.vat[locale]}</p>
-    {priceGroups.map((g) => (
-      <section class="plist__group" aria-labelledby={`pl-${g.id}`}>
-        <h2 id={`pl-${g.id}`}>{g.title[locale]}</h2>
-        <div class="plist__scroll">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">{T.service}</th>
-                {g.id !== 'rates' && <th scope="col">{T.included}</th>}
-                {g.lead && <th scope="col">{T.lead}</th>}
-                <th scope="col" class="num">{T.price}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {g.items.map((it) => (
-                <tr>
-                  <th scope="row">{it.name[locale]}</th>
-                  {g.id !== 'rates' && <td>{it.included[locale]}</td>}
-                  {g.lead && <td class="lead">{it.lead?.[locale]}</td>}
-                  <td class="num">{amount(it)}{it.unit && <span class="unit"> {it.unit[locale]}</span>}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+
+    <nav class="plist__nav" aria-label={T.nav}>
+      <ul>
+        {priceGroups.map((g) => <li><a href={`#${g.id}`}>{(g.nav ?? g.title)[locale]}</a></li>)}
+        <li><a href="#terms">{T.terms}</a></li>
+      </ul>
+    </nav>
+
+    {priceGroups.map((g, i) => (
+      <section class="plist__group" id={g.id} aria-labelledby={`pl-${g.id}`}>
+        <h2 id={`pl-${g.id}`}><span class="plist__n" aria-hidden="true">{two(i)}</span>{g.title[locale]}</h2>
+        {g.id === 'rates' ? (
+          <ul class="rates">
+            {g.items.map((it) => (
+              <li><h3>{it.name[locale]}</h3><p class="rates__v">{value(it)}</p></li>
+            ))}
+          </ul>
+        ) : (
+          <ul class="items">
+            {g.items.map((it) => (
+              <li class="it">
+                <div class="it__top">
+                  <h3>{it.name[locale]}</h3>
+                  <span class="it__dots" aria-hidden="true"></span>
+                  <p class="it__price">{it.from && <span class="it__soft">{T.from} </span>}<b>{value(it)}</b>{it.unit && <span class="it__soft it__unit"> {it.unit[locale]}</span>}</p>
+                </div>
+                {it.included[locale] && <p class="it__desc">{it.included[locale]}</p>}
+                {it.lead && (
+                  <p class="it__lead">
+                    <svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.6" /><path d="M7 3.8V7l2.2 1.4" /></svg>
+                    <span class="sr-only">{T.lead}{fr ? `${nb}:` : ':'} </span>{it.lead[locale]}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
         {g.note && <p class="plist__note">{g.note[locale]}</p>}
       </section>
     ))}
-    <section class="plist__group" aria-labelledby="pl-terms">
-      <h2 id="pl-terms">{T.terms}</h2>
-      <ul class="plist__terms">{terms[locale].map((t) => <li>{t}</li>)}</ul>
+
+    <section class="plist__group" id="terms" aria-labelledby="pl-terms">
+      <h2 id="pl-terms"><span class="plist__n" aria-hidden="true">{two(priceGroups.length)}</span>{T.terms}</h2>
+      <ol class="terms">{terms[locale].map((t) => <li>{t}</li>)}</ol>
       <p class="plist__note">{mediator[locale]}</p>
     </section>
-    <p class="plist__acts">
+
+    <div class="plist__quote">
+      <p>{T.pitch}</p>
       <a class="btn" href={`${localePath(locale)}#contact`}>{T.quote}</a>
-      <a class="link-drawn" href={localePath(locale)}>{T.back}</a>
-    </p>
+    </div>
+    <p class="plist__back"><a class="link-drawn" href={localePath(locale)}>{T.back}</a></p>
   </div>
 </PlainPage>
 
+<script>
+  /* Section bar: mark the section being read, keep its tab in view, and show a shadow once the bar is stuck. */
+  const nav = document.querySelector<HTMLElement>('.plist__nav');
+  const list = nav?.querySelector('ul');
+  if (nav && list) {
+    const links = [...nav.querySelectorAll('a')];
+    const sections = links.map((a) => document.getElementById(a.hash.slice(1))).filter((s): s is HTMLElement => !!s);
+    const calm = matchMedia('(prefers-reduced-motion: reduce)');
+    let current = '';
+    let queued = false;
+    const ends = () => {
+      list.toggleAttribute('data-start', list.scrollLeft < 2);
+      list.toggleAttribute('data-end', list.scrollLeft + list.clientWidth > list.scrollWidth - 2);
+    };
+    const update = () => {
+      queued = false;
+      const bar = nav.getBoundingClientRect();
+      nav.classList.toggle('is-stuck', bar.top < 1 && scrollY > 0);
+      let id = '';
+      for (const s of sections) if (s.getBoundingClientRect().top <= bar.bottom + 32) id = s.id;
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) id = sections[sections.length - 1]?.id ?? id;
+      if (id === current) return;
+      current = id;
+      for (const a of links) {
+        if (a.hash === `#${id}`) {
+          a.setAttribute('aria-current', 'true');
+          list.scrollTo({ left: a.parentElement!.offsetLeft - 32, behavior: calm.matches ? 'auto' : 'smooth' });
+        } else a.removeAttribute('aria-current');
+      }
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', () => { ends(); queue(); });
+    list.addEventListener('scroll', ends, { passive: true });
+    ends();
+    update();
+  }
+</script>
+
 <style>
-  .plist { max-width: 860px; }
-  .plist__meta { margin-top: 4px; font: 400 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
-  .plist__intro { margin-top: 14px; max-width: 62ch; color: var(--ink-soft); }
-  .plist__group { margin-top: 40px; }
-  .plist__group h2 { font: 700 22px/1.2 var(--sans); letter-spacing: -.01em; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
-  .plist__scroll { overflow-x: auto; }
-  table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 16px; }
-  thead th { padding: 10px 12px 8px 0; text-align: left; font: 400 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); border-bottom: 1px solid var(--crease-dark); }
-  tbody th { padding: 12px 16px 12px 0; text-align: left; vertical-align: top; font: 600 16px/1.3 var(--sans); width: 30%; }
-  tbody td { padding: 12px 16px 12px 0; vertical-align: top; line-height: 1.45; }
-  tbody tr { border-bottom: 1px solid var(--crease); }
-  .lead { white-space: nowrap; color: var(--ink-soft); }
-  .num { text-align: right; padding-right: 0; white-space: nowrap; font: 500 15px/1.4 var(--mono); font-variant-numeric: tabular-nums; }
-  thead th.num { font: 400 11px/1.3 var(--mono); text-align: right; padding-right: 0; }
-  .unit { color: var(--ink-soft); font-size: 13px; }
-  .plist__note { margin-top: 12px; font-size: 15px; color: var(--ink-soft); }
-  .plist__terms { margin: 14px 0 0; padding-left: 18px; display: grid; gap: 6px; }
-  .plist__acts { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px; }
+  .plist { container-type: inline-size; }
+  .plist__meta { margin-top: 6px; font: 400 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .plist__intro { margin-top: 14px; max-width: 58ch; color: var(--ink-soft); }
+
+  /* section bar: sticks to the top of the screen, across the whole sheet */
+  .plist__nav { position: sticky; top: 0; z-index: 2; isolation: isolate; margin: 26px calc(-1 * var(--fp)) 0; background: var(--paper); box-shadow: inset 0 -1px 0 var(--crease); transition: box-shadow .25s var(--ui); }
+  .plist__nav::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--grain); opacity: .55; pointer-events: none; }
+  :global(html.lite) .plist__nav::before { display: none; }
+  .plist__nav.is-stuck { box-shadow: inset 0 -1px 0 var(--crease), 0 10px 14px -12px rgb(var(--sh) / .45); }
+  .plist__nav ul { position: relative; display: flex; gap: 22px; padding: 0 var(--fp); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .plist__nav ul::-webkit-scrollbar { display: none; }
+  .plist__nav ul:not([data-end]) { mask-image: linear-gradient(90deg, #000 calc(100% - 48px), transparent); }
+  .plist__nav ul:not([data-start]):not([data-end]) { mask-image: linear-gradient(90deg, transparent, #000 32px, #000 calc(100% - 48px), transparent); }
+  .plist__nav ul:not([data-start])[data-end] { mask-image: linear-gradient(90deg, transparent, #000 32px); }
+  .plist__nav li { flex: none; }
+  .plist__nav a { display: inline-flex; align-items: center; min-height: 46px; white-space: nowrap; font: 400 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; box-shadow: inset 0 -2px 0 transparent; transition: color .2s, box-shadow .2s; }
+  .plist__nav a:hover { color: var(--ink); }
+  .plist__nav a[aria-current] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--pencil); }
+  .plist__nav a:focus-visible { outline-offset: -2px; }
+
+  .plist__group { margin-top: 46px; }
+  .plist__group h2 { display: flex; align-items: baseline; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); font: 700 24px/1.2 var(--sans); letter-spacing: -.015em; }
+  .plist__n { font: 400 12px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft); }
+
+  /* one service: name ······ price, then what is included and the lead time */
+  .it { display: grid; grid-template-columns: 1fr auto; column-gap: 32px; padding: 16px 0 17px; border-bottom: 1px solid var(--crease); }
+  .it__top { grid-column: 1 / -1; display: flex; align-items: last baseline; gap: 10px; }
+  .it h3 { flex: 0 1 auto; font: 600 18px/1.25 var(--sans); letter-spacing: -.01em; }
+  .it__dots { flex: 1 1 20px; min-width: 20px; border-bottom: 1.5px dotted var(--ink-soft); opacity: .45; transform: translateY(-4px); transition: border-color .2s, opacity .2s; }
+  .it:hover .it__dots { border-color: var(--pencil); opacity: 1; }
+  .it__price { flex: none; white-space: nowrap; font: 700 18px/1.25 var(--sans); letter-spacing: -.01em; }
+  .it__price b { font-weight: 700; }
+  .it__soft { font: italic 400 15px/1 var(--serif); letter-spacing: 0; color: var(--ink-soft); }
+  .it__desc { grid-column: 1; margin-top: 6px; max-width: 54ch; font-size: 16px; line-height: 1.45; color: var(--ink-soft); }
+  .it__lead { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; white-space: nowrap; font: 400 12px/1.3 var(--mono); letter-spacing: .02em; color: var(--ink-soft); }
+  .it__lead svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; }
+
+  /* the two rates, as tickets side by side */
+  .rates { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .rates li { padding: 16px 18px 18px; border: 1px solid var(--crease-dark); background: var(--paper-hi); }
+  .rates h3 { font: 400 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .rates__v { margin-top: 10px; font: 700 34px/1 var(--sans); letter-spacing: -.025em; }
+
+  .terms { margin-top: 4px; columns: 2; column-gap: 32px; counter-reset: t; }
+  .terms li { counter-increment: t; display: flex; gap: 12px; padding: 11px 0 12px; border-bottom: 1px solid var(--crease); break-inside: avoid; line-height: 1.4; }
+  .terms li::before { content: counter(t, decimal-leading-zero); flex: none; padding-top: 4px; font: 400 12px/1.3 var(--mono); color: var(--ink-soft); }
+
+  .plist__note { margin-top: 12px; max-width: 64ch; font-size: 15px; line-height: 1.45; color: var(--ink-soft); }
+
+  .plist__quote { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 48px; padding: 22px 24px; border: 1.5px dashed var(--crease-dark); }
+  .plist__quote p { max-width: 24ch; font: 600 20px/1.25 var(--sans); letter-spacing: -.01em; }
+  .plist__back { margin-top: 18px; }
+
+  @container (max-width: 540px) {
+    .it { grid-template-columns: 1fr; }
+    .it__desc { grid-column: 1; }
+    .it__lead { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
+    .terms { columns: 1; }
+    .plist__quote { padding: 20px; }
+    .plist__quote .btn { width: 100%; }
+  }
+  @container (max-width: 340px) {
+    .it h3, .it__price { font-size: 17px; }
+    .it__price { text-align: right; }
+    .it__unit { display: block; margin-top: 2px; }
+    .rates__v { font-size: 30px; }
+  }
+  @media (prefers-reduced-motion: no-preference) { :global(html) { scroll-behavior: smooth; } }
+  @media print {
+    .plist__nav, .plist__quote, .plist__back { display: none; }
+    .it { break-inside: avoid; }
+  }
 </style>
