@@ -2,7 +2,7 @@
 import { useI18n, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
 import Pencil from './Pencil.astro';
-import { stripLoop, arrow } from './marks';
+import { arrow } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
@@ -15,7 +15,6 @@ const look = (client: string, label: string) => t(d.work.lookCloser, { client, l
 <section class="face face--i face--p2" id="work" aria-labelledby="work-h">
   <div class="op" aria-hidden="true"><span class="op__l">{d.cover.h1a} {d.cover.h1b}.</span></div>
   <div class="fc">
-    <span class="op-word" aria-hidden="true"><span class="mk-op">{d.cover.h1b}<Pencil mark={stripLoop} g="strip-small" /></span>.</span>
     <p class="kicker" aria-hidden="true"><b>4</b><span>{d.work.kicker}</span></p>
     <div class="work-head"><h2 class="h2" id="work-h">{d.work.title}</h2><p class="meta">{t(d.work.count)}</p></div>
     <article class="w1" id="work-1" aria-labelledby="w1-h">

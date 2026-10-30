@@ -5,7 +5,9 @@ html.leaf-3d .op { z-index: 2; mix-blend-mode: multiply; }
 .cover__h1 .loopw .pencil { left: -5%; width: 110%; }
 .cover__place { text-wrap: pretty; }
 html.leaf-3d .op { --opfs: calc(var(--W) * .5); }
-#about .op-word { --k: 36; } #work .op-word { --k: 22.3; }
+/* on phones the whole slogan heads About, on two lines, instead of being split across panels */
+#about .op-word { --k: 22.3; } :lang(fr) #about .op-word { --k: 14.8; }
+.op-word__l { display: block; }
 
 /* lockup: "Made" is scaled up so both lines fill the panel width */
 .cover__h1 .l:first-child { font-size: calc(var(--h1a, 1.6) * 1em); line-height: .86; }
