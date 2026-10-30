@@ -14,8 +14,6 @@ import Services from './Services.astro';
 import Prices from './Prices.astro';
 import Contact from './Contact.astro';
 import LooseDialog from './LooseDialog.astro';
-import Pencil from './Pencil.astro';
-import { stripLoop } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
@@ -92,7 +90,6 @@ const json = JSON.stringify(data).replace(/</g, '\\u003c');
         <Prices locale={locale} />
         <Contact locale={locale} />
         <div class="edge" aria-hidden="true"></div>
-        <div class="poster-loop" aria-hidden="true"><Pencil mark={stripLoop} g="poster" /></div>
       </div>
     </div>
     <div class="scroll-hint" aria-hidden="true">{d.ui.scrollHint}</div>

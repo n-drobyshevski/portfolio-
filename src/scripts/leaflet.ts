@@ -81,7 +81,7 @@ function init(CFG: Config) {
 
   /* ---------- elements ---------- */
   const wrap = $('.wrap'), stage = $('.stage'), camera = $('.camera');
-  const hint = $('.scroll-hint'), edge = $('.edge'), posterLoop = $('.poster-loop');
+  const hint = $('.scroll-hint'), edge = $('.edge');
   const dSharp = $('.dsh--sharp'), dSoft = $('.dsh--soft');
 
   interface FaceRec {
@@ -124,11 +124,10 @@ function init(CFG: Config) {
   interface State {
     mode: 'leaf' | 'strip' | 'calm' | null; W: number; H: number; Ws: number[]; C: number; sheetW: number; vh: number;
     coverS: number; posterS: number; ct: string; fitFail: string;
-    loop?: { x: number; y: number; w: number; h: number };
     // render caches
-    eo: any; lo: any; lt: any; ho: any; tab: any; ap: any;
+    eo: any; ho: any; tab: any; ap: any;
   }
-  const S: State = { mode: null, W: 0, H: 0, Ws: [0, 0, 0, 0], C: 0, sheetW: 0, vh: innerHeight / 100, coverS: 1, posterS: .66, ct: '', fitFail: '', eo: null, lo: null, lt: null, ho: null, tab: null, ap: null };
+  const S: State = { mode: null, W: 0, H: 0, Ws: [0, 0, 0, 0], C: 0, sheetW: 0, vh: innerHeight / 100, coverS: 1, posterS: .66, ct: '', fitFail: '', eo: null, ho: null, tab: null, ap: null };
   const fold = { a12: 176, a23: 179.5, a34: 179.8, flip: 0 };
   const cam = { x: 0, y: 0, s: 1, rx: 0, ry: 0, rz: -1.2, pk: 0 };
   const intro = { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 };
@@ -210,17 +209,6 @@ function init(CFG: Config) {
     }
     d.style.removeProperty('--ts');
     return false;
-  }
-
-  function measureLoop() {
-    const sm = document.querySelector<HTMLElement>('#about .op__small');
-    if (!sm || S.mode !== 'leaf') return;
-    const op = sm.closest('.op') as HTMLElement, line = sm.parentElement as HTMLElement;
-    const x = op.offsetLeft + line.offsetLeft + sm.offsetLeft, y = op.offsetTop + line.offsetTop + sm.offsetTop;
-    const w = sm.offsetWidth, h = sm.offsetHeight;
-    S.loop = { x: x - w * .14, y: y + h * .02, w: w * 1.28, h: h * 1.02 };
-    posterLoop.style.width = S.loop.w + 'px';
-    posterLoop.style.height = S.loop.h + 'px';
   }
 
   /* forward kinematics: one transform list per panel, hinge after hinge */
@@ -342,11 +330,6 @@ function init(CFG: Config) {
     const eo = flip > .01 ? clamp(0, 1, 1 - Math.abs(Math.cos(flip * DEG)) / .22) : 0;
     if (eo !== S.eo) { edge.style.opacity = String(eo); S.eo = eo; }
     if (eo > 0) edge.style.transform = P[0] + `translateX(${C}px) rotateY(90deg) translateX(-1.5px)`;
-
-    // the big pencil loop on the poster sits just above the sheet
-    const lo = (a34 < 1 && flip < .5 && S.loop) ? 1 : 0;
-    if (lo !== S.lo) { posterLoop.style.opacity = String(lo); S.lo = lo; }
-    if (lo && S.loop) { const lt = `translate3d(${S.loop.x.toFixed(1)}px, ${S.loop.y.toFixed(1)}px, .8px)`; if (lt !== S.lt) { posterLoop.style.transform = lt; S.lt = lt; } }
 
     const atPoster = rest === 'poster';
     if (atPoster !== S.ap) { d.classList.toggle('at-poster', atPoster); S.ap = atPoster; }
@@ -704,9 +687,9 @@ function init(CFG: Config) {
   interface Land { g: string; t: number; delay: number; dur?: number; pending?: (() => void) | null }
   const LAND: Land[] = [
     { g: 'hello', t: 100, delay: .15 }, { g: 'work', t: 225, delay: .15 }, { g: 'menu', t: 330, delay: .15 },
-    { g: 'poster', t: 415, delay: .35, dur: 1.1 }, { g: 'reply', t: 560, delay: 0 },
+    { g: 'reply', t: 560, delay: 0 },
   ];
-  const LAND_LABEL: Record<string, string> = { hello: 'hello', work: 'work', menu: 'menu', poster: 'poster', reply: 'reply' };
+  const LAND_LABEL: Record<string, string> = { hello: 'hello', work: 'work', menu: 'menu', reply: 'reply' };
   function land(L: Land, self: ScrollTrigger) {
     if (drawn[L.g] || L.pending) return;
     const fast = Math.abs(self.getVelocity()) > 3200 || (scrollTw && scrollTarget && scrollTarget !== LAND_LABEL[L.g]);
@@ -729,14 +712,13 @@ function init(CFG: Config) {
     camera.style.left = Math.round(innerWidth / 2) + 'px';
     camera.style.top = Math.round(stage.clientHeight / 2) + 'px';
     FACES.forEach(f => { f.tf = null; f.op = null; f.sh = null; f.ck = null; });
-    S.ct = ''; S.eo = S.lo = S.lt = S.ho = S.tab = S.ap = null;
-    measureLoop();
+    S.ct = ''; S.eo = S.ho = S.tab = S.ap = null;
     master = buildMaster();
     st = ScrollTrigger.create({
       trigger: wrap, start: 'top top', end: 'bottom bottom', animation: master, scrub: .8,
       snap: { snapTo: (v: number, self?: ScrollTrigger) => snapTo(v, self), delay: .3, duration: { min: .35, max: .85 }, ease: 'power2.inOut', inertia: false },
     });
-    ['hello', 'work', 'menu', 'poster'].forEach(g => { if (!drawn[g]) hidePaths(marks[g]); });
+    ['hello', 'work', 'menu'].forEach(g => { if (!drawn[g]) hidePaths(marks[g]); });
     replyPrep();
     LAND.forEach(L => {
       L.pending = null;
@@ -1109,7 +1091,7 @@ function init(CFG: Config) {
     killScroll();
     LAND.forEach(unland);
     const els: Element[] = [...panels, ...FACES.map(f => f.shade), ...FACES.filter(f => f.cast).map(f => f.cast as HTMLElement),
-      camera, edge, posterLoop, dSharp, dSoft, perfLine, scissors, quoteSlip, wrap, hint, openTab, ...tags, ...cropPaths, ...$$('.pm'), ...$$('.op-word')];
+      camera, edge, dSharp, dSoft, perfLine, scissors, quoteSlip, wrap, hint, openTab, ...tags, ...cropPaths, ...$$('.pm'), ...$$('.op-word')];
     gsap.killTweensOf(els);
     gsap.killTweensOf([fold, cam, intro, peek, bend]);
     gsap.set(els, { clearProps: 'all' });
@@ -1150,7 +1132,7 @@ function init(CFG: Config) {
       if (want === S.mode && want !== 'leaf' && wasSpread === lastSpread) { if (wasW !== innerWidth) ScrollTrigger.refresh(); return; }
       if (want === 'leaf' && S.mode === 'leaf' && wasW === innerWidth && wasH === innerHeight) return;
       applyMode(keepOpts());
-      measureLoop(); render();
+      render();
     }, 250);
   });
   const onPref = () => { motionLabel(); applyMode(keepOpts()); };
@@ -1442,7 +1424,7 @@ function init(CFG: Config) {
     if (fontsReady) return;
     fontsReady = true;
     if (S.mode === 'leaf' && !fitCheck()) { S.fitFail = geoKey(); applyMode(keepOpts()); }
-    measureLoop(); render();
+    render();
     ScrollTrigger.refresh();
   };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(ready); else ready();

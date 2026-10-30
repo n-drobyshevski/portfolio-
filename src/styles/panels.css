@@ -10,7 +10,7 @@ html.lite .face::before { display: none; }
 .face + .face { box-shadow: inset 0 1px 0 var(--crease), inset 0 2px 0 var(--paper-hi); }
 .face--valley { box-shadow: inset 0 1px 0 var(--crease), inset 0 2px 0 var(--paper-hi), inset 0 22px 22px -22px rgb(var(--sh) / .16) !important; }
 .fc { position: relative; z-index: 1; }
-.dsh, .edge, .poster-loop, .cast, .op, .open-tab, .scroll-hint { display: none; }
+.dsh, .edge, .cast, .op, .open-tab, .scroll-hint { display: none; }
 .shade { display: none; position: absolute; inset: 0; z-index: 4; background: var(--ink); opacity: 0; pointer-events: none; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 html.strip .shade { display: block; }
 
