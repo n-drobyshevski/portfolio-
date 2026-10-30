@@ -283,6 +283,9 @@ function init(CFG: Config) {
       } else {
         tf = faceTf(f, P);
         if (flip < .01) {
+          /* About lies right under the closed cover: hide it until the cover lifts, so a browser that sorts the 3D
+             layers differently cannot draw it over the cover (the open-tab peek lifts the cover to 163) */
+          if (f.k === 0 && !f.o && a12 > 165) op = 0;
           if (f.k === 2 && a12 > 150) op = 0;
           if (f.k === 3 && (a12 > 150 || a23 > 150)) op = 0;
         }
