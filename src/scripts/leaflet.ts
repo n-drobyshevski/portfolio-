@@ -133,6 +133,7 @@ function init(CFG: Config) {
   const cam = { x: 0, y: 0, s: 1, rx: 0, ry: 0, rz: -1.2, pk: 0 };
   const intro = { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 };
   const peek = { v: 0 };
+  const bend = { h: 0, v: 0 }; // a hand on the paper: extra degrees on one hinge (1-3 the folds, 4 the turn-over), towards the next page
   let master: gsap.core.Timeline | null = null;
   let st: ScrollTrigger | null = null;
   let introTl: gsap.core.Timeline | null = null;
@@ -261,8 +262,10 @@ function init(CFG: Config) {
     if (S.mode !== 'leaf') return;
     const t = master ? master.time() : 0;
     const W = S.W, Ws = S.Ws, C = S.C, H = S.H;
-    const a12 = clamp(0, 180, fold.a12 + intro.puff - peek.v), a23 = fold.a23, a34 = fold.a34, flip = fold.flip;
-    const rest = (introDone && !peek.v) ? restAt(t) : null;
+    const bh = bend.h, bv = bend.v;
+    const a12 = clamp(0, 180, fold.a12 + intro.puff - peek.v - (bh === 1 ? bv : 0)), a23 = clamp(0, 180, fold.a23 - (bh === 2 ? bv : 0));
+    const a34 = clamp(0, 180, fold.a34 - (bh === 3 ? bv : 0)), flip = clamp(0, 180, fold.flip + (bh === 4 ? bv : 0));
+    const rest = (introDone && !peek.v && !bv) ? restAt(t) : null;
     const reading = rest && READING[rest] ? rest : null;
     if (peekOn && t > 1) setPeek(false);
 
@@ -395,13 +398,18 @@ function init(CFG: Config) {
   addEventListener('wheel', killScroll, { passive: true });
   addEventListener('touchstart', killScroll, { passive: true });
   addEventListener('keydown', e => { if (!['Tab', 'Enter', ' ', 'Shift'].includes(e.key)) killScroll(); });
-  function scrollToY(y: number, dur?: number, label?: string) {
+  interface ScrollOpts { ease?: string; direct?: boolean; done?: () => void }
+  function scrollToY(y: number, dur?: number, label?: string, so?: ScrollOpts) {
     killScroll();
-    const from = scrollY, dist = Math.abs(y - from);
-    if (dur === 0 || dist < 2) { window.scrollTo(0, y); return; }
+    const from = scrollY, dist = Math.abs(y - from), o2 = so || {};
+    if (dur === 0 || dist < 2) { window.scrollTo(0, y); if (o2.direct) follow(); if (o2.done) o2.done(); return; }
     const o = { y: from };
     scrollTarget = label || null;
-    scrollTw = gsap.to(o, { y, duration: dur || clamp(.7, 1.8, dist / 2400), ease: 'power3.inOut', onUpdate: () => window.scrollTo(0, Math.round(o.y)), onComplete: () => { scrollTw = null; scrollTarget = null; } });
+    scrollTw = gsap.to(o, {
+      y, duration: dur || clamp(.7, 1.8, dist / 2400), ease: o2.ease || 'power3.inOut',
+      onUpdate: () => { window.scrollTo(0, Math.round(o.y)); if (o2.direct) follow(); },
+      onComplete: () => { scrollTw = null; scrollTarget = null; if (o2.done) o2.done(); },
+    });
   }
   const labelY = (name: LabelName) => Math.round(st!.start + (st!.end - st!.start) * LABELS[name] / T);
   function jumpInstant(name: LabelName) {
@@ -498,9 +506,11 @@ function init(CFG: Config) {
   });
 
   /* ---------- gestures: pull the paper sideways to turn the leaflet ----------
-     A sideways swipe on a trackpad, or a drag with the mouse or a finger, moves through the same scroll as the wheel,
-     so the paper follows the hand; pulling to the right opens it, the way the cover's free edge lifts and swings over. Letting go of a drag turns to
-     the next page that way (or back, after a nudge); a swipe settles through the scroll's own snap. */
+     A sideways swipe on a trackpad moves through the same scroll as the wheel and settles through its snap.
+     A drag with the mouse or a finger is a hand on the paper: press, and the page that turns next lifts its free edge;
+     drag, and the paper follows the hand exactly (pulling to the right opens it, the way the cover swings over);
+     let go, and it carries on to the next page that way (or back, after a nudge) and lands with a small settle.
+     Past the first and last page it gives like rubber. */
   const pxPerDx = () => innerHeight * 1.15 / (S.W || 500); // a pull across one panel is about one turn
   const maxY = () => document.documentElement.scrollHeight - innerHeight;
   addEventListener('wheel', e => {
@@ -512,35 +522,70 @@ function init(CFG: Config) {
     window.scrollTo(0, clamp(0, maxY(), scrollY - dx * pxPerDx()));
   }, { passive: false });
 
+  /* the paper is where the scroll says, now: the scrub's easing would leave it trailing behind the hand */
+  function follow() {
+    ScrollTrigger.update();
+    const tw = st && st.getTween && st.getTween();
+    if (tw) tw.progress(1);
+  }
+  // which hinge lifts when the paper is pressed at each rest (degrees towards the next page; on the reply, back)
+  const LIFT: Partial<Record<LabelName, [number, number]>> = { cover: [1, 14], hello: [2, 12], work: [3, 12], poster: [4, 8], reply: [4, -8] };
+  // which hinge turns between two neighbouring rests
+  const TURN: Record<string, number> = { 'cover>hello': 1, 'hello>work': 2, 'work>menu': 3, 'poster>reply': 4 };
+  function bendTo(v: number, dur: number, ease: string) {
+    gsap.killTweensOf(bend);
+    return gsap.to(bend, { v, duration: dur, ease, onUpdate: render, onComplete: render });
+  }
+
   interface Drag { id: number; x: number; y: number; y0: number; on: boolean; lx: number; lt: number; vx: number }
   let drag: Drag | null = null, dragClick = false;
   const NO_DRAG = 'a, button, input, textarea, select, label, summary, [contenteditable], .open-tab';
   stage.addEventListener('pointerdown', e => {
-    if (S.mode !== 'leaf' || !st || !introDone || e.button !== 0 || (e.target as Element).closest(NO_DRAG)) return;
+    if (S.mode !== 'leaf' || !st || !master || !introDone || e.button !== 0 || (e.target as Element).closest(NO_DRAG)) return;
+    killScroll();
+    gsap.killTweensOf(intro);
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, y0: scrollY, on: false, lx: e.clientX, lt: e.timeStamp, vx: 0 };
+    d.classList.add('page-hold');
+    // the page that turns next lifts its free edge (on the cover it takes over from the corner peek)
+    const t = master.time(), at = (t < 1 ? 'cover' : restAt(t)) as LabelName | null, lift = at && LIFT[at];
+    if (!lift) return;
+    if (bend.h !== lift[0]) { gsap.killTweensOf(bend); bend.v = 0; bend.h = lift[0]; }
+    if (lift[0] === 1 && peek.v) { gsap.killTweensOf(peek); bend.v = peek.v; peek.v = 0; peekOn = false; }
+    bendTo(lift[1], .28, 'ui');
   });
+  function letGo() {
+    drag = null;
+    d.classList.remove('page-hold', 'page-drag');
+    if (intro.dx) gsap.to(intro, { dx: 0, duration: .7, ease: 'elastic.out(1, .55)', onUpdate: render, onComplete: render });
+  }
   addEventListener('pointermove', e => {
     if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (!drag.on) {
-      if (Math.abs(dy) > 10 && Math.abs(dy) >= Math.abs(dx)) { drag = null; return; } // up and down stays a selection or a scroll
+      // up and down stays a selection or a scroll: the page is put down
+      if (Math.abs(dy) > 10 && Math.abs(dy) >= Math.abs(dx)) { letGo(); if (bend.v) bendTo(0, .3, 'power2.out'); return; }
       if (Math.abs(dx) < 10) return;
       drag.on = true;
-      killScroll();
       try { stage.setPointerCapture(e.pointerId); } catch { /* ignore */ }
       d.classList.add('page-drag');
+      if (dx < 0 && bend.v) bendTo(0, .25, 'power2.out'); // pulled back: the lifted page lies down again
     }
     getSelection()?.removeAllRanges();
     const dt = e.timeStamp - drag.lt;
     if (dt > 0) drag.vx = .7 * drag.vx + .3 * (e.clientX - drag.lx) / dt;
     drag.lx = e.clientX; drag.lt = e.timeStamp;
-    window.scrollTo(0, clamp(0, maxY(), drag.y0 + dx * pxPerDx()));
+    const k = pxPerDx(), y = drag.y0 + dx * k, top = maxY();
+    const over = y < 0 ? y / k : y > top ? (y - top) / k : 0;
+    intro.dx = over ? Math.sign(over) * 56 * (1 - 1 / (1 + Math.abs(over) / 150)) : 0;
+    window.scrollTo(0, clamp(0, top, y));
+    follow();
+    render();
   });
   function endDrag(e: PointerEvent) {
     if (!drag || e.pointerId !== drag.id) return;
-    const g = drag; drag = null;
-    if (!g.on || !st) return;
-    d.classList.remove('page-drag');
+    const g = drag;
+    letGo();
+    if (!g.on || !st) { if (bend.v) bendTo(0, .3, 'power2.out'); return; }
     // the click that ends a drag is not a click (on the poster it would zoom in)
     dragClick = true; setTimeout(() => { dragClick = false; }, 0);
     const dx = e.clientX - g.x, flick = e.timeStamp - g.lt < 80 && Math.abs(g.vx) > .45;
@@ -549,11 +594,31 @@ function init(CFG: Config) {
     let to: LabelName = currentLabel();
     if (dir > 0) to = ORDER.find(n => LABELS[n] > t + 1) || 'reply';
     if (dir < 0) to = [...ORDER].reverse().find(n => LABELS[n] < t - 1) || 'cover';
-    goTo(to, { dur: .7 });
+    dropOn(to, dir, flick, t);
   }
   addEventListener('pointerup', endDrag);
   addEventListener('pointercancel', endDrag);
   addEventListener('click', e => { if (dragClick) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+  /* letting go: the page carries on under its own ease, the scrub kept out of it, then lands
+     with a small settle, bouncing up a touch the way it came before it lies flat */
+  function dropOn(to: LabelName, dir: number, flick: boolean, t: number) {
+    const dur = clamp(.3, .75, Math.abs(LABELS[to] - t) / 120 * .8);
+    const prev = dir ? ORDER[ORDER.indexOf(to) - dir] : undefined;
+    const h = prev ? (TURN[dir > 0 ? `${prev}>${to}` : `${to}>${prev}`] || 0) : 0;
+    if (bend.v) bendTo(0, dur, 'power2.out');
+    scrollToY(labelY(to), dur, to, {
+      ease: flick ? 'power3.out' : 'power2.inOut', direct: true,
+      done: () => {
+        if (!h || (h === 3 && dir > 0)) return; // the third fold lands on its own air cushion
+        gsap.killTweensOf(bend);
+        bend.h = h; bend.v = 0;
+        gsap.timeline({ onUpdate: render, onComplete: render })
+          .to(bend, { v: -dir * 3, duration: .12, ease: 'power1.out' })
+          .to(bend, { v: 0, duration: .34, ease: 'sine.inOut' });
+      },
+    });
+  }
 
   /* ---------- build: the 3D leaflet ---------- */
   function buildMaster() {
@@ -756,7 +821,7 @@ function init(CFG: Config) {
     peekOn = on;
     gsap.to(peek, { v: on ? 13 : 0, duration: on ? .45 : .6, ease: on ? 'ui' : 'power2.inOut', overwrite: true, onUpdate: render, onComplete: render });
   }
-  const canPeek = () => S.mode === 'leaf' && introDone && !previewTl && master && master.time() < 1 && !scrollTw;
+  const canPeek = () => S.mode === 'leaf' && introDone && !previewTl && master && master.time() < 1 && !scrollTw && !drag;
   face.cover.el.addEventListener('pointermove', e => {
     if (!canPeek() || !mmFine.matches) return;
     const r = face.cover.el.getBoundingClientRect();
@@ -1017,13 +1082,13 @@ function init(CFG: Config) {
     const els: Element[] = [...panels, ...FACES.map(f => f.shade), ...FACES.filter(f => f.cast).map(f => f.cast as HTMLElement),
       camera, edge, posterLoop, dSharp, dSoft, perfLine, scissors, quoteSlip, wrap, hint, openTab, ...tags, ...cropPaths, ...$$('.pm'), ...$$('.op-word')];
     gsap.killTweensOf(els);
-    gsap.killTweensOf([fold, cam, intro, peek]);
+    gsap.killTweensOf([fold, cam, intro, peek, bend]);
     gsap.set(els, { clearProps: 'all' });
     [dSharp, dSoft].forEach(el => { const s = el as ShadowEl; s.__tf = s.__w = s.__o = null; });
     Object.assign(intro, { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 });
     peek.v = 0; peekOn = false; introDone = true;
     for (const k in drawn) delete drawn[k];
-    drag = null; d.classList.remove('page-drag');
+    drag = null; d.classList.remove('page-hold', 'page-drag'); bend.h = bend.v = 0;
   }
   function applyMode(opts?: ModeOpts) {
     const o = opts || {};
