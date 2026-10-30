@@ -2,6 +2,7 @@
 
 Captured from the live web demo (https://arc-ko.vercel.app/?demo, a simulated EP-133). Desktop 1440x900 and phone 390x844, both at 2x.
 
+- `00-cover-device.webp`: Cover: the EP-133 drawing, the phone device browser and a saved backup
 - `01-live.webp`: Live: the EP-133 mirrored on screen as you play, with tools and the Claude beat prompt
 - `02-live-one-group.webp`: Live in One group view: a large pad grid for a single group
 - `03-backups.webp`: Backups library: every backup saved with its sound and project counts

@@ -18,15 +18,15 @@ import ssCards from '../assets/projects/skillsoft/02-results-competency-cards.we
 import ssPsy from '../assets/projects/skillsoft/05-psychometrics-dashboard.webp';
 import ssTest from '../assets/projects/skillsoft/10-candidate-test.webp';
 import ssMapper from '../assets/projects/skillsoft/11-skill-mapper.webp';
+import arcCover from '../assets/projects/arc/00-cover-device.webp';
 import arcLive from '../assets/projects/arc/01-live.webp';
 import arcBackups from '../assets/projects/arc/03-backups.webp';
 import arcDevice from '../assets/projects/arc/06-device.webp';
 import arcGuide from '../assets/projects/arc/09-guide.webp';
-import arcWhat from '../assets/projects/arc/11-whats-what.webp';
+import trCover from '../assets/projects/translator/00-cover-dark.webp';
 import trDashboard from '../assets/projects/translator/02-dashboard.webp';
 import trDetail from '../assets/projects/translator/04-event-detail.webp';
 import trManager from '../assets/projects/translator/05-message-manager.webp';
-import trLogs from '../assets/projects/translator/10-logs.webp';
 import kCover from '../assets/projects/cards/desktop/00-cover-fan.webp';
 import kReview from '../assets/projects/cards/desktop/01-review.webp';
 import kAdd from '../assets/projects/cards/desktop/02-add-suggestions.webp';
@@ -61,18 +61,18 @@ export const galleries: Record<string, Shot[]> = {
     { src: ssTest, caption: { en: 'Full-screen test player', fr: 'Lecteur de test plein écran' } },
   ],
   arc: [
+    { src: arcCover, caption: { en: 'The drum machine, the phone and the backups', fr: 'La boîte à rythmes, le téléphone et les sauvegardes' } },
     { src: arcLive, caption: { en: 'The drum machine, live on screen', fr: 'La boîte à rythmes en direct à l’écran' } },
     { src: arcBackups, caption: { en: 'Library of backups', fr: 'Bibliothèque de sauvegardes' } },
     { src: arcDevice, caption: { en: 'Sounds and projects on the device', fr: 'Sons et projets sur l’appareil' } },
     { src: arcGuide, caption: { en: 'Guide to 100 key combos', fr: 'Guide de 100 raccourcis' } },
-    { src: arcWhat, caption: { en: 'Every control labelled', fr: 'Chaque commande expliquée' } },
   ],
   translator: [
+    { src: trCover, caption: { en: 'A Russian post and its English translation', fr: 'Un post russe et sa traduction anglaise' } },
     { src: '/work/translator.svg', caption: { en: 'How a post gets translated', fr: 'Comment un post est traduit' } },
     { src: trDashboard, caption: { en: 'Dashboard: volume, timing, latency', fr: `Tableau de bord${N}: volume, horaires, latence` } },
     { src: trDetail, caption: { en: 'Source and translation side by side', fr: 'Original et traduction côte à côte' } },
     { src: trManager, caption: { en: 'Re-post a message by hand', fr: 'Republier un message à la main' } },
-    { src: trLogs, caption: { en: 'Live log with retries', fr: 'Journal en direct avec relances' } },
   ],
   cards: [
     { src: kCover, caption: { en: 'Review, word detail and progress', fr: 'Révision, fiche du mot et progrès' } },
