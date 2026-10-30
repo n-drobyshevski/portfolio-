@@ -394,22 +394,17 @@ function init(CFG: Config) {
   }
 
   /* ---------- scrolling: native, with a few guided jumps ---------- */
-  function killScroll() { if (scrollTw) { scrollTw.kill(); scrollTw = null; scrollTarget = null; } }
+  function killScroll() { if (scrollTw) { scrollTw.kill(); scrollTw = null; scrollTarget = null; } stopGlide(); }
   addEventListener('wheel', killScroll, { passive: true });
   addEventListener('touchstart', killScroll, { passive: true });
   addEventListener('keydown', e => { if (!['Tab', 'Enter', ' ', 'Shift'].includes(e.key)) killScroll(); });
-  interface ScrollOpts { ease?: string; direct?: boolean; done?: () => void }
-  function scrollToY(y: number, dur?: number, label?: string, so?: ScrollOpts) {
+  function scrollToY(y: number, dur?: number, label?: string) {
     killScroll();
-    const from = scrollY, dist = Math.abs(y - from), o2 = so || {};
-    if (dur === 0 || dist < 2) { window.scrollTo(0, y); if (o2.direct) follow(); if (o2.done) o2.done(); return; }
+    const from = scrollY, dist = Math.abs(y - from);
+    if (dur === 0 || dist < 2) { window.scrollTo(0, y); return; }
     const o = { y: from };
     scrollTarget = label || null;
-    scrollTw = gsap.to(o, {
-      y, duration: dur || clamp(.7, 1.8, dist / 2400), ease: o2.ease || 'power3.inOut',
-      onUpdate: () => { window.scrollTo(0, Math.round(o.y)); if (o2.direct) follow(); },
-      onComplete: () => { scrollTw = null; scrollTarget = null; if (o2.done) o2.done(); },
-    });
+    scrollTw = gsap.to(o, { y, duration: dur || clamp(.7, 1.8, dist / 2400), ease: 'power3.inOut', onUpdate: () => window.scrollTo(0, Math.round(o.y)), onComplete: () => { scrollTw = null; scrollTarget = null; } });
   }
   const labelY = (name: LabelName) => Math.round(st!.start + (st!.end - st!.start) * LABELS[name] / T);
   function jumpInstant(name: LabelName) {
@@ -507,8 +502,9 @@ function init(CFG: Config) {
   /* ---------- gestures: pull the paper sideways to turn the leaflet ----------
      A sideways swipe on a trackpad moves through the same scroll as the wheel and settles through its snap.
      A drag with the mouse or a finger is a hand on the paper: press, and the page that turns next lifts its free edge;
-     drag, and the paper follows the hand exactly (pulling to the right opens it, the way the cover swings over);
-     let go, and it carries on to the next page that way (or back, after a nudge) and lands with a small settle.
+     drag, and the paper follows the hand a breath behind (pulling to the right opens it, the way the cover swings over);
+     let go, and it glides on at the hand's speed to the next page that way (or back, after a nudge), slowing as it
+     arrives, and lands with a small settle.
      Past the first and last page it gives like rubber. */
   const pxPerDx = () => innerHeight * 1.15 / (S.W || 500); // a pull across one panel is about one turn
   const maxY = () => document.documentElement.scrollHeight - innerHeight;
@@ -521,7 +517,7 @@ function init(CFG: Config) {
     window.scrollTo(0, clamp(0, maxY(), scrollY - dx * pxPerDx()));
   }, { passive: false });
 
-  /* the paper is where the scroll says, now: the scrub's easing would leave it trailing behind the hand */
+  /* the paper is where the scroll says, now: the scrub's own easing would leave it trailing far behind the hand */
   function follow() {
     ScrollTrigger.update();
     const tw = st && st.getTween && st.getTween();
@@ -550,7 +546,7 @@ function init(CFG: Config) {
     if (!lift) return;
     if (bend.h !== lift[0]) { gsap.killTweensOf(bend); bend.v = 0; bend.h = lift[0]; }
     if (lift[0] === 1 && peek.v) { gsap.killTweensOf(peek); bend.v = peek.v; peek.v = 0; peekOn = false; }
-    bendTo(lift[1], .28, 'ui');
+    bendTo(lift[1], .4, 'power2.out');
   });
   function letGo() {
     drag = null;
@@ -562,12 +558,13 @@ function init(CFG: Config) {
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (!drag.on) {
       // up and down stays a selection or a scroll: the page is put down
-      if (Math.abs(dy) > 10 && Math.abs(dy) >= Math.abs(dx)) { letGo(); if (bend.v) bendTo(0, .3, 'power2.out'); return; }
+      if (Math.abs(dy) > 10 && Math.abs(dy) >= Math.abs(dx)) { letGo(); if (bend.v) bendTo(0, .35, 'sine.inOut'); return; }
       if (Math.abs(dx) < 10) return;
       drag.on = true;
       try { stage.setPointerCapture(e.pointerId); } catch { /* ignore */ }
       d.classList.add('page-drag');
-      if (dx < 0 && bend.v) bendTo(0, .25, 'power2.out'); // pulled back: the lifted page lies down again
+      if (dx < 0 && bend.v) bendTo(0, .35, 'sine.inOut'); // pulled back: the lifted page lies down again
+      startGlide();
     }
     getSelection()?.removeAllRanges();
     const dt = e.timeStamp - drag.lt;
@@ -576,15 +573,14 @@ function init(CFG: Config) {
     const k = pxPerDx(), y = drag.y0 + dx * k, top = maxY();
     const over = y < 0 ? y / k : y > top ? (y - top) / k : 0;
     intro.dx = over ? Math.sign(over) * 56 * (1 - 1 / (1 + Math.abs(over) / 150)) : 0;
-    window.scrollTo(0, clamp(0, top, y));
-    follow();
-    render();
+    glide.hand = clamp(0, top, y);
+    if (over) render();
   });
   function endDrag(e: PointerEvent) {
     if (!drag || e.pointerId !== drag.id) return;
     const g = drag;
     letGo();
-    if (!g.on || !st) { if (bend.v) bendTo(0, .3, 'power2.out'); return; }
+    if (!g.on || !st) { if (bend.v) bendTo(0, .35, 'sine.inOut'); return; }
     // the click that ends a drag is not a click (on the poster it would zoom in)
     dragClick = true; setTimeout(() => { dragClick = false; }, 0);
     const dx = e.clientX - g.x, flick = e.timeStamp - g.lt < 80 && Math.abs(g.vx) > .45;
@@ -593,30 +589,64 @@ function init(CFG: Config) {
     let to: LabelName = currentLabel();
     if (dir > 0) to = ORDER.find(n => LABELS[n] > t + 1) || 'reply';
     if (dir < 0) to = [...ORDER].reverse().find(n => LABELS[n] < t - 1) || 'cover';
-    dropOn(to, dir, flick, t);
+    dropOn(to, dir);
   }
   addEventListener('pointerup', endDrag);
   addEventListener('pointercancel', endDrag);
   addEventListener('click', e => { if (dragClick) { e.preventDefault(); e.stopPropagation(); } }, true);
 
-  /* letting go: the page carries on under its own ease, the scrub kept out of it, then lands
-     with a small settle, bouncing up a touch the way it came before it lies flat */
-  function dropOn(to: LabelName, dir: number, flick: boolean, t: number) {
-    const dur = clamp(.3, .75, Math.abs(LABELS[to] - t) / 120 * .8);
+  /* the paper's own motion under a hand. While held it chases the hand a tenth of a second behind, so the folds run
+     smooth instead of taking every jitter of the mouse; let go, it leaves at exactly the speed it had and eases into
+     the next rest along one smooth curve (a Hermite curve: no stall at the release, no kick, no overshoot past the page) */
+  const glide = { on: false, y: 0, v: 0, hand: 0, goal: -1, h: 0, dir: 0, t: 0, dur: 0, y0: 0, m0: 0 };
+  function startGlide() {
+    if (!glide.on) { glide.y = scrollY; glide.v = 0; glide.on = true; gsap.ticker.add(glideTick); }
+    glide.hand = glide.y; glide.goal = -1;
+  }
+  function stopGlide() {
+    if (!glide.on || (drag && drag.on)) return;
+    glide.on = false; glide.goal = -1; gsap.ticker.remove(glideTick);
+    if (scrollTarget && !scrollTw) scrollTarget = null;
+  }
+  function glideTick(_t: number, ms: number) {
+    const dt = Math.min(.05, ms / 1000) || .016;
+    if (drag && drag.on) {
+      const gap = glide.hand - glide.y;
+      if (Math.abs(gap) < .5) { glide.v = 0; if (!gap) return; glide.y = glide.hand; } // caught up: the paper rests in the hand
+      else { const y = glide.y + gap * (1 - Math.exp(-dt / .1)); glide.v = (y - glide.y) / dt; glide.y = y; }
+    } else if (glide.goal >= 0) {
+      glide.t = Math.min(1, glide.t + dt / glide.dur);
+      const u = glide.t, u2 = u * u, u3 = u2 * u;
+      glide.y = (2 * u3 - 3 * u2 + 1) * glide.y0 + (u3 - 2 * u2 + u) * glide.m0 + (3 * u2 - 2 * u3) * glide.goal;
+      if (u >= 1) { window.scrollTo(0, glide.goal); follow(); landed(); return; }
+    } else { stopGlide(); return; }
+    window.scrollTo(0, glide.y);
+    follow();
+  }
+  /* letting go: aim the glide at the page, and let the lifted edge down on the way */
+  function dropOn(to: LabelName, dir: number) {
+    if (!glide.on) startGlide();
     const prev = dir ? ORDER[ORDER.indexOf(to) - dir] : undefined;
-    const h = prev ? (TURN[dir > 0 ? `${prev}>${to}` : `${to}>${prev}`] || 0) : 0;
-    if (bend.v) bendTo(0, dur, 'power2.out');
-    scrollToY(labelY(to), dur, to, {
-      ease: flick ? 'power3.out' : 'power2.inOut', direct: true,
-      done: () => {
-        if (!h || (h === 3 && dir > 0)) return; // the third fold lands on its own air cushion
-        gsap.killTweensOf(bend);
-        bend.h = h; bend.v = 0;
-        gsap.timeline({ onUpdate: render, onComplete: render })
-          .to(bend, { v: -dir * 3, duration: .12, ease: 'power1.out' })
-          .to(bend, { v: 0, duration: .34, ease: 'sine.inOut' });
-      },
-    });
+    glide.h = prev ? (TURN[dir > 0 ? `${prev}>${to}` : `${to}>${prev}`] || 0) : 0;
+    glide.dir = dir; glide.goal = labelY(to); scrollTarget = to;
+    // as long as it would take to coast there at the hand's speed, within a calm half to most of a second;
+    // the hand's speed carries over, but never so much that the curve would shoot past the page
+    const left = glide.goal - glide.y, sp = Math.abs(glide.v);
+    glide.dur = clamp(.45, .9, sp > 1 ? 2 * Math.abs(left) / sp : .9);
+    glide.m0 = Math.sign(left) === Math.sign(glide.v) ? clamp(-2.5 * Math.abs(left), 2.5 * Math.abs(left), glide.v * glide.dur) : 0;
+    glide.y0 = glide.y; glide.t = 0;
+    if (bend.v) bendTo(0, glide.dur * .8, 'sine.inOut');
+  }
+  /* it lies down: a small settle, bouncing up a touch the way it came before it lies flat */
+  function landed() {
+    const h = glide.h, dir = glide.dir;
+    stopGlide();
+    if (!h || (h === 3 && dir > 0)) return; // the third fold lands on its own air cushion
+    gsap.killTweensOf(bend);
+    bend.h = h; bend.v = 0;
+    gsap.timeline({ onUpdate: render, onComplete: render })
+      .to(bend, { v: -dir * 2.5, duration: .2, ease: 'sine.out' })
+      .to(bend, { v: 0, duration: .5, ease: 'sine.inOut' });
   }
 
   /* ---------- build: the 3D leaflet ---------- */
@@ -1087,7 +1117,7 @@ function init(CFG: Config) {
     Object.assign(intro, { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 });
     peek.v = 0; peekOn = false; introDone = true;
     for (const k in drawn) delete drawn[k];
-    drag = null; d.classList.remove('page-hold', 'page-drag'); bend.h = bend.v = 0;
+    drag = null; d.classList.remove('page-hold', 'page-drag'); bend.h = bend.v = 0; stopGlide();
   }
   function applyMode(opts?: ModeOpts) {
     const o = opts || {};
