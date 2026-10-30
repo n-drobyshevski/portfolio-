@@ -861,7 +861,7 @@ function init(CFG: Config) {
   }
   summary.addEventListener('click', e => { e.preventDefault(); if (details.open) closeContents(); else openContents(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && details.open) { closeContents(); summary.focus(); } });
-  document.addEventListener('pointerdown', e => { if (details.open && !details.contains(e.target as Node)) closeContents(); });
+  document.addEventListener('pointerdown', e => { if (details.open && (!details.contains(e.target as Node) || e.target === details)) closeContents(); });
 
   /* EN / FR are real links between / and /fr/. They carry the current panel in the hash so the reader lands where they were. */
   $$<HTMLAnchorElement>('[data-lang-link]').forEach(a => {

@@ -53,6 +53,6 @@ const { locale, path = '', wide = false, here } = Astro.props;
     };
     summary.addEventListener('click', (e) => { e.preventDefault(); if (details.open) close(); else open(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && details.open) { close(); summary.focus(); } });
-    document.addEventListener('pointerdown', (e) => { if (details.open && !details.contains(e.target as Node)) close(); });
+    document.addEventListener('pointerdown', (e) => { if (details.open && (!details.contains(e.target as Node) || e.target === details)) close(); });
   }
 </script>
