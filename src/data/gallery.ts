@@ -68,8 +68,8 @@ export const galleries: Record<string, Shot[]> = {
     { src: arcGuide, caption: { en: 'Guide to 100 key combos', fr: 'Guide de 100 raccourcis' } },
   ],
   translator: [
-    { src: trCover, caption: { en: 'A Russian post and its English translation', fr: 'Un post russe et sa traduction anglaise' } },
     { src: '/work/translator.svg', caption: { en: 'How a post gets translated', fr: 'Comment un post est traduit' } },
+    { src: trCover, caption: { en: 'A Russian post and its English translation', fr: 'Un post russe et sa traduction anglaise' } },
     { src: trDashboard, caption: { en: 'Dashboard: volume, timing, latency', fr: `Tableau de bord${N}: volume, horaires, latence` } },
     { src: trDetail, caption: { en: 'Source and translation side by side', fr: 'Original et traduction côte à côte' } },
     { src: trManager, caption: { en: 'Re-post a message by hand', fr: 'Republier un message à la main' } },

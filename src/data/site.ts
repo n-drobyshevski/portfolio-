@@ -58,7 +58,7 @@ export const site = {
     { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026', image: '/work/planner-phones.webp' },
     { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft-results.webp' },
     { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo', image: '/work/arc-device.webp' },
-    { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026', image: '/work/translator-dark.webp' },
+    { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026', image: '/work/translator.svg' },
     { id: 'cards', client: { en: 'French Cards', fr: 'Cartes de français' }, year: '2026', leaflet: false },
   ] as Project[],
   /** Legal notice details (mentions légales). */

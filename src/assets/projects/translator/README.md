@@ -1,4 +1,4 @@
-00-cover-dark.webp: Cover: a Russian post and its English translation over the dashboard
+00-cover-dark.webp: Second image in the pop-up: a Russian post and its English translation over the dashboard
 01-login.webp: Admin login page
 02-dashboard.webp: Main dashboard: posts per channel, daily volume, posting-hours heatmap and throughput vs latency
 03-events.webp: Events table with OK and FAIL status per translated post
