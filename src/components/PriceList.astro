@@ -89,6 +89,9 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     const calm = matchMedia('(prefers-reduced-motion: reduce)');
     let current = '';
     let queued = false;
+    /* a tab that was just chosen stays marked, even when the page cannot scroll its section to the top,
+       until the reader scrolls on their own */
+    let chosen = sections.some((s) => `#${s.id}` === location.hash) ? location.hash.slice(1) : '';
     const ends = () => {
       list.toggleAttribute('data-start', list.scrollLeft < 2);
       list.toggleAttribute('data-end', list.scrollLeft + list.clientWidth > list.scrollWidth - 2);
@@ -100,6 +103,7 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
       let id = '';
       for (const s of sections) if (s.getBoundingClientRect().top <= bar.bottom + 32) id = s.id;
       if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) id = sections[sections.length - 1]?.id ?? id;
+      if (chosen) id = chosen;
       if (id === current) return;
       current = id;
       for (const a of links) {
@@ -110,6 +114,13 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
       }
     };
     const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    nav.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest('a');
+      if (a) { chosen = a.hash.slice(1); queue(); }
+    });
+    for (const type of ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const) {
+      addEventListener(type, (e) => { if (chosen && !nav.contains(e.target as Node)) { chosen = ''; queue(); } }, { passive: true });
+    }
     addEventListener('scroll', queue, { passive: true });
     addEventListener('resize', () => { ends(); queue(); });
     list.addEventListener('scroll', ends, { passive: true });
@@ -157,10 +168,10 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
   .it__lead svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; }
 
   /* the two rates, as tickets side by side */
-  .rates { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-  .rates li { padding: 16px 18px 18px; border: 1px solid var(--crease-dark); background: var(--paper-hi); }
-  .rates h3 { font: 400 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
-  .rates__v { margin-top: 10px; font: 700 34px/1 var(--sans); letter-spacing: -.025em; }
+  .rates { display: grid; grid-template-columns: repeat(2, minmax(0, 190px)); gap: 10px; margin-top: 16px; }
+  .rates li { display: flex; flex-direction: column; justify-content: space-between; gap: 6px; padding: 11px 14px 13px; border: 1px solid var(--crease-dark); background: var(--paper-hi); }
+  .rates h3 { font: 400 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .rates__v { font: 700 24px/1 var(--sans); letter-spacing: -.025em; }
 
   .terms { margin-top: 4px; columns: 2; column-gap: 32px; counter-reset: t; }
   .terms li { counter-increment: t; display: flex; gap: 12px; padding: 11px 0 12px; border-bottom: 1px solid var(--crease); break-inside: avoid; line-height: 1.4; }
@@ -184,7 +195,6 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     .it h3, .it__price { font-size: 17px; }
     .it__price { text-align: right; }
     .it__unit { display: block; margin-top: 2px; }
-    .rates__v { font-size: 30px; }
   }
   @media (prefers-reduced-motion: no-preference) { :global(html) { scroll-behavior: smooth; } }
   @media print {
