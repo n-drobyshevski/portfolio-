@@ -22,7 +22,6 @@ import arcLive from '../assets/projects/arc/01-live.webp';
 import arcBackups from '../assets/projects/arc/03-backups.webp';
 import arcDevice from '../assets/projects/arc/06-device.webp';
 import arcGuide from '../assets/projects/arc/09-guide.webp';
-import trCover from '../assets/projects/translator/00-cover-dark.webp';
 import trDashboard from '../assets/projects/translator/02-dashboard.webp';
 import trDetail from '../assets/projects/translator/04-event-detail.webp';
 import trManager from '../assets/projects/translator/05-message-manager.webp';
@@ -67,8 +66,8 @@ export const galleries: Record<string, Shot[]> = {
     { src: arcGuide, caption: { en: 'Guide to 100 key combos', fr: 'Guide de 100 raccourcis' } },
   ],
   translator: [
+    { src: '/work/translator-telegram.svg', caption: { en: 'Every Russian channel gets an English twin', fr: 'Chaque chaîne russe a son double en anglais' } },
     { src: '/work/translator.svg', caption: { en: 'How a post gets translated', fr: 'Comment un post est traduit' } },
-    { src: trCover, caption: { en: 'A Russian post and its English translation', fr: 'Un post russe et sa traduction anglaise' } },
     { src: trDashboard, caption: { en: 'Dashboard: volume, timing, latency', fr: `Tableau de bord${N}: volume, horaires, latence` } },
     { src: trDetail, caption: { en: 'Source and translation side by side', fr: 'Original et traduction côte à côte' } },
     { src: trManager, caption: { en: 'Re-post a message by hand', fr: 'Republier un message à la main' } },
