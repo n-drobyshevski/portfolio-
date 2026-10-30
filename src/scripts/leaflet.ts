@@ -473,7 +473,6 @@ function init(CFG: Config) {
     e.preventDefault();
     closeContents(true);
     if (dlg.open) closeLoose(true);
-    if (a.classList.contains('tag') && S.mode !== 'calm') tug(a);
     if (S.mode === 'leaf') goTo(label); else goTo(label, { id });
     if (e.detail === 0) { // keyboard: carry focus to where we land
       const target = document.getElementById(id === 'contact' ? 'contact-h' : id);
@@ -1127,16 +1126,7 @@ function init(CFG: Config) {
   const onPref = () => { motionLabel(); applyMode(keepOpts()); };
   if (mmReduce.addEventListener) mmReduce.addEventListener('change', onPref);
 
-  /* ---------- desk furniture ---------- */
-  function tug(a: HTMLElement) {
-    const card = $('.tag__card', a);
-    gsap.timeline().to(card, { y: 22, duration: .18, ease: 'power2.out' }).to(card, { y: 0, duration: .5, ease: 'expo.out', clearProps: 'transform' });
-  }
-  tags.forEach(t => t.addEventListener('mouseenter', () => {
-    if (S.mode === 'calm' || !mmFine.matches || innerWidth < 1100) return;
-    gsap.fromTo(t, { rotation: 0 }, { keyframes: { rotation: [1.5, -1, .4, 0] }, duration: .8, ease: 'sine.inOut', clearProps: 'transform' });
-  }));
-
+  /* ---------- desk furniture (the tags pull and swing on their own: scripts/tags.ts) ---------- */
   const motionBtn = $('.motion');
   function motionLabel() {
     const on = !d.classList.contains('motion-off') && !mmReduce.matches;

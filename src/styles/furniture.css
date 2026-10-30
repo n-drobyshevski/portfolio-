@@ -48,10 +48,13 @@ html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 .tag {
   position: fixed; top: 0; z-index: 21; display: block; width: 62px; text-decoration: none; color: var(--ink); transform-origin: 50% 0;
   --tag-cut: polygon(22% 0, 78% 0, 100% 16%, 100% 100%, 0 100%, 0 16%); /* the card's outline, which its shadow shares */
+  /* pulled like a cord (scripts/tags.ts): --pull stretches the string, --swing turns the tag on it */
+  rotate: var(--swing, 0deg); cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none;
 }
+.tag--held { cursor: grabbing; }
 .tag--work { right: 106px; }
 .tag--prices { right: 34px; }
-.tag::before { content: ""; display: block; width: 1px; margin: 0 auto; background: var(--string); height: var(--str, 46px); }
+.tag::before { content: ""; display: block; width: 1px; margin: 0 auto; background: var(--string); height: calc(var(--str, 46px) + var(--pull, 0px)); }
 .tag--prices { --str: 74px; }
 .tag__card {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
@@ -62,9 +65,12 @@ html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 }
 .tag__card::before { content: ""; position: absolute; top: 10px; left: 50%; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: var(--desk); box-shadow: 0 0 0 2.5px var(--paper-hi); }
 .tag__card::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 34px; border-top: 1px dashed var(--crease-dark); }
-.tag__shadow { position: absolute; left: 4px; right: -4px; top: calc(var(--str, 46px) - 2px); height: 92px; background: rgb(var(--sh) / .14); clip-path: var(--tag-cut); z-index: -1; }
+.tag__shadow { position: absolute; left: 4px; right: -4px; top: calc(var(--str, 46px) + var(--pull, 0px) - 2px); height: 92px; background: rgb(var(--sh) / .14); clip-path: var(--tag-cut); z-index: -1; }
 .tag:hover .tag__card, .tag:focus-visible .tag__card, .tag[aria-current="page"] .tag__card { transform: translateY(6px); }
 .tag:focus-visible { outline-offset: -2px; }
+/* pulled far enough to open: the string and the label take the pencil */
+.tag--ready::before { background: var(--pencil); }
+.tag--ready .tag__card { color: var(--pencil-deep); }
 
 /* the free quote: a small tear-off reply slip lying on the desk, like the one on the back of the leaflet */
 .quote-slip {
