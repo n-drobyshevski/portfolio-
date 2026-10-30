@@ -22,7 +22,9 @@
      Contents on the left, where you are in the middle, and the free quote as the stub. Work and Prices are in Contents. */
   .furn {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; align-items: stretch;
-    height: calc(58px + var(--sb)); padding: 0; background: var(--paper-hi);
+    /* a slim bar; on phones with a home bar it only partly steps over the inset, which is mostly empty space */
+    --bar: 46px; --bar-pad: max(0px, calc(var(--sb) - 14px));
+    height: calc(var(--bar) + var(--bar-pad)); padding: 0; background: var(--paper-hi);
     box-shadow: 0 -12px 24px -16px rgb(var(--sh) / .4);
   }
   .furn::before { content: ""; position: absolute; left: 0; right: 0; top: 0; border-top: 1.5px dashed var(--ink-soft); pointer-events: none; }
@@ -36,24 +38,24 @@
   .stamp, .folio { position: static; transform: none; }
   .folio { order: 1; margin-left: 0; align-items: stretch; }
   .contents { margin: 0; position: static; display: flex; }
-  .contents > summary { height: 100%; padding: 0 16px var(--sb) var(--gl); gap: 9px; border-radius: 0; background: none; box-shadow: none; font-size: 15px; }
+  .contents > summary { height: 100%; padding: 0 16px var(--bar-pad) var(--gl); gap: 9px; border-radius: 0; background: none; box-shadow: none; font-size: 15px; }
   .contents > summary svg { width: 16px; height: 12px; }
   .contents[open] > summary { background: var(--ink); color: var(--paper); }
   .furn__here {
-    order: 2; flex: 1; min-width: 0; padding: 0 10px var(--sb); box-shadow: inset 1px 0 0 var(--crease);
+    order: 2; flex: 1; min-width: 0; padding: 0 10px var(--bar-pad); box-shadow: inset 1px 0 0 var(--crease);
     display: block; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-    font: 400 11.5px/58px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft);
+    font: 400 11.5px/var(--bar) var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft);
   }
   .stamp {
-    order: 3; flex: none; width: auto; height: auto; padding: 0 calc(var(--gr) + 2px) var(--sb) 16px;
+    order: 3; flex: none; width: auto; height: auto; padding: 0 calc(var(--gr) + 2px) var(--bar-pad) 16px;
     display: flex; align-items: center; border-radius: 0; border-left: 1.5px dashed var(--ink-soft);
     background: var(--note); color: var(--pencil-deep); transform: none !important;
   }
   .stamp:active { background: var(--overprint); }
   .stamp__ink, .stamp::before, .stamp__txt { display: none; }
-  .stamp__short { display: block; position: relative; white-space: nowrap; font: italic 500 18px/1 var(--serif); }
-  .stamp__short::after { content: "\00a0→"; font: 700 18px/1 var(--sans); font-style: normal; }
-  .contents__card { position: fixed; left: var(--gl); right: var(--gr); width: auto; bottom: calc(70px + var(--sb)); max-height: calc(100svh - 124px); overflow: auto; }
+  .stamp__short { display: block; position: relative; white-space: nowrap; font: italic 500 17px/1 var(--serif); }
+  .stamp__short::after { content: "\00a0→"; font: 700 17px/1 var(--sans); font-style: normal; }
+  .contents__card { position: fixed; left: var(--gl); right: var(--gr); width: auto; bottom: calc(var(--bar) + var(--bar-pad) + 12px); max-height: calc(100svh - 112px); overflow: auto; }
   .colophon { flex-direction: column; align-items: flex-start; }
   .colophon__links a { min-height: 44px; }
   .loose__wrap { display: block; padding: 0; background: var(--desk); }
