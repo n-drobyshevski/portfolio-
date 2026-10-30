@@ -3,7 +3,7 @@
 /* overprint like real ink: it sits above the page and multiplies, so photos and prints cannot hide it */
 html.leaf-3d .op { z-index: 2; mix-blend-mode: multiply; }
 /* Firefox breaks the leaflet's 3D layering when a blend mode sits inside it (pages show through each other), so there the overprint is plain ink */
-@supports (-moz-appearance: none) { html.leaf-3d .op { mix-blend-mode: normal; } }
+@supports (-moz-appearance: none) { html.leaf-3d .op { mix-blend-mode: normal; z-index: 0; } } /* and under the page content, so it does not wash over the screenshots */
 .cover__h1 .loopw .pencil { left: -5%; width: 110%; }
 .cover__place { text-wrap: pretty; }
 html.leaf-3d .op { --opfs: calc(var(--W) * .5); }

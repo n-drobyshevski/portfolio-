@@ -86,7 +86,7 @@ html.strip .shade { display: block; }
 /* work */
 .work-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .work-head .h2 { margin: 0; }
-.w1 .print { aspect-ratio: 425 / 220; transform: rotate(-.6deg); }
+.w1 .print { aspect-ratio: 425 / 220; }
 .print--btn { cursor: zoom-in; }
 .print--btn .paper { position: absolute; inset: 0; background: var(--print); clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--dog)), calc(100% - var(--dog)) 100%, 0 100%); transition: --dog .3s var(--ui); }
 .print--btn .dog { position: absolute; right: 0; bottom: 0; width: var(--dog); height: var(--dog); background: var(--paper-hi); clip-path: polygon(0 0, 100% 0, 0 100%); box-shadow: inset 1px 1px 0 var(--crease); transition: width .3s var(--ui), height .3s var(--ui); }
@@ -107,9 +107,7 @@ html.strip .shade { display: block; }
 .read .pencil--arrow { left: calc(100% + 8px); top: 4px; width: 74px; height: 32px; transform: scaleX(-1) rotate(8deg); }
 .wrow { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: start; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--crease); }
 .wrow .print { aspect-ratio: 4 / 3; }
-.wrow:nth-of-type(2) .print { transform: rotate(.5deg); }
-.wrow:nth-of-type(3) .print { transform: rotate(-.4deg); }
-.wrow:nth-of-type(4) .print { transform: rotate(.3deg); }
+/* screenshots lie square: even a slight tilt resamples them and softens the text in them */
 .wrow .print .slot { inset: 6px; font-size: 10.5px; padding: 4px; }
 /* a screenshot fills the print; inside .paper it keeps the dog-ear fold */
 .print .shot, .loose__print .shot { position: absolute; inset: 5px; width: calc(100% - 10px); height: calc(100% - 10px); object-fit: cover; object-position: top center; }
@@ -215,7 +213,7 @@ html:not(.js) .copy { display: none; }
 .loose::backdrop { background: var(--desk-veil); }
 .loose__wrap { position: relative; min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 64px 40px; }
 .loose__stage { position: relative; flex: none; width: min(58vw, 860px, calc((100svh - 250px) * 1.6)); }
-.loose__print { position: relative; width: 100%; aspect-ratio: 16 / 10; background: var(--print); transform: rotate(-.4deg); box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 30px 50px -26px rgb(var(--sh) / .5); }
+.loose__print { position: relative; width: 100%; aspect-ratio: 16 / 10; background: var(--print); box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 30px 50px -26px rgb(var(--sh) / .5); }
 .loose__print--more { cursor: pointer; }
 .loose__print .slot { font-size: 14px; }
 .loose__print .shot--contain { object-fit: contain; object-position: center; }
