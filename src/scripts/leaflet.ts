@@ -683,7 +683,7 @@ function init(CFG: Config) {
     if (!cue || scrollY > 20) return;
     gsap.set(cue, { autoAlpha: 0, y: 8 });
     cue.hidden = false;
-    gsap.to(cue, { autoAlpha: 1, y: 0, duration: .4, ease: 'power2.out', delay: .5 });
+    gsap.to(cue, { autoAlpha: .8, y: 0, duration: .4, ease: 'power2.out', delay: .5 });
     const hide = () => {
       if (scrollY < 20) return;
       removeEventListener('scroll', hide);
