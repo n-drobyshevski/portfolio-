@@ -57,7 +57,7 @@
   .contents__card { position: fixed; z-index: 2; left: var(--gl); right: var(--gr); width: auto; bottom: calc(var(--bar) + var(--bar-pad) + 12px); max-height: calc(100svh - 112px); overflow: auto;
     box-shadow: 0 0 0 1px var(--crease-dark), 0 24px 48px -12px rgb(var(--sh) / .55); }
   /* while Contents is open the page behind dims, so the card stands off the paper; a tap on the dim closes it */
-  .contents[open]::before { content: ""; position: fixed; inset: 0; z-index: 0; background: rgb(var(--sh) / .42); animation: dim .2s ease-out; }
+  .contents[open]::before { content: ""; position: fixed; inset: 0; z-index: 0; background: rgb(var(--sh) / .2); animation: dim .2s ease-out; }
   .contents > summary { position: relative; z-index: 1; }
   @keyframes dim { from { opacity: 0; } }
   .colophon { flex-direction: column; align-items: flex-start; }
