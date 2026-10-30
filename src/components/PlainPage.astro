@@ -34,17 +34,19 @@ const { locale, path = '', wide = false, here } = Astro.props;
   const card = details?.querySelector<HTMLElement>('.contents__card');
   if (details && summary && card) {
     const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const folded = { transform: 'perspective(900px) translateY(12px) rotateX(-80deg)', opacity: 0 };
+    /* on phones the tall card slides out of the bar instead of folding, which would swing it at the reader */
+    const phone = () => matchMedia('(max-width: 1099px)').matches;
+    const folded = () => phone() ? { transform: 'translateY(16px)', opacity: 0 } : { transform: 'perspective(900px) translateY(12px) rotateX(80deg)', opacity: 0 };
     const flat = { transform: 'none', opacity: 1 };
     const open = () => {
       details.open = true;
       if (still()) card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
-      else card.animate([folded, flat], { duration: 550, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+      else card.animate([folded(), flat], phone() ? { duration: 300, easing: 'cubic-bezier(.22, 1, .36, 1)' } : { duration: 550, easing: 'cubic-bezier(.22, 1, .36, 1)' });
     };
     const close = () => {
       if (!details.open) return;
       if (still()) { details.open = false; return; }
-      card.animate([flat, folded], { duration: 320, easing: 'cubic-bezier(.55, 0, 1, .45)', fill: 'forwards' }).onfinish = (e) => {
+      card.animate([flat, folded()], { duration: phone() ? 200 : 320, easing: 'cubic-bezier(.55, 0, 1, .45)', fill: 'forwards' }).onfinish = (e) => {
         details.open = false;
         (e.target as Animation).cancel();
       };

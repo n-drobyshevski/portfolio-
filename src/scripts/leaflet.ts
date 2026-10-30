@@ -844,16 +844,20 @@ function init(CFG: Config) {
 
   /* Contents: a folded card that opens up from the folio */
   const details = $<HTMLDetailsElement>('.contents'), summary = $('summary', details), card = $('.contents__card', details);
+  /* on phones the card is tall and fixed above the bar: it slides out of the bar instead of folding, which would swing it at the reader */
+  const mmBar = matchMedia('(max-width: 1099px)');
   function openContents() {
     details.open = true;
     if (S.mode === 'calm') gsap.fromTo(card, { opacity: 0 }, { opacity: 1, duration: .18, clearProps: 'opacity' });
-    else gsap.fromTo(card, { rotationX: -80, y: 12, opacity: 0, transformPerspective: 900 }, { rotationX: 0, y: 0, opacity: 1, duration: .55, ease: 'paper', clearProps: 'transform,opacity' });
+    else if (mmBar.matches) gsap.fromTo(card, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .3, ease: 'power2.out', clearProps: 'transform,opacity' });
+    else gsap.fromTo(card, { rotationX: 80, y: 12, opacity: 0, transformPerspective: 900 }, { rotationX: 0, y: 0, opacity: 1, duration: .55, ease: 'paper', clearProps: 'transform,opacity' });
   }
   function closeContents(instant?: boolean) {
     if (!details.open) return;
     gsap.killTweensOf(card);
     if (instant || S.mode === 'calm') { details.open = false; gsap.set(card, { clearProps: 'all' }); return; }
-    gsap.to(card, { rotationX: -80, y: 12, opacity: 0, transformPerspective: 900, duration: .32, ease: 'power2.in', onComplete: () => { details.open = false; gsap.set(card, { clearProps: 'all' }); } });
+    if (mmBar.matches) { gsap.to(card, { y: 16, opacity: 0, duration: .2, ease: 'power2.in', onComplete: () => { details.open = false; gsap.set(card, { clearProps: 'all' }); } }); return; }
+    gsap.to(card, { rotationX: 80, y: 12, opacity: 0, transformPerspective: 900, duration: .32, ease: 'power2.in', onComplete: () => { details.open = false; gsap.set(card, { clearProps: 'all' }); } });
   }
   summary.addEventListener('click', e => { e.preventDefault(); if (details.open) closeContents(); else openContents(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && details.open) { closeContents(); summary.focus(); } });
