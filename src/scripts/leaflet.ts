@@ -746,6 +746,7 @@ function init(CFG: Config) {
     hidePaths(coverMarks);
     unfolded.add(ab); unfolded.add(wy);
     unfolding = true;
+    d.classList.add('unfolding'); // the phone bar waits until the leaflet is open
     btn.style.setProperty('--hint-y', Math.round(top + y0 + hc * s0 + 14) + 'px');
     gsap.set(btn, { autoAlpha: 0 });
     btn.hidden = false;
@@ -789,6 +790,7 @@ function init(CFG: Config) {
       if (scrollY) scrollTo(0, 0);
       drawPaths(coverMarks, .05, .7);
       unfolding = false; finishUnfold = null;
+      d.classList.remove('unfolding');
       setFolio(PANEL_FOLIO[currentPanel().id]);
       after();
       showScrollCue();

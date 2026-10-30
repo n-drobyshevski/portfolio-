@@ -54,6 +54,9 @@
     font: italic 500 19px/1 var(--serif);
   }
   .contents__quote::after { content: "\00a0→"; font: 700 19px/1 var(--sans); font-style: normal; }
+  /* during the phone intro the bar stays tucked below the screen, then slides up once the leaflet is open */
+  .furn { transition: transform .45s var(--ui); }
+  html.js.intro:not(.leaf-3d) .furn, html.unfolding .furn { transform: translateY(calc(100% + 16px)); pointer-events: none; }
   .contents__card { position: fixed; z-index: 2; left: var(--gl); right: var(--gr); width: auto; bottom: calc(var(--bar) + var(--bar-pad) + 12px); max-height: calc(100svh - 112px); overflow: auto;
     box-shadow: 0 0 0 1px var(--crease-dark), 0 24px 48px -12px rgb(var(--sh) / .55); }
   /* while Contents is open the page behind dims, so the card stands off the paper; a tap on the dim closes it */
