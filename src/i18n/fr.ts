@@ -38,9 +38,7 @@ export const fr: Dict = {
   nav: {
     work: "Travaux",
     prices: "Tarifs",
-    quote: "Demander un devis",
-    quoteShort: "Devis gratuit",
-    stampRing: "NICOLAI DROBYSHEVSKI · DESIGN WEB · LILLE ·"
+    quoteShort: "Devis gratuit"
   },
   folio: {
     page: "Page",

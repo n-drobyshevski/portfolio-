@@ -99,7 +99,7 @@ function init(CFG: Config) {
   const face: Record<string, FaceRec> = {};
   FACES.forEach(f => { face[f.id] = f; });
   const panels = FACES.map(f => f.el);
-  const tags = $$('.tag'), stamp = $('.stamp');
+  const tags = $$('.tag'), quoteSlip = $('.quote-slip');
   const cropPaths = $$<SVGPathElement>('.crops path');
   const coverMarks = $$<SVGPathElement>('.pencil[data-g="cover"] .pm');
   const perf = $('.perf'), perfLine = $('.perf__line'), scissors = $('.scissors');
@@ -637,7 +637,7 @@ function init(CFG: Config) {
       .to(intro, { rz: 0, dx: 0, duration: .5, ease: 'expo.out' }, .52)
       .to(cropPaths, { drawSVG: '100%', duration: .4, stagger: .05, ease: 'power2.out' }, .6)
       .fromTo(tags, { rotation: 3 }, { rotation: 0, duration: .8, stagger: .08, ease: 'sine.out' }, .62)
-      .add(stampThump(), .9)
+      .add(slipThump(), .9)
       .fromTo(coverMarks, { drawSVG: '0%' }, { drawSVG: '100%', duration: .8, ease: 'power2.inOut' }, 1);
     armSkip();
   }
@@ -645,15 +645,15 @@ function init(CFG: Config) {
     introDone = true; introTl = null;
     hideSkip();
     Object.assign(intro, { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 });
-    gsap.set(tags.concat(stamp), { clearProps: 'transform' });
+    gsap.set(tags.concat(quoteSlip), { clearProps: 'transform' });
     showPaths(cropPaths); showPaths(coverMarks);
     render();
   }
-  function stampThump() {
+  function slipThump() {
     return gsap.timeline()
-      .to(stamp, { scale: 1.07, duration: .08, ease: 'power1.out' })
-      .to(stamp, { scale: .95, duration: .16, ease: 'power4.in' })
-      .to(stamp, { scale: 1, duration: .14, ease: 'power2.out' });
+      .to(quoteSlip, { scale: 1.07, duration: .08, ease: 'power1.out' })
+      .to(quoteSlip, { scale: .95, duration: .16, ease: 'power4.in' })
+      .to(quoteSlip, { scale: 1, duration: .14, ease: 'power2.out' });
   }
   function skipIntro() { previewNext = false; if (introTl) introTl.progress(1); }
   function armSkip() {
@@ -956,7 +956,7 @@ function init(CFG: Config) {
     killScroll();
     LAND.forEach(unland);
     const els: Element[] = [...panels, ...FACES.map(f => f.shade), ...FACES.filter(f => f.cast).map(f => f.cast as HTMLElement),
-      camera, edge, posterLoop, dSharp, dSoft, perfLine, scissors, stamp, wrap, hint, openTab, ...tags, ...cropPaths, ...$$('.pm'), ...$$('.op-word')];
+      camera, edge, posterLoop, dSharp, dSoft, perfLine, scissors, quoteSlip, wrap, hint, openTab, ...tags, ...cropPaths, ...$$('.pm'), ...$$('.op-word')];
     gsap.killTweensOf(els);
     gsap.killTweensOf([fold, cam, intro, peek]);
     gsap.set(els, { clearProps: 'all' });

@@ -16,6 +16,8 @@ const { d, t } = useI18n(locale);
 const loose = sheet !== undefined;
 const home = loose ? localePath(locale) : '';
 const hrefs = { en: localePath('en', sheet), fr: localePath('fr', sheet) };
+// the arrow stays with the last word, so the free quote breaks as "Free / quote →"
+const quoteWords = d.nav.quoteShort.split(' '), quoteLast = quoteWords.pop();
 const toc = [
   { href: `${home}#about`, label: d.contents.about, n: 2 },
   { href: `${home}#work`, label: d.contents.work, n: 4 },
@@ -50,14 +52,9 @@ const toc = [
 <nav class="furn" aria-label={d.ui.shortcuts}>
   <a class="tag tag--work" href={`${home}#work`}><span class="tag__shadow" aria-hidden="true"></span><span class="tag__card">{d.nav.work}</span></a>
   <a class="tag tag--prices" href={sheet === 'prices' ? '#top' : `${home}#prices`} aria-current={sheet === 'prices' ? 'page' : undefined}><span class="tag__shadow" aria-hidden="true"></span><span class="tag__card">{d.nav.prices}</span></a>
-  <a class="stamp" href={`${home}#contact`}>
-    <svg class="stamp__ink" viewBox="0 0 108 108" aria-hidden="true" focusable="false">
-      <defs><path id="stamp-ring" d="M54 54m-40.5 0a40.5 40.5 0 1 1 81 0a40.5 40.5 0 1 1-81 0"/></defs>
-      <circle cx="54" cy="54" r="51" stroke-width="2.4"/><circle cx="54" cy="54" r="47" stroke-width="1"/><circle cx="54" cy="54" r="32" stroke-width="1.2"/>
-      <text><textPath href="#stamp-ring" textLength="250" lengthAdjust="spacing">{d.nav.stampRing}</textPath></text>
-    </svg>
-    <span class="stamp__txt">{d.nav.quote}</span>
-    <span class="stamp__short">{d.nav.quoteShort}</span>
+  <a class="quote-slip" href={`${home}#contact`}>
+    <span class="quote-slip__k" aria-hidden="true">{d.contact.slipTitle}</span>
+    <span class="quote-slip__t">{quoteWords.join(' ')} <span class="quote-slip__end">{quoteLast}<span class="quote-slip__arr" aria-hidden="true">→</span></span></span>
   </a>
   <p class="furn__here">{here ?? `1 · ${d.folio.names.cover}`}</p>
   <div class="folio">
