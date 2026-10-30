@@ -8,7 +8,7 @@ interface Props {
   locale: Locale;
   /** Page path of a loose sheet lying on the desk, e.g. "prices" ("" for 404); leave out on the leaflet itself. */
   sheet?: string;
-  /** Where the reader is, shown on the Contents card on phones (the sheet's title; the leaflet keeps it up to date itself). */
+  /** Where the reader is, shown on the phone bar (the sheet's title; the leaflet keeps it up to date itself). */
   here?: string;
 }
 const { locale, sheet, here } = Astro.props;
@@ -59,6 +59,7 @@ const toc = [
     <span class="stamp__txt">{d.nav.quote}</span>
     <span class="stamp__short">{d.nav.quoteShort}</span>
   </a>
+  <p class="furn__here">{here ?? `1 · ${d.folio.names.cover}`}</p>
   <div class="folio">
     {loose ? (
       <a class="folio__back" href={sheet === 'prices' ? `${home}#prices` : home} aria-label={d.ui.backToLeaflet}><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5"/></svg><span>{d.ui.leaflet}</span></a>
@@ -70,7 +71,7 @@ const toc = [
       </>
     )}
     <details class="contents">
-      <summary><svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 1h14M0 5h14M0 9h9"/></svg><span class="contents__t">{d.contents.title}</span><span class="contents__here">{here ?? `1 · ${d.folio.names.cover}`}</span></summary>
+      <summary><svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 1h14M0 5h14M0 9h9"/></svg><span>{d.contents.title}</span></summary>
       <div class="contents__card">
         <p class="contents__h">{d.contents.title}</p>
         <ol class="toc">

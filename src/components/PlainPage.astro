@@ -10,7 +10,7 @@ interface Props {
   path?: string;
   /** A wider sheet, for pages with more to lay out (the price list). */
   wide?: boolean;
-  /** The sheet's name, shown on the Contents card on phones. */
+  /** The sheet's name, shown on the phone bar. */
   here: string;
 }
 const { locale, path = '', wide = false, here } = Astro.props;

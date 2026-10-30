@@ -101,7 +101,7 @@ function init(CFG: Config) {
   const cropPaths = $$<SVGPathElement>('.crops path');
   const coverMarks = $$<SVGPathElement>('.pencil[data-g="cover"] .pm');
   const perf = $('.perf'), perfLine = $('.perf__line'), scissors = $('.scissors');
-  const odo = $('.odo'), folioName = $('.folio__name'), folioPg = $('.folio__pg'), folioHere = $('.contents__here');
+  const odo = $('.odo'), folioName = $('.folio__name'), folioPg = $('.folio__pg'), folioHere = $('.furn__here');
   const live = $('#live'), openTab = $('.open-tab');
 
   /* ---------- the leaflet model ---------- */
