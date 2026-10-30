@@ -3,7 +3,7 @@
   :root { --ts: .97; }
   .wrap { padding: 0 var(--gr) calc(96px + var(--sb)) var(--gl); }
   .imprint, .crops, .folio__btn, .folio__label, .folio__back, .colophon__sep { display: none; }
-  .controls { position: relative; z-index: 26; display: flex; justify-content: flex-end; gap: 6px; padding: 4px var(--gr) 4px var(--gl); }
+  .controls { position: relative; inset: auto; z-index: 26; display: flex; justify-content: flex-end; gap: 6px; padding: 4px var(--gr) 4px var(--gl); }
   .sheet { max-width: 640px; }
   .face { padding: 30px 22px 36px; }
   .h2 { font-size: 30px; }
