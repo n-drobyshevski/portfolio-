@@ -89,14 +89,13 @@ html.js.intro:not(.leaf-3d) .face--cover { box-shadow: 0 1px 1px rgb(var(--sh) /
 .unfold[hidden] { display: none; }
 .unfold:focus-visible { outline: none; }
 .unfold__hint {
-  position: absolute; left: 50%; top: var(--hint-y, 70%); display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 12px;
-  border-radius: 2px; background: var(--paper); color: var(--ink); white-space: nowrap; transform: translateX(-50%);
-  font: 400 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
-  box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 10px 20px -10px rgb(var(--sh) / .5);
+  position: absolute; left: 50%; top: var(--hint-y, 70%); display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 6px;
+  color: var(--ink-soft); white-space: nowrap; opacity: .85; transform: translateX(-50%);
+  font: 400 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
 }
-.unfold:focus-visible .unfold__hint { outline: 2px solid var(--pencil); outline-offset: 3px; }
-.unfold__hint svg { width: 18px; height: 18px; fill: none; stroke: var(--pencil); stroke-width: 1.6; stroke-linecap: round; animation: unfold-nudge 1.8s ease-in-out infinite; }
-@keyframes unfold-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px) rotate(14deg); } }
+.unfold:focus-visible .unfold__hint { outline: 2px solid var(--pencil); outline-offset: 2px; opacity: 1; }
+.unfold__hint svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; animation: unfold-nudge 1.8s ease-in-out infinite; }
+@keyframes unfold-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(2px) rotate(10deg); } }
 .unfold__click { display: none; }
 @media (hover: hover) and (pointer: fine) { .unfold__tap { display: none; } .unfold__click { display: inline; } }
 /* after the unfold: the rest of the leaflet is below */

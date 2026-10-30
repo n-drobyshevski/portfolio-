@@ -720,7 +720,7 @@ function init(CFG: Config) {
     hidePaths(coverMarks);
     unfolded.add(ab); unfolded.add(wy);
     unfolding = true;
-    btn.style.setProperty('--hint-y', Math.round(top + y0 + hc * s0 + 22) + 'px');
+    btn.style.setProperty('--hint-y', Math.round(top + y0 + hc * s0 + 14) + 'px');
     gsap.set(btn, { autoAlpha: 0 });
     btn.hidden = false;
 
