@@ -25,12 +25,12 @@ import trDashboard from '../assets/projects/translator/02-dashboard.webp';
 import trDetail from '../assets/projects/translator/04-event-detail.webp';
 import trManager from '../assets/projects/translator/05-message-manager.webp';
 import trLogs from '../assets/projects/translator/10-logs.webp';
-import kLibrary from '../assets/projects/cards/16-desktop-library.webp';
-import kReview from '../assets/projects/cards/02-review-answer.webp';
-import kWord from '../assets/projects/cards/07-word-detail.webp';
-import kProgress from '../assets/projects/cards/12-progress.webp';
-import kChatCards from '../assets/projects/cards/mcp/02-cards-flipped.webp';
-import kChatExercise from '../assets/projects/cards/mcp/07-exercise-answered.webp';
+import kReview from '../assets/projects/cards/desktop/01-review.webp';
+import kAdd from '../assets/projects/cards/desktop/02-add-suggestions.webp';
+import kWord from '../assets/projects/cards/desktop/03-word-detail.webp';
+import kProgress from '../assets/projects/cards/desktop/06-progress.webp';
+import kChatCards from '../assets/projects/cards/desktop/07-chat-cards.webp';
+import kChatExercise from '../assets/projects/cards/desktop/08-chat-exercise.webp';
 
 export interface Shot {
   /** An imported image (resized at build time) or a path in public/ used as is. */
@@ -72,11 +72,11 @@ export const galleries: Record<string, Shot[]> = {
     { src: trLogs, caption: { en: 'Live log with retries', fr: 'Journal en direct avec relances' } },
   ],
   cards: [
-    { src: kLibrary, caption: { en: 'The word library on a computer', fr: 'La bibliothèque de mots sur ordinateur' } },
-    { src: kReview, fit: 'contain', caption: { en: 'Review card with grading', fr: 'Carte de révision et notation' } },
-    { src: kWord, fit: 'contain', caption: { en: 'Word origin and conjugation', fr: 'Origine et conjugaison d’un mot' } },
-    { src: kProgress, fit: 'contain', caption: { en: 'Progress and study calendar', fr: 'Progrès et calendrier d’étude' } },
-    { src: kChatCards, fit: 'contain', caption: { en: 'Cards inside a chat with Claude', fr: 'Les cartes dans une conversation avec Claude' } },
-    { src: kChatExercise, fit: 'contain', caption: { en: 'An exercise inside the chat', fr: 'Un exercice dans la conversation' } },
+    { src: kReview, caption: { en: 'Review card with grading', fr: 'Carte de révision et notation' } },
+    { src: kAdd, caption: { en: 'Quick add with suggestions', fr: 'Ajout rapide avec suggestions' } },
+    { src: kWord, caption: { en: 'Conjugation of a verb', fr: 'La conjugaison d’un verbe' } },
+    { src: kProgress, caption: { en: 'Progress and study calendar', fr: 'Progrès et calendrier d’étude' } },
+    { src: kChatCards, caption: { en: 'Cards inside a chat with Claude', fr: 'Les cartes dans une conversation avec Claude' } },
+    { src: kChatExercise, caption: { en: 'An exercise inside the chat', fr: 'Un exercice dans la conversation' } },
   ],
 };
