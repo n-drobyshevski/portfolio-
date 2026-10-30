@@ -98,6 +98,10 @@ const json = JSON.stringify(data).replace(/</g, '\\u003c');
     <div class="scroll-hint" aria-hidden="true">{d.ui.scrollHint}</div>
   </div>
 </main>
+<!-- phone intro: the closed leaflet waits on the desk until the reader opens it (shown by the script) -->
+<button class="unfold" type="button" hidden aria-label={d.ui.openLeaflet}>
+  <span class="unfold__hint" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M2 13C5 5 11 4 15.5 9.5M15.5 9.5 11 9.6M15.5 9.5l-.2-4.4"/></svg><span class="unfold__tap">{d.ui.tapOpen}</span><span class="unfold__click">{d.ui.clickOpen}</span></span>
+</button>
 
 <LooseDialog locale={locale} />
 

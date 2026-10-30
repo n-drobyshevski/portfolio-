@@ -23,6 +23,8 @@ export const en = {
     openLeaflet: 'Open the leaflet',
     open: 'Open',
     scrollHint: 'Scroll to open',
+    tapOpen: 'Tap to unfold',
+    clickOpen: 'Click to unfold',
     prevPage: 'Previous page',
     nextPage: 'Next page',
     home: 'Back to the cover',

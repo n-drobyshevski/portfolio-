@@ -25,6 +25,8 @@ export const fr: Dict = {
     openLeaflet: "Ouvrir le dépliant",
     open: "Ouvrir",
     scrollHint: "Faites défiler pour ouvrir",
+    tapOpen: "Touchez pour déplier",
+    clickOpen: "Cliquez pour déplier",
     prevPage: "Page précédente",
     nextPage: "Page suivante",
     home: "Retour à la couverture",

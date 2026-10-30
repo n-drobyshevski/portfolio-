@@ -3,7 +3,7 @@
   :root { --ts: .97; }
   .wrap { padding: 0 var(--gr) calc(96px + var(--sb)) var(--gl); }
   .imprint, .crops, .folio__btn, .folio__label, .folio__back, .colophon__sep { display: none; }
-  .controls { position: static; display: flex; justify-content: flex-end; gap: 6px; padding: 4px var(--gr) 4px var(--gl); }
+  .controls { position: relative; z-index: 26; display: flex; justify-content: flex-end; gap: 6px; padding: 4px var(--gr) 4px var(--gl); }
   .sheet { max-width: 640px; }
   .face { padding: 30px 22px 36px; }
   .h2 { font-size: 30px; }
@@ -84,6 +84,21 @@
 html.js.intro:not(.leaf-3d) .sheet { transform-origin: 50% 0; transform: translateY(16svh) scale(.5); background: none; box-shadow: none; }
 html.js.intro:not(.leaf-3d) .face:not(.face--cover) { visibility: hidden; }
 html.js.intro:not(.leaf-3d) .face--cover { box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 26px 44px -22px rgb(var(--sh) / .5); }
+/* the whole desk is the button that unfolds it; the hint sits under the closed leaflet */
+.unfold { position: fixed; inset: 0; z-index: 20; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.unfold[hidden] { display: none; }
+.unfold:focus-visible { outline: none; }
+.unfold__hint {
+  position: absolute; left: 50%; top: var(--hint-y, 70%); display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 12px;
+  border-radius: 2px; background: var(--paper); color: var(--ink); white-space: nowrap; transform: translateX(-50%);
+  font: 400 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 10px 20px -10px rgb(var(--sh) / .5);
+}
+.unfold:focus-visible .unfold__hint { outline: 2px solid var(--pencil); outline-offset: 3px; }
+.unfold__hint svg { width: 18px; height: 18px; fill: none; stroke: var(--pencil); stroke-width: 1.6; stroke-linecap: round; animation: unfold-nudge 1.8s ease-in-out infinite; }
+@keyframes unfold-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px) rotate(14deg); } }
+.unfold__click { display: none; }
+@media (hover: hover) and (pointer: fine) { .unfold__tap { display: none; } .unfold__click { display: inline; } }
 
 /* calm proof: reduced motion or "Animations: off" */
 html.calm .pencil path { filter: none; }

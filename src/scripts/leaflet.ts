@@ -677,22 +677,25 @@ function init(CFG: Config) {
   openTab.addEventListener('blur', () => setPeek(false));
   openTab.addEventListener('click', () => { setPeek(false); goTo('hello', { dur: 1.1 }); });
 
-  /* ---------- intro on phones: the leaflet lands closed, unfolds two panels, then zooms in to the cover ---------- */
+  /* ---------- intro on phones: the leaflet lands closed and waits; a tap unfolds two panels, then it zooms in to the cover ---------- */
+  let finishUnfold: (() => void) | null = null; // lands the intro at once (a mode change, a shortcut)
   function unfoldIntro(unfolded: Set<HTMLElement>, after: () => void) {
     const sheet = $('.sheet'), cv = face.cover.el, ab = face.about.el, wy = face.why.el;
+    const btn = $<HTMLButtonElement>('.unfold'), furn = $('.furn'), controls = $('.controls');
     const rest = panels.slice(3);
     let top = 0;
     for (let el: HTMLElement | null = sheet; el; el = el.offsetParent as HTMLElement | null) top += el.offsetTop;
     const hc = cv.offsetHeight, ha = ab.offsetHeight, hw = wy.offsetHeight;
-    const s = clamp(.3, .58, (innerHeight - 150) / (hc + ha + hw));
     const mid = (innerHeight - 56) / 2;
-    const y0 = mid - top - hc * s / 2, y1 = mid - top - (hc + ha + hw) * s / 2;
+    // closed: large enough to read as an object, with room for the hint under it; open: three panels fit the screen
+    const s0 = clamp(.36, .62, (innerHeight - 250) / hc), s = clamp(.3, .58, (innerHeight - 150) / (hc + ha + hw));
+    const y0 = mid - 26 - top - hc * s0 / 2, y1 = mid - top - (hc + ha + hw) * s / 2;
     // the closed leaflet lies on the desk, so the sheet's paper and shadow step aside for the panels' own
     const lift = '0 1px 1px rgb(var(--sh) / .12), 0 26px 44px -22px rgb(var(--sh) / .5)';
     const crease = 'inset 0 1px 0 var(--crease), inset 0 2px 0 var(--paper-hi), ';
     sheet.style.background = 'none'; sheet.style.boxShadow = 'none';
     cv.style.boxShadow = lift; ab.style.boxShadow = crease + lift; wy.style.boxShadow = crease + lift;
-    gsap.set(sheet, { transformOrigin: '50% 0%', transformPerspective: 1400, scale: s, y: y0 });
+    gsap.set(sheet, { transformOrigin: '50% 0%', transformPerspective: 1400, scale: s0, y: y0 });
     gsap.set([ab, wy], { transformOrigin: '50% 0%', transformPerspective: 1300, backfaceVisibility: 'hidden' });
     gsap.set(ab, { rotationX: -180 });
     gsap.set(wy, { rotationX: 180 });
@@ -702,34 +705,59 @@ function init(CFG: Config) {
     hidePaths(coverMarks);
     unfolded.add(ab); unfolded.add(wy);
     unfolding = true;
+    btn.style.setProperty('--hint-y', Math.round(top + y0 + hc * s0 + 22) + 'px');
+    gsap.set(btn, { autoAlpha: 0 });
+    btn.hidden = false;
 
-    const skips = ['pointerdown', 'touchstart', 'wheel', 'keydown'] as const;
-    const skip = () => tl.progress(1);
-    const done = () => {
-      skips.forEach(t => removeEventListener(t, skip));
+    // 1. it lands on the desk, then waits for the reader
+    const land = gsap.timeline();
+    land.fromTo(sheet, { y: y0 - 24, rotationX: 10, rotationZ: -4 }, { y: y0, rotationX: 0, rotationZ: 0, duration: .55, ease: 'power2.in' })
+      .to(sheet, { rotationZ: .4, duration: .1, ease: 'power1.out' })
+      .to(sheet, { rotationZ: 0, duration: .25, ease: 'expo.out' })
+      .to(btn, { autoAlpha: 1, duration: .35 }, .75);
+
+    // 2. a tap (or a scroll, or a key) unfolds it: pull back, About swings down from behind, Why from in front, then zoom in
+    let tl: gsap.core.Timeline | null = null;
+    const block = (e: Event) => { e.preventDefault(); open(); };
+    const keys = (e: KeyboardEvent) => { if (['ArrowDown', 'PageDown', ' ', 'Enter', 'End', 'Escape'].includes(e.key) && e.target !== btn) { e.preventDefault(); open(); } };
+    const skip = (e: Event) => { if (!btn.contains(e.target as Node)) tl?.progress(1); };
+    const now = () => { open(); tl?.progress(1); };
+    function open() {
+      if (tl) return;
+      land.progress(1);
+      removeEventListener('wheel', block); removeEventListener('touchmove', block); removeEventListener('keydown', keys);
+      gsap.to(btn, { autoAlpha: 0, duration: .2, onComplete: () => { btn.hidden = true; gsap.set(btn, { clearProps: 'opacity,visibility' }); } });
+      tl = gsap.timeline({ onComplete: done });
+      tl.to(sheet, { scale: s, y: y1, duration: .75, ease: 'power2.inOut' }, 0)
+        .to(ab, { rotationX: 0, duration: .5, ease: 'paper' }, .2)
+        .to(face.about.shade, { opacity: 0, duration: .5, ease: 'power1.out' }, .2)
+        .to(wy, { rotationX: 0, duration: .5, ease: 'paper' }, .72)
+        .to(face.why.shade, { opacity: 0, duration: .5, ease: 'power1.out' }, .72)
+        .to(sheet, { scale: 1, y: 0, duration: .7, ease: 'power3.inOut' }, 1.4)
+        .to(rest, { autoAlpha: 1, duration: .3 }, 1.75);
+      // once it is unfolding, another tap or scroll just lands it
+      setTimeout(() => ['pointerdown', 'wheel', 'keydown'].forEach(t => addEventListener(t, skip, { passive: true })), 0);
+    }
+    function done() {
+      ['pointerdown', 'wheel', 'keydown'].forEach(t => removeEventListener(t, skip));
+      furn.removeEventListener('click', now, true); controls.removeEventListener('click', now, true);
       sheet.style.background = sheet.style.boxShadow = cv.style.boxShadow = ab.style.boxShadow = wy.style.boxShadow = '';
       gsap.set([sheet, ab, wy], { clearProps: 'transform,transformOrigin,transformPerspective,backfaceVisibility' });
       gsap.set([face.about.shade, face.why.shade], { clearProps: 'opacity' });
       gsap.set(rest, { clearProps: 'opacity,visibility' });
+      if (scrollY) scrollTo(0, 0);
       drawPaths(coverMarks, .05, .7);
-      unfolding = false;
+      unfolding = false; finishUnfold = null;
       setFolio(PANEL_FOLIO[currentPanel().id]);
       after();
-    };
-    const tl = gsap.timeline({ onComplete: done });
-    tl.fromTo(sheet, { y: y0 - 24, rotationX: 10, rotationZ: -4 }, { y: y0, rotationX: 0, rotationZ: 0, duration: .55, ease: 'power2.in' })
-      .to(sheet, { rotationZ: .4, duration: .1, ease: 'power1.out' })
-      .to(sheet, { rotationZ: 0, duration: .25, ease: 'expo.out' })
-      // About swings down from behind the cover, then Why from in front, like an accordion
-      .to(ab, { rotationX: 0, duration: .5, ease: 'paper' }, .65)
-      .to(face.about.shade, { opacity: 0, duration: .5, ease: 'power1.out' }, .65)
-      .to(sheet, { y: y1, duration: 1.05, ease: 'power2.inOut' }, .65)
-      .to(wy, { rotationX: 0, duration: .5, ease: 'paper' }, 1.2)
-      .to(face.why.shade, { opacity: 0, duration: .5, ease: 'power1.out' }, 1.2)
-      // then it is picked up to reading size, cover first
-      .to(sheet, { scale: 1, y: 0, duration: .7, ease: 'power3.inOut' }, 1.85)
-      .to(rest, { autoAlpha: 1, duration: .3 }, 2.2);
-    skips.forEach(t => addEventListener(t, skip, { passive: true }));
+    }
+    btn.addEventListener('click', open, { once: true });
+    addEventListener('wheel', block, { passive: false });
+    addEventListener('touchmove', block, { passive: false });
+    addEventListener('keydown', keys);
+    // the bar and the controls still work: their shortcut lands the leaflet first
+    furn.addEventListener('click', now, true); controls.addEventListener('click', now, true);
+    finishUnfold = now;
   }
 
   /* ---------- build: the strip (phones, tablets, short laptops) ---------- */
@@ -823,6 +851,7 @@ function init(CFG: Config) {
     return { keep, keepId: S.mode === 'leaf' ? LABEL_ID[keep] : currentPanel().id };
   }
   function resetAll() {
+    if (finishUnfold) finishUnfold(); // first, so the scroll triggers it arms are cleared just below
     ScrollTrigger.getAll().forEach(t => t.kill());
     if (master) { master.kill(); master = null; }
     st = null;
