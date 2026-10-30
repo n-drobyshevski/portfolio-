@@ -35,32 +35,24 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     {priceGroups.map((g, i) => (
       <section class="plist__group" id={g.id} aria-labelledby={`pl-${g.id}`}>
         <h2 id={`pl-${g.id}`}><span class="plist__n" aria-hidden="true">{two(i)}</span>{g.title[locale]}</h2>
-        {g.id === 'rates' ? (
-          <ul class="rates">
-            {g.items.map((it) => (
-              <li><h3>{it.name[locale]}</h3><p class="rates__v">{value(it)}</p></li>
-            ))}
-          </ul>
-        ) : (
-          <ul class="items">
-            {g.items.map((it) => (
-              <li class="it">
-                <div class="it__top">
-                  <h3>{it.name[locale]}</h3>
-                  <span class="it__dots" aria-hidden="true"></span>
-                  <p class="it__price">{it.from && <span class="it__soft">{T.from} </span>}<b>{value(it)}</b>{it.unit && <span class="it__soft it__unit"> {it.unit[locale]}</span>}</p>
-                </div>
-                {it.included[locale] && <p class="it__desc">{it.included[locale]}</p>}
-                {it.lead && (
-                  <p class="it__lead">
-                    <svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.6" /><path d="M7 3.8V7l2.2 1.4" /></svg>
-                    <span class="sr-only">{T.lead}{fr ? `${nb}:` : ':'} </span>{it.lead[locale]}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul class="items">
+          {g.items.map((it) => (
+            <li class="it">
+              <div class="it__top">
+                <h3>{it.name[locale]}</h3>
+                <span class="it__dots" aria-hidden="true"></span>
+                <p class="it__price">{it.from && <span class="it__soft">{T.from} </span>}<b>{value(it)}</b>{it.unit && <span class="it__soft it__unit"> {it.unit[locale]}</span>}</p>
+              </div>
+              {it.included[locale] && <p class="it__desc">{it.included[locale]}</p>}
+              {it.lead && (
+                <p class="it__lead">
+                  <svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.6" /><path d="M7 3.8V7l2.2 1.4" /></svg>
+                  <span class="sr-only">{T.lead}{fr ? `${nb}:` : ':'} </span>{it.lead[locale]}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
         {g.note && <p class="plist__note">{g.note[locale]}</p>}
       </section>
     ))}
@@ -167,11 +159,6 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
   .it__lead { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; white-space: nowrap; font: 400 12px/1.3 var(--mono); letter-spacing: .02em; color: var(--ink-soft); }
   .it__lead svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; }
 
-  /* the two rates, as tickets side by side */
-  .rates { display: grid; grid-template-columns: repeat(2, minmax(0, 190px)); gap: 10px; margin-top: 16px; }
-  .rates li { display: flex; flex-direction: column; justify-content: space-between; gap: 6px; padding: 11px 14px 13px; border: 1px solid var(--crease-dark); background: var(--paper-hi); }
-  .rates h3 { font: 400 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
-  .rates__v { font: 700 24px/1 var(--sans); letter-spacing: -.025em; }
 
   .terms { margin-top: 4px; columns: 2; column-gap: 32px; counter-reset: t; }
   .terms li { counter-increment: t; display: flex; gap: 12px; padding: 11px 0 12px; border-bottom: 1px solid var(--crease); break-inside: avoid; line-height: 1.4; }
