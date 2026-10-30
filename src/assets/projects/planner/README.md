@@ -1,3 +1,4 @@
+00-cover.webp: Cover: the desktop view with the phone view in front
 01-week.webp: Week view with shared and personal events, recurring standups and a partner overlay
 02-week-dark.webp: Week view in the dark theme
 03-month.webp: Month view with recurring events across the month

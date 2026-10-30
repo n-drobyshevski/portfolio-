@@ -1,3 +1,4 @@
+00-cover.webp: Cover: the desktop view with the phone view in front
 01-results-overview.webp: Candidate results overview: 73% qualified, Exceeds, Meets and Below groups and the gap analysis against benchmarks.
 02-results-competency-cards.webp: Competency cards with benchmark deltas, trend sparklines and a candidate versus benchmark radar.
 03-results-trend.webp: Score progression across three attempts with per-competency sparklines.

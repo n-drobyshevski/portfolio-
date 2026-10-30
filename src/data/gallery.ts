@@ -6,11 +6,13 @@
 import type { ImageMetadata } from 'astro';
 import type { L } from './site';
 
+import plCover from '../assets/projects/planner/00-cover.webp';
 import plWeek from '../assets/projects/planner/01-week.webp';
 import plBoard from '../assets/projects/planner/06-tasks-board.webp';
 import plSubtasks from '../assets/projects/planner/08-subtasks-in-order.webp';
 import plSharing from '../assets/projects/planner/11-event-sharing.webp';
 import plInsights from '../assets/projects/planner/12-insights.webp';
+import ssCover from '../assets/projects/skillsoft/00-cover.webp';
 import ssResults from '../assets/projects/skillsoft/01-results-overview.webp';
 import ssCards from '../assets/projects/skillsoft/02-results-competency-cards.webp';
 import ssPsy from '../assets/projects/skillsoft/05-psychometrics-dashboard.webp';
@@ -45,18 +47,18 @@ const N = ' ';
 
 export const galleries: Record<string, Shot[]> = {
   planner: [
+    { src: plCover, caption: { en: 'On a computer and on a phone', fr: 'Sur ordinateur et sur téléphone' } },
     { src: plWeek, caption: { en: 'Week view with both calendars', fr: 'Vue semaine avec les deux agendas' } },
     { src: plBoard, caption: { en: 'Tasks board', fr: 'Tableau des tâches' } },
     { src: plSubtasks, caption: { en: 'Subtasks done in order', fr: 'Sous-tâches à faire dans l’ordre' } },
-    { src: plSharing, caption: { en: 'Private, visible or shared events', fr: 'Événements privés, visibles ou partagés' } },
     { src: plInsights, caption: { en: "Where the week's time went", fr: 'Où est passé le temps de la semaine' } },
   ],
   skillsoft: [
+    { src: ssCover, caption: { en: 'Results on a computer and on a phone', fr: 'Les résultats sur ordinateur et sur téléphone' } },
     { src: ssResults, caption: { en: 'Candidate results against the benchmark', fr: 'Résultats du candidat face au niveau attendu' } },
     { src: ssCards, caption: { en: 'Competency cards and radar', fr: 'Fiches de compétences et radar' } },
     { src: ssPsy, caption: { en: 'Psychometric health of the tests', fr: 'Santé psychométrique des tests' } },
     { src: ssTest, caption: { en: 'Full-screen test player', fr: 'Lecteur de test plein écran' } },
-    { src: ssMapper, caption: { en: 'Skill search across ESCO and O*NET', fr: 'Recherche de compétences ESCO et O*NET' } },
   ],
   arc: [
     { src: arcLive, caption: { en: 'The drum machine, live on screen', fr: 'La boîte à rythmes en direct à l’écran' } },
