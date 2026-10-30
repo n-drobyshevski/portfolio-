@@ -12,7 +12,7 @@ import plBoard from '../assets/projects/planner/06-tasks-board.webp';
 import plSubtasks from '../assets/projects/planner/08-subtasks-in-order.webp';
 import plSharing from '../assets/projects/planner/11-event-sharing.webp';
 import plInsights from '../assets/projects/planner/12-insights.webp';
-import ssCover from '../assets/projects/skillsoft/editorial/00-cover.webp';
+import ssCover from '../assets/projects/skillsoft/editorial/00-cover-poster.webp';
 import ssResults from '../assets/projects/skillsoft/editorial/01-results-overview.webp';
 import ssCards from '../assets/projects/skillsoft/editorial/02-results-competency-cards.webp';
 import ssPsy from '../assets/projects/skillsoft/editorial/05-psychometrics-dashboard.webp';
@@ -53,7 +53,7 @@ export const galleries: Record<string, Shot[]> = {
     { src: plInsights, caption: { en: "Where the week's time went", fr: 'Où est passé le temps de la semaine' } },
   ],
   skillsoft: [
-    { src: ssCover, caption: { en: 'Results at a glance', fr: 'Les résultats en un coup d’œil' } },
+    { src: ssCover, caption: { en: 'Soft-skills tests with results teams can trust', fr: 'Des tests de compétences aux résultats fiables' } },
     { src: ssResults, caption: { en: 'Candidate results against the benchmark', fr: 'Résultats du candidat face au niveau attendu' } },
     { src: ssCards, caption: { en: 'Competency cards and radar', fr: 'Fiches de compétences et radar' } },
     { src: ssPsy, caption: { en: 'Psychometric health of the tests', fr: 'Santé psychométrique des tests' } },
