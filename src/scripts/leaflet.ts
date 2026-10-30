@@ -345,7 +345,9 @@ function init(CFG: Config) {
     if (tabOn !== S.tab) { openTab.style.visibility = tabOn; S.tab = tabOn; }
     const ho = clamp(0, 1, 1 - t / 12);
     if (ho !== S.ho) { hint.style.opacity = String(ho); S.ho = ho; }
-    setFolio(labelAt(t));
+    // the folio follows the paper: once the cover has turned past halfway, the reader is on About
+    const lab = labelAt(t);
+    setFolio(lab === 'cover' && a12 < 90 ? 'hello' : lab);
   }
   type ShadowEl = HTMLElement & { __tf?: string | null; __w?: string | null; __o?: string | null };
   function writeShadow(el: ShadowEl, a: number, b: number, o: number, z: number) {
