@@ -6,13 +6,13 @@
 import type { ImageMetadata } from 'astro';
 import type { L } from './site';
 
-import plCover from '../assets/projects/planner/00-cover.webp';
+import plCover from '../assets/projects/planner/00-cover-phones.webp';
 import plWeek from '../assets/projects/planner/01-week.webp';
 import plBoard from '../assets/projects/planner/06-tasks-board.webp';
 import plSubtasks from '../assets/projects/planner/08-subtasks-in-order.webp';
 import plSharing from '../assets/projects/planner/11-event-sharing.webp';
 import plInsights from '../assets/projects/planner/12-insights.webp';
-import ssCover from '../assets/projects/skillsoft/00-cover.webp';
+import ssCover from '../assets/projects/skillsoft/00-cover-results.webp';
 import ssResults from '../assets/projects/skillsoft/01-results-overview.webp';
 import ssCards from '../assets/projects/skillsoft/02-results-competency-cards.webp';
 import ssPsy from '../assets/projects/skillsoft/05-psychometrics-dashboard.webp';
@@ -27,7 +27,7 @@ import trDashboard from '../assets/projects/translator/02-dashboard.webp';
 import trDetail from '../assets/projects/translator/04-event-detail.webp';
 import trManager from '../assets/projects/translator/05-message-manager.webp';
 import trLogs from '../assets/projects/translator/10-logs.webp';
-import kCover from '../assets/projects/cards/desktop/00-cover.webp';
+import kCover from '../assets/projects/cards/desktop/00-cover-fan.webp';
 import kReview from '../assets/projects/cards/desktop/01-review.webp';
 import kAdd from '../assets/projects/cards/desktop/02-add-suggestions.webp';
 import kWord from '../assets/projects/cards/desktop/03-word-detail.webp';
@@ -47,14 +47,14 @@ const N = ' ';
 
 export const galleries: Record<string, Shot[]> = {
   planner: [
-    { src: plCover, caption: { en: 'On a computer and on a phone', fr: 'Sur ordinateur et sur téléphone' } },
+    { src: plCover, caption: { en: 'Calendar and tasks on the phone', fr: 'L’agenda et les tâches sur téléphone' } },
     { src: plWeek, caption: { en: 'Week view with both calendars', fr: 'Vue semaine avec les deux agendas' } },
     { src: plBoard, caption: { en: 'Tasks board', fr: 'Tableau des tâches' } },
     { src: plSubtasks, caption: { en: 'Subtasks done in order', fr: 'Sous-tâches à faire dans l’ordre' } },
     { src: plInsights, caption: { en: "Where the week's time went", fr: 'Où est passé le temps de la semaine' } },
   ],
   skillsoft: [
-    { src: ssCover, caption: { en: 'Results on a computer and on a phone', fr: 'Les résultats sur ordinateur et sur téléphone' } },
+    { src: ssCover, caption: { en: 'Results at a glance', fr: 'Les résultats en un coup d’œil' } },
     { src: ssResults, caption: { en: 'Candidate results against the benchmark', fr: 'Résultats du candidat face au niveau attendu' } },
     { src: ssCards, caption: { en: 'Competency cards and radar', fr: 'Fiches de compétences et radar' } },
     { src: ssPsy, caption: { en: 'Psychometric health of the tests', fr: 'Santé psychométrique des tests' } },
@@ -75,7 +75,7 @@ export const galleries: Record<string, Shot[]> = {
     { src: trLogs, caption: { en: 'Live log with retries', fr: 'Journal en direct avec relances' } },
   ],
   cards: [
-    { src: kCover, caption: { en: 'On a computer and on a phone', fr: 'Sur ordinateur et sur téléphone' } },
+    { src: kCover, caption: { en: 'Review, word detail and progress', fr: 'Révision, fiche du mot et progrès' } },
     { src: kReview, caption: { en: 'Review card with grading', fr: 'Carte de révision et notation' } },
     { src: kAdd, caption: { en: 'Quick add with suggestions', fr: 'Ajout rapide avec suggestions' } },
     { src: kWord, caption: { en: 'Conjugation of a verb', fr: 'La conjugaison d’un verbe' } },
