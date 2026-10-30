@@ -112,6 +112,44 @@ html.js.intro:not(.leaf-3d) .face--cover { box-shadow: 0 1px 1px rgb(var(--sh) /
 @keyframes cue-bob { 0%, 100% { transform: none; } 50% { transform: translateY(2px); } }
 @media (min-width: 1100px) { .scroll-cue { bottom: 28px; } }
 
+/* ---------- tablets: the closed cover alone, then the leaflet lies open in two-page spreads ----------
+   (the same query as mmSpread in leaflet.ts; the height keeps landscape phones on the phone layout) */
+@media (min-width: 744px) and (max-width: 1099px) and (min-height: 600px) {
+  .wrap { padding: 0 32px calc(104px + var(--sb)); }
+  .camera .sheet {
+    --lift: 0 1px 1px rgb(var(--sh) / .1), 0 26px 44px -26px rgb(var(--sh) / .45);
+    max-width: 1040px; display: grid; grid-template-columns: 1fr 1fr; row-gap: 56px; background: none; box-shadow: none;
+  }
+  /* every page carries its own paper and shadow; the stacked strip's creases step aside for the one down the middle */
+  .camera .face { padding: 34px 30px 40px; box-shadow: var(--lift) !important; }
+  #about, #work, #services { box-shadow: inset -1px 0 0 var(--crease), inset -22px 0 22px -22px rgb(var(--sh) / .16), var(--lift) !important; }
+  #why, #how, #prices { box-shadow: inset 1px 0 0 var(--paper-hi), inset 22px 0 22px -22px rgb(var(--sh) / .07), var(--lift) !important; }
+  /* the cover is a folded DL leaflet on the desk; the reply slip is one page wide too */
+  #cover { grid-column: 1 / -1; justify-self: center; width: clamp(280px, calc((100svh - 170px) / 2.12), 50%); aspect-ratio: 99 / 210; margin-top: 18px; display: flex; flex-direction: column; }
+  #cover .fc { flex: 1; min-height: 0; }
+  #contact { grid-column: 1 / -1; justify-self: center; width: 50%; }
+  /* the intro has nothing to scale: the closed cover already lies in its place */
+  html.js.intro:not(.leaf-3d) .sheet { transform: none; }
+
+  /* the tear-off coupon floats as a short slip, with room for the free quote as its stub */
+  .furn {
+    left: 0; right: 0; bottom: calc(12px + var(--sb)); width: min(560px, calc(100vw - 64px)); margin: 0 auto; --bar-pad: 0px;
+    box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 14px 30px -12px rgb(var(--sh) / .45);
+  }
+  .stamp {
+    order: 3; display: flex; align-items: center; width: auto; height: auto; padding: 0 18px; border-radius: 0;
+    border-left: 1.5px dashed var(--ink-soft); background: var(--note); color: var(--pencil-deep); transform: none !important;
+    font: italic 500 17px/1 var(--serif); white-space: nowrap;
+  }
+  .stamp__ink, .stamp__txt, .stamp::before { display: none; }
+  .stamp__short { display: inline; }
+  .stamp__short::after { content: "\00a0→"; font: 700 17px/1 var(--sans); font-style: normal; }
+  .stamp:focus-visible { border-radius: 0; outline-offset: -3px; }
+  .contents__quote { display: none; }
+  .contents__card { left: max(32px, calc(50vw - 280px)); right: auto; width: 360px; bottom: calc(var(--bar) + 24px + var(--sb)); }
+  .scroll-cue { bottom: calc(var(--bar, 46px) + 22px + var(--sb)); }
+}
+
 /* calm proof: reduced motion or "Animations: off" */
 html.calm .pencil path { filter: none; }
 

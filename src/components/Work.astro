@@ -20,7 +20,7 @@ async function card(id: string, big: boolean) {
   if (!src || typeof src === 'string') return null;
   const widths = big ? cardSizes.big : cardSizes.small;
   const img = await getImage({ src, widths, format: 'webp', quality: big ? 82 : 80 });
-  return { src: img.src, srcset: img.srcSet.attribute, sizes: big ? '(max-width: 1099px) 92vw, 480px' : '(max-width: 1099px) 30vw, 110px' };
+  return { src: img.src, srcset: img.srcSet.attribute, sizes: big ? '(max-width: 743px) 92vw, (max-width: 1099px) 46vw, 480px' : '(max-width: 1099px) 30vw, 110px' };
 }
 const cards: Record<string, Awaited<ReturnType<typeof card>>> = {};
 for (const p of site.projects) cards[p.id] = await card(p.id, p === p1);
