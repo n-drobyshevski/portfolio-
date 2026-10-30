@@ -30,14 +30,17 @@ interface WorkData {
   quote: { text: string; by: string } | null;
   url: string;
   image: string;
+  stack: string;
+  shots: ShotData[];
 }
+interface ShotData { full: string; thumb: string; w: number; h: number; fit: string; cap: string }
 interface Config {
   lang: string;
   email: string;
   ui: { motionOn: string; motionOff: string; motionReduced: string; marksOn: string; marksOff: string };
   folio: Record<FolioName, string>;
   works: WorkData[];
-  dialog: { count: string; caseStudyNote: string };
+  dialog: { count: string; caseStudyNote: string; shotLabel: string };
   contact: {
     copy: string; copied: string; selected: string; copiedLive: string; selectedLive: string;
     errName: string; errEmail: string; errEmailBad: string; errSend: string; mailtoStatus: string;
@@ -871,18 +874,59 @@ function init(CFG: Config) {
   const dlg = $<HTMLDialogElement>('.loose'), lWrap = $('.loose__wrap', dlg), lPrint = $('.loose__print', dlg), lCard = $('.loose__card', dlg);
   let lIdx = 0, lSrc: HTMLElement | null = null, lTl: gsap.core.Timeline | gsap.core.Tween | null = null;
   const lRead = $('#loose-read'), lReadA = $<HTMLAnchorElement>('#loose-read a'), lQuote = $('#loose-quote');
+  const lImg = $<HTMLImageElement>('#loose-img'), lSlot = $('#loose-slot'), lStrip = $('#loose-strip'), lCap = $('#loose-cap');
+  let lShot = 0;
+  /* show screenshot k of the open project: fade in once decoded, mark its thumb, warm up the next one */
+  function showShot(k: number, fade = true) {
+    const shots = WORKS[lIdx].shots;
+    if (!shots.length) return;
+    lShot = (k + shots.length) % shots.length;
+    const s = shots[lShot];
+    lImg.hidden = false; lSlot.hidden = true;
+    lImg.classList.toggle('shot--contain', s.fit === 'contain');
+    lImg.width = s.w; lImg.height = s.h;
+    const calm = S.mode === 'calm' || mmReduce.matches;
+    if (fade && !calm) gsap.set(lImg, { opacity: 0 });
+    lImg.src = s.full;
+    if (fade && !calm) lImg.decode().catch(() => {}).finally(() => gsap.to(lImg, { opacity: 1, duration: .22, ease: 'ui' }));
+    lCap.textContent = `${lShot + 1} / ${shots.length} · ${s.cap}`;
+    $$<HTMLButtonElement>('.loose__thumb', lStrip).forEach((t, j) => t.setAttribute('aria-pressed', String(j === lShot)));
+    const next = shots[(lShot + 1) % shots.length];
+    if (next !== s) { const pre = new Image(); pre.src = next.full; }
+  }
   function fillLoose(i: number) {
     const w = WORKS[i];
-    $('#loose-slot').textContent = w.slot;
-    const img = $<HTMLImageElement>('#loose-img');
-    img.hidden = !w.image; $('#loose-slot').hidden = !!w.image; if (w.image) img.src = w.image; else img.removeAttribute('src'); $('#loose-meta').textContent = w.meta; $('#loose-h').textContent = w.name;
+    lSlot.textContent = w.slot;
+    $('#loose-meta').textContent = w.meta; $('#loose-h').textContent = w.name;
     $('#loose-text').textContent = w.text;
+    $('#loose-stack').textContent = w.stack;
     lQuote.hidden = !w.quote;
     if (w.quote) { $('p', lQuote).textContent = w.quote.text; $('footer', lQuote).textContent = w.quote.by; }
     /* no case study yet: the link stays hidden instead of pointing nowhere */
     lRead.hidden = !w.url;
     if (w.url) { lReadA.href = w.url; lReadA.target = '_blank'; lReadA.rel = 'noopener'; }
     $('#loose-count').textContent = fill(CFG.dialog.count, { i: i + 1, n: WORKS.length });
+    /* the strip of screenshots under the print */
+    lStrip.textContent = '';
+    lStrip.hidden = w.shots.length < 2;
+    lPrint.classList.toggle('loose__print--more', w.shots.length > 1);
+    w.shots.forEach((s, k) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'loose__thumb' + (s.fit === 'contain' ? ' loose__thumb--contain' : '');
+      b.setAttribute('aria-label', fill(CFG.dialog.shotLabel, { i: k + 1, caption: s.cap }));
+      b.setAttribute('aria-pressed', 'false');
+      const im = document.createElement('img');
+      im.src = s.thumb; im.alt = ''; im.decoding = 'async';
+      b.append(im);
+      b.addEventListener('click', () => showShot(k));
+      lStrip.append(b);
+    });
+    lCap.hidden = !w.shots.length;
+    if (w.shots.length) showShot(0, false);
+    else {
+      lImg.hidden = !w.image; lSlot.hidden = !!w.image; lImg.classList.remove('shot--contain');
+      if (w.image) lImg.src = w.image; else lImg.removeAttribute('src');
+    }
   }
   function openLoose(i: number, src: HTMLElement | null) {
     lIdx = i; lSrc = src; fillLoose(i);
@@ -918,6 +962,15 @@ function init(CFG: Config) {
   dlg.addEventListener('cancel', e => { e.preventDefault(); closeLoose(); });
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target === lWrap) closeLoose(); });
   dlg.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') switchLoose(-1); if (e.key === 'ArrowRight') switchLoose(1); });
+  /* screenshots: the print itself steps to the next one; in the strip, Left/Right move between shots instead of projects */
+  lPrint.addEventListener('click', () => { if (WORKS[lIdx].shots.length > 1) showShot(lShot + 1); });
+  lStrip.addEventListener('keydown', e => {
+    const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!step) return;
+    e.preventDefault(); e.stopPropagation();
+    showShot(lShot + step);
+    ($$<HTMLButtonElement>('.loose__thumb', lStrip)[lShot])?.focus();
+  });
 
   /* ---------- reply slip ---------- */
   const copyBtn = $('.copy'), addr = $('.mail__addr'), ghost = $('.mail__ghost');

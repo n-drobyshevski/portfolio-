@@ -38,9 +38,14 @@
   .contents__card { position: fixed; left: var(--gl); right: var(--gr); width: auto; bottom: calc(68px + var(--sb)); max-height: calc(100svh - 120px); overflow: auto; }
   .colophon { flex-direction: column; align-items: flex-start; }
   .colophon__links a { min-height: 44px; }
-  .loose__wrap { display: block; padding: 0; }
-  .loose__print { width: 100%; transform: none; aspect-ratio: 4 / 3; }
-  .loose__card { width: auto; margin: -24px 12px 24px; transform: none; padding: 26px 22px 20px; }
+  .loose__wrap { display: block; padding: 0; background: var(--desk); }
+  .loose__stage { width: 100%; }
+  .loose__print { transform: none; aspect-ratio: 4 / 3; }
+  .loose__strip { margin-top: 14px; padding: 6px var(--gl, 16px) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .loose__strip::-webkit-scrollbar { display: none; }
+  .loose__thumb { width: 72px; scroll-snap-align: start; }
+  .loose__cap { margin: 4px var(--gl, 16px) 0; }
+  .loose__card { width: auto; margin: 14px 12px 24px; transform: none; padding: 26px 22px 20px; }
   .loose__close { right: max(12px, env(safe-area-inset-right, 0px)); top: 12px; }
 }
 @media (min-width: 1100px) and (max-width: 1399px) {

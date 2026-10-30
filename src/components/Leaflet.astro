@@ -1,7 +1,9 @@
 ---
 /* The leaflet: eight faces on one sheet, plus the script that folds, turns and draws it. */
 import { useI18n, fill, type Locale } from '../i18n/utils';
+import { getImage } from 'astro:assets';
 import { site } from '../data/site';
+import { galleries } from '../data/gallery';
 import Desk from './Desk.astro';
 import Cover from './Cover.astro';
 import About from './About.astro';
@@ -17,6 +19,17 @@ import { stripLoop } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
+
+/* pop-up screenshots: resized at build time, loaded only when the dialog opens */
+const shots = await Promise.all(site.projects.map(p => Promise.all((galleries[p.id] ?? []).map(async s => {
+  const cap = s.caption[locale];
+  if (typeof s.src === 'string') return { full: s.src, thumb: s.src, w: 1200, h: 750, fit: s.fit ?? '', cap };
+  const [full, thumb] = await Promise.all([
+    getImage({ src: s.src, width: Math.min(1440, s.src.width), format: 'webp', quality: 78 }),
+    getImage({ src: s.src, width: 240, format: 'webp', quality: 70 }),
+  ]);
+  return { full: full.src, thumb: thumb.src, w: s.src.width, h: s.src.height, fit: s.fit ?? '', cap };
+}))));
 
 /* everything the script needs in the page's language, passed as JSON (no runtime language swapping) */
 const data = {
@@ -34,12 +47,14 @@ const data = {
     slot: d.work.items[i].slot,
     meta: `${p.year} · ${d.work.items[i].kind}`,
     name: p.client[locale],
-    text: d.work.items[i].desc,
+    text: d.work.items[i].long,
+    stack: d.work.items[i].stack,
     quote: p.quote ? { text: p.quote.text[locale], by: p.quote.by[locale] } : null,
     url: p.url ?? '',
     image: p.image ?? '',
+    shots: shots[i],
   })),
-  dialog: { count: d.work.dialog.count, caseStudyNote: d.work.dialog.caseStudyNote },
+  dialog: { count: d.work.dialog.count, caseStudyNote: d.work.dialog.caseStudyNote, shotLabel: d.work.dialog.shotLabel },
   contact: {
     copy: d.contact.copy,
     copied: d.contact.copied,

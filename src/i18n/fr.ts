@@ -103,25 +103,41 @@ export const fr: Dict = {
         kind: "Appli web · Design et code",
         label: "agenda partagé",
         slot: "[Capture de la vue semaine]",
-        desc: "Un agenda partagé à deux, synchronisé en direct. Le privé reste privé, et les tâches se glissent dans l’agenda."
+        desc: "Un agenda partagé à deux, synchronisé en direct. Le privé reste privé, et les tâches se glissent dans l’agenda.",
+        long: "Un agenda et un gestionnaire de tâches partagés à deux. Le privé reste privé, les événements communs se synchronisent en direct sur les deux téléphones, et les tâches découpées en étapes se glissent directement dans la semaine. Je l’ai conçu et développé de bout en bout, avec connexion par passkey et une appli Android.",
+        stack: "Next.js · Supabase Realtime · Passkeys · Android"
       },
       {
         kind: "Plateforme web",
         label: "plateforme d’évaluation des compétences",
         slot: "[Capture d’écran]",
-        desc: "Créer des tests de compétences, les noter et lire les résultats."
+        desc: "Créer des tests de compétences, les noter et lire les résultats.",
+        long: "Une plateforme qui mesure les compétences comportementales avec des tests scientifiques. Les équipes créent leurs évaluations à partir d’un référentiel, les candidats les passent dans un lecteur plein écran épuré, et les résultats comparent chaque compétence au niveau attendu pour le poste. En coulisses, des contrôles psychométriques repèrent les questions faibles pour garder des tests fiables.",
+        stack: "Next.js · Spring Boot · Clerk · Psychométrie"
       },
       {
         kind: "Appli Android et web",
         label: "sauvegarde pour boîte à rythmes",
         slot: "[Capture d’écran]",
-        desc: "Sauvegarde en USB les sons d’une boîte à rythmes."
+        desc: "Sauvegarde en USB les sons d’une boîte à rythmes.",
+        long: "Une appli gratuite pour les possesseurs de la boîte à rythmes EP-133 K.O. II. Elle sauvegarde tous les sons et projets en USB, les restaure, et affiche l’appareil en direct pendant que vous jouez. Elle tourne en appli Android native et dans le navigateur, avec un guide intégré de 100 raccourcis.",
+        stack: "Android · Web MIDI · TypeScript · PWA"
       },
       {
         kind: "Bot Telegram · IA",
         label: "bot de traduction Telegram",
         slot: "[Capture d’écran]",
-        desc: "Traduit des chaînes Telegram russes en anglais, post par post, avec l’IA."
+        desc: "Traduit des chaînes Telegram russes en anglais, post par post, avec l’IA.",
+        long: "Un bot Telegram qui reproduit des chaînes russes en anglais. Chaque nouveau post est traduit par l’IA et publié en quelques secondes, avec sa mise en forme, ses liens et ses hashtags. Un tableau de bord suit le volume et les erreurs, et permet de modifier le prompt de traduction ou de republier un message à la main.",
+        stack: "Python · Telegram API · Claude API · Flask"
+      },
+      {
+        kind: "PWA · appli MCP",
+        label: "appli de cartes de français",
+        slot: "[Capture d’écran]",
+        desc: "Des cartes pour apprendre le français familier, avec répétition espacée.",
+        long: "Une appli pensée pour le téléphone, pour apprendre le français familier, de l’argot au verlan. La répétition espacée choisit les mots à revoir chaque jour, les nouveaux mots viennent d’un dictionnaire, de suggestions de l’IA ou d’une capture d’écran de conversation, et une appli MCP permet de réviser et de faire des exercices directement dans une conversation avec Claude.",
+        stack: "Next.js PWA · FSRS · Supabase · appli MCP"
       }
     ],
     dialog: {
@@ -129,6 +145,8 @@ export const fr: Dict = {
       next: "Suivant",
       close: "Fermer",
       count: "{i} sur {n}",
+      shots: "Captures d’écran",
+      shotLabel: "Capture {i} : {caption}",
       caseStudyNote: "L’étude de cas n’est pas encore en ligne sur ce site."
     }
   },

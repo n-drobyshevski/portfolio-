@@ -6,7 +6,8 @@ import { stripLoop, arrow } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
-const [p1, ...rest] = site.projects;
+/* projects marked leaflet: false only appear in the pop-up; data-work keeps each project's index in site.projects */
+const [p1, ...rest] = site.projects.filter(p => p.leaflet !== false);
 const i1 = d.work.items[0];
 const look = (client: string, label: string) => t(d.work.lookCloser, { client, label });
 ---
@@ -18,17 +19,17 @@ const look = (client: string, label: string) => t(d.work.lookCloser, { client, l
     <p class="kicker" aria-hidden="true"><b>4</b><span>{d.work.kicker}</span></p>
     <div class="work-head"><h2 class="h2" id="work-h">{d.work.title}</h2><p class="meta">{t(d.work.count)}</p></div>
     <article class="w1" id="work-1" aria-labelledby="w1-h">
-      <button type="button" class="print print--btn" data-work="0"><span class="paper" aria-hidden="true">{p1.image && <img class="shot" src={p1.image} alt="" width="1200" height="750" loading="lazy" decoding="async" />}</span>{!p1.image && <span class="slot">{i1.slot}</span>}<span class="sr-only">{look(p1.client[locale], i1.label)}</span><span class="dog" aria-hidden="true"></span><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i></button>
+      <button type="button" class="print print--btn" data-work={site.projects.indexOf(p1)}><span class="paper" aria-hidden="true">{p1.image && <img class="shot" src={p1.image} alt="" width="1200" height="750" loading="lazy" decoding="async" />}</span>{!p1.image && <span class="slot">{i1.slot}</span>}<span class="sr-only">{look(p1.client[locale], i1.label)}</span><span class="dog" aria-hidden="true"></span><i class="pc pc--tl"></i><i class="pc pc--tr"></i><i class="pc pc--bl"></i></button>
       <h3 class="w-name" id="w1-h">{p1.client[locale]}</h3>
       <p class="meta">{p1.year} · {i1.kind}</p>
       <p class="w-text">{i1.desc}</p>
       {p1.url && <p class="read"><a href={p1.url} target="_blank" rel="noopener">{d.work.read}</a><Pencil mark={arrow} g="work" class="pencil--arrow" /></p>}
     </article>
     {rest.map((p, k) => {
-      const n = k + 2, it = d.work.items[k + 1];
+      const n = k + 2, idx = site.projects.indexOf(p), it = d.work.items[idx];
       return (
         <article class="wrow" id={`work-${n}`} aria-labelledby={`w${n}-h`}>
-          <button type="button" class="print print--btn" data-work={k + 1}><span class="paper" aria-hidden="true">{p.image && <img class="shot" src={p.image} alt="" width="1200" height="750" loading="lazy" decoding="async" />}</span>{!p.image && <span class="slot">{it.slot}</span>}<span class="sr-only">{look(p.client[locale], it.label)}</span><span class="dog" aria-hidden="true"></span></button>
+          <button type="button" class="print print--btn" data-work={idx}><span class="paper" aria-hidden="true">{p.image && <img class="shot" src={p.image} alt="" width="1200" height="750" loading="lazy" decoding="async" />}</span>{!p.image && <span class="slot">{it.slot}</span>}<span class="sr-only">{look(p.client[locale], it.label)}</span><span class="dog" aria-hidden="true"></span></button>
           <div><h3 class="w-name" id={`w${n}-h`}>{p.client[locale]}</h3><p class="meta">{p.year} · {it.kind}</p><p class="w-text">{it.desc}</p></div>
         </article>
       );

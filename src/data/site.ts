@@ -21,6 +21,8 @@ export interface Project {
   url?: string;
   /** Optional screenshot or animated SVG in public/, 16:10. Without one the print shows the slot text. */
   image?: string;
+  /** False keeps the project off the leaflet's Work panel; it is still reachable in the pop-up. */
+  leaflet?: boolean;
 }
 
 export const site = {
@@ -51,12 +53,13 @@ export const site = {
   ] as { id: PriceId; amount: L; featured?: boolean }[],
   /** Shown under the prices; keep or replace with your own VAT mention. */
   vat: { en: 'VAT not applicable, art. 293 B du CGI.', fr: 'TVA non applicable, art. 293 B du CGI.' } as L,
-  /** Projects for the Work panel and the loose-print dialog: the first gets the big print, the rest are rows. Kind, description and screenshot text are in the dictionaries, in the same order. */
+  /** Projects for the Work panel and the loose-print dialog: the first gets the big print, the rest are rows. Kind, descriptions and screenshot text are in the dictionaries, in the same order; pop-up screenshots are in gallery.ts. */
   projects: [
     { id: 'planner', client: { en: 'Planner', fr: 'Planner' }, year: '2026', image: '/work/planner.webp' },
     { id: 'skillsoft', client: { en: 'SkillSoft', fr: 'SkillSoft' }, year: '2026', url: 'https://skillsoft.app', image: '/work/skillsoft-app.webp' },
     { id: 'arc', client: { en: 'Arc', fr: 'Arc' }, year: '2026', url: 'https://arc-ko.vercel.app/?demo', image: '/work/arc.webp' },
     { id: 'translator', client: { en: 'Telegram translator', fr: 'Traducteur Telegram' }, year: '2026', image: '/work/translator.svg' },
+    { id: 'cards', client: { en: 'French Cards', fr: 'Cartes de français' }, year: '2026', leaflet: false },
   ] as Project[],
   /** Legal notice details (mentions légales). */
   legal: {
