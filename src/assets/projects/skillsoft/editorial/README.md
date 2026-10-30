@@ -1,6 +1,6 @@
 SkillSoft redesigned at capture time in a calm editorial style; the live app is unchanged.
 
-00-cover-poster.webp: Cover: title, tagline and features beside the competency screen with the score and result groups floating
+00-cover-bento.webp: Cover: a bento of real screens around the title tile: score, difficulty chart, radar, a test question and the item-quality map
 01-results-overview.webp: Candidate results overview: 73% qualified, Exceeds, Meets and Below groups and the gap analysis against benchmarks.
 02-results-competency-cards.webp: Competency cards with benchmark deltas, trend sparklines and a candidate versus benchmark radar.
 03-results-trend.webp: Score progression across three attempts with per-competency sparklines.
