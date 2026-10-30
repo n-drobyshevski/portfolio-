@@ -60,6 +60,7 @@
   .contents[open]::before { content: ""; position: fixed; inset: 0; z-index: 0; background: rgb(var(--sh) / .2); animation: dim .2s ease-out; }
   .contents > summary { position: relative; z-index: 1; }
   @keyframes dim { from { opacity: 0; } }
+  .contents__card::after { display: none; } /* the fold crease only reads as a fold on the short desktop card */
   .colophon { flex-direction: column; align-items: flex-start; }
   .colophon__links a { min-height: 44px; }
   .loose__wrap { display: block; padding: 0; background: var(--desk); }
