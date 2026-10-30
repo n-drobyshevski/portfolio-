@@ -33,20 +33,23 @@ html[lang="fr"] { --h1k: 14.3; --h1a: 3.65; }
 .send-status--err { color: var(--rubric); }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-/* plain pages (legal notice, 404): the same paper on the same desk, as a flat sheet */
-.plain-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px var(--gr) 0 var(--gl); max-width: 640px; margin: 0 auto; }
-.plain-top a { display: inline-flex; align-items: center; min-height: 44px; font: 600 15px var(--sans); color: var(--desk-ink); text-decoration: none; }
-.plain-top .lang-link { font: 400 12px var(--mono); color: var(--desk-ink-soft); padding: 0 6px; }
-.plain-wrap { padding: 12px var(--gr) 72px var(--gl); }
-.plain-wrap .sheet { max-width: 640px; }
+/* pages that are not the leaflet (price list, legal notice, 404): a loose sheet on the same desk, among the same furniture.
+   Room for the imprint above it, and on desktop a sheet that keeps clear of the furniture at the sides. */
+.plain-wrap { padding: 72px var(--gr) 72px var(--gl); }
+.plain-wrap .sheet { max-width: min(640px, 100vw - 580px); }
+.plain--wide .sheet { max-width: min(760px, 100vw - 580px); }
+@media (max-width: 1099px) {
+  .plain-wrap { padding-top: 4px; padding-bottom: calc(96px + var(--sb)); }
+  .plain-wrap .sheet { max-width: 640px; }
+  .plain--wide .sheet { max-width: 760px; }
+}
+/* the name heads the sheet on phones, where the imprint is not on the desk */
+.plain-mast { display: none; margin-bottom: 26px; font: 600 15px/1.2 var(--sans); letter-spacing: -.01em; }
+.plain-mast a { color: var(--ink); text-decoration: none; }
+@media (max-width: 1099px) { .plain-mast { display: block; } }
 .plain-wrap .face { --fp: 28px; padding: 36px var(--fp) 40px; }
-.plain-top.plain--wide, .plain--wide .sheet { max-width: 760px; }
 .plain--wide .face { --fp: 48px; padding-top: 44px; padding-bottom: 48px; }
 @media (max-width: 600px) { .plain--wide .face { --fp: 20px; padding-top: 30px; padding-bottom: 32px; } }
-/* an insert lies on the leaflet's desk: room for the imprint above it, and a sheet that keeps clear of the furniture */
-.plain--insert { padding-top: 72px; }
-@media (min-width: 1100px) { .plain--insert .sheet { max-width: min(760px, 100vw - 580px); } }
-@media (max-width: 1099px) { .plain--insert { padding-top: 4px; padding-bottom: calc(96px + var(--sb)); } }
 .plain-wrap .h2 { font-size: 34px; }
 .legal h2 { margin: 22px 0 6px; font: 600 19px/1.2 var(--sans); letter-spacing: -.01em; }
 .legal p, .legal li { margin-top: 6px; }

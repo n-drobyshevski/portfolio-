@@ -1,9 +1,8 @@
 ---
-/* A flat sheet on the desk, for pages that are not the leaflet (legal notice, 404, the price list).
-   An insert (the price list) lies on the leaflet's own desk, with the same furniture around it. */
+/* A flat sheet lying on the leaflet's desk, for pages that are not the leaflet (the price list, the legal notice, 404),
+   with the same furniture around it. */
 import { localePath, type Locale } from '../i18n/utils';
 import { site } from '../data/site';
-import LangSwitch from './LangSwitch.astro';
 import Desk from './Desk.astro';
 interface Props {
   locale: Locale;
@@ -11,22 +10,45 @@ interface Props {
   path?: string;
   /** A wider sheet, for pages with more to lay out (the price list). */
   wide?: boolean;
-  /** Lay the sheet on the leaflet's desk, as a loose insert. */
-  insert?: boolean;
 }
-const { locale, path = '', wide = false, insert = false } = Astro.props;
-const hrefs = { en: localePath('en', path), fr: localePath('fr', path) };
+const { locale, path = '', wide = false } = Astro.props;
 ---
-{insert ? <Desk locale={locale} insert={path} /> : (
-  <header class:list={['plain-top', { 'plain--wide': wide }]}>
-    <a href={localePath(locale)}>{site.name}</a>
-    <LangSwitch locale={locale} hrefs={hrefs} class="langs" />
-  </header>
-)}
-<main class:list={['plain-wrap', { 'plain--wide': wide, 'plain--insert': insert }]} id="top">
+<Desk locale={locale} sheet={path} />
+<main class:list={['plain-wrap', { 'plain--wide': wide }]} id="top">
   <div class="sheet">
     <section class="face">
-      <div class="fc"><slot /></div>
+      <div class="fc">
+        <p class="plain-mast"><a href={localePath(locale)}>{site.name}</a></p>
+        <slot />
+      </div>
     </section>
   </div>
 </main>
+
+<script>
+  /* Contents: the same folded card as on the leaflet, opening up from the folio */
+  const details = document.querySelector<HTMLDetailsElement>('.contents');
+  const summary = details?.querySelector('summary');
+  const card = details?.querySelector<HTMLElement>('.contents__card');
+  if (details && summary && card) {
+    const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const folded = { transform: 'perspective(900px) translateY(12px) rotateX(-80deg)', opacity: 0 };
+    const flat = { transform: 'none', opacity: 1 };
+    const open = () => {
+      details.open = true;
+      if (still()) card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
+      else card.animate([folded, flat], { duration: 550, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+    };
+    const close = () => {
+      if (!details.open) return;
+      if (still()) { details.open = false; return; }
+      card.animate([flat, folded], { duration: 320, easing: 'cubic-bezier(.55, 0, 1, .45)', fill: 'forwards' }).onfinish = (e) => {
+        details.open = false;
+        (e.target as Animation).cancel();
+      };
+    };
+    summary.addEventListener('click', (e) => { e.preventDefault(); if (details.open) close(); else open(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && details.open) { close(); summary.focus(); } });
+    document.addEventListener('pointerdown', (e) => { if (details.open && !details.contains(e.target as Node)) close(); });
+  }
+</script>

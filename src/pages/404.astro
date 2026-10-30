@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import PlainPage from '../components/PlainPage.astro';
+import Pencil from '../components/Pencil.astro';
+import { linkLine } from '../components/marks';
 import { getDict, localePath } from '../i18n/utils';
 const d = getDict('en');
 const f = getDict('fr');
@@ -12,12 +14,12 @@ const f = getDict('fr');
     <p>{d.notFound.text}</p>
     <div class="nf-links">
       <a class="btn" href={localePath('en')}>{d.notFound.home}</a>
-      <a class="link-drawn" href={localePath('fr')} hreflang="fr" lang="fr">{d.notFound.other}</a>
+      <a class="link-drawn" href={localePath('fr')} hreflang="fr" lang="fr"><span>{d.notFound.other}</span><Pencil mark={linkLine} /></a>
     </div>
     <div lang="fr" class="nf-fr">
       <h2 class="h2">{f.notFound.title}</h2>
       <p>{f.notFound.text}</p>
-      <div class="nf-links"><a class="link-drawn" href={localePath('fr')} hreflang="fr">{f.notFound.home}</a></div>
+      <div class="nf-links"><a class="link-drawn" href={localePath('fr')} hreflang="fr"><span>{f.notFound.home}</span><Pencil mark={linkLine} /></a></div>
     </div>
   </PlainPage>
 </Base>

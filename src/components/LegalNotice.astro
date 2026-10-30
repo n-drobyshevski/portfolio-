@@ -1,6 +1,8 @@
 ---
 import { useI18n, localePath, type Locale } from '../i18n/utils';
 import PlainPage from './PlainPage.astro';
+import Pencil from './Pencil.astro';
+import { linkLine } from './marks';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
@@ -15,6 +17,6 @@ const { d, t } = useI18n(locale);
         {s.p.map((line) => <p>{t(line)}</p>)}
       </>
     ))}
-    <p class="legal__back"><a class="link-drawn" href={localePath(locale)}>{d.ui.home}</a></p>
+    <p class="legal__back"><a class="link-drawn" href={localePath(locale)}><span>{d.ui.home}</span><Pencil mark={linkLine} /></a></p>
   </div>
 </PlainPage>

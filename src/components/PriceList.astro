@@ -23,9 +23,8 @@ const value = (it: PriceItem) => {
 };
 const two = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<PlainPage locale={locale} path="prices" wide insert>
+<PlainPage locale={locale} path="prices" wide>
   <div class="plist">
-    <p class="plist__mast"><a href={localePath(locale)}>{site.name}</a></p>
     <p class="kicker" aria-hidden="true"><b>7</b><span>{d.prices.kicker} · {T.insert}</span></p>
     <h1 class="h2">{T.title}</h1>
     <p class="plist__meta">{validFrom[locale]}</p>
@@ -129,7 +128,6 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     list.addEventListener('scroll', ends, { passive: true });
     ends();
     update();
-
     /* EN / FR carry the section being read, so the other language opens at the same place */
     document.querySelectorAll<HTMLAnchorElement>('[data-lang-link]').forEach((a) => {
       const base = a.getAttribute('href') || '';
@@ -139,38 +137,10 @@ const two = (i: number) => String(i + 1).padStart(2, '0');
     });
   }
 
-  /* Contents: the same folded card as on the leaflet, opening up from the folio */
-  const details = document.querySelector<HTMLDetailsElement>('.contents');
-  const summary = details?.querySelector('summary');
-  const card = details?.querySelector<HTMLElement>('.contents__card');
-  if (details && summary && card) {
-    const still = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const folded = { transform: 'perspective(900px) translateY(12px) rotateX(-80deg)', opacity: 0 };
-    const flat = { transform: 'none', opacity: 1 };
-    const open = () => {
-      details.open = true;
-      if (still()) card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
-      else card.animate([folded, flat], { duration: 550, easing: 'cubic-bezier(.22, 1, .36, 1)' });
-    };
-    const close = () => {
-      if (!details.open) return;
-      if (still()) { details.open = false; return; }
-      card.animate([flat, folded], { duration: 320, easing: 'cubic-bezier(.55, 0, 1, .45)', fill: 'forwards' }).onfinish = (e) => {
-        details.open = false;
-        (e.target as Animation).cancel();
-      };
-    };
-    summary.addEventListener('click', (e) => { e.preventDefault(); if (details.open) close(); else open(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && details.open) { close(); summary.focus(); } });
-    document.addEventListener('pointerdown', (e) => { if (details.open && !details.contains(e.target as Node)) close(); });
-  }
 </script>
 
 <style>
   .plist { container-type: inline-size; }
-  .plist__mast { display: none; margin-bottom: 26px; font: 600 15px/1.2 var(--sans); letter-spacing: -.01em; }
-  .plist__mast a { color: var(--ink); text-decoration: none; }
-  @media (max-width: 1099px) { .plist__mast { display: block; } }
   .plist__meta { margin-top: 6px; font: 400 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
   .plist__intro { margin-top: 14px; max-width: 58ch; color: var(--ink-soft); }
 
