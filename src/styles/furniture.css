@@ -73,6 +73,7 @@ html:not(.js) :is(.motion, .folio__btn, .folio__label) { display: none; }
 .stamp__ink circle { fill: none; stroke: var(--pencil); }
 .stamp__ink text { fill: var(--pencil); font: 400 8.6px var(--mono); letter-spacing: .14em; }
 .stamp__txt { position: relative; width: 70px; text-align: center; font: 700 15px/1.05 var(--sans); letter-spacing: -.01em; text-transform: none; }
+.stamp__short, .contents__here { display: none; } /* phones only */
 .stamp::before { content: ""; position: absolute; inset: 3px; border-radius: 50%; border: 2px solid var(--pencil); opacity: 0; transition: opacity .35s var(--ui); }
 .stamp:hover, .stamp:focus-visible { transform: translateY(-4px) rotate(-5deg); }
 .stamp:hover::before, .stamp:focus-visible::before { opacity: .28; transform: translateY(4px); }

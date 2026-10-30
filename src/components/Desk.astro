@@ -8,8 +8,10 @@ interface Props {
   locale: Locale;
   /** Page path of a loose sheet lying on the desk, e.g. "prices" ("" for 404); leave out on the leaflet itself. */
   sheet?: string;
+  /** Where the reader is, shown on the Contents card on phones (the sheet's title; the leaflet keeps it up to date itself). */
+  here?: string;
 }
-const { locale, sheet } = Astro.props;
+const { locale, sheet, here } = Astro.props;
 const { d, t } = useI18n(locale);
 const loose = sheet !== undefined;
 const home = loose ? localePath(locale) : '';
@@ -55,6 +57,7 @@ const toc = [
       <text><textPath href="#stamp-ring" textLength="250" lengthAdjust="spacing">{d.nav.stampRing}</textPath></text>
     </svg>
     <span class="stamp__txt">{d.nav.quote}</span>
+    <span class="stamp__short">{d.nav.quoteShort}</span>
   </a>
   <div class="folio">
     {loose ? (
@@ -67,7 +70,7 @@ const toc = [
       </>
     )}
     <details class="contents">
-      <summary><svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 1h14M0 5h14M0 9h9"/></svg><span>{d.contents.title}</span></summary>
+      <summary><svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 1h14M0 5h14M0 9h9"/></svg><span class="contents__t">{d.contents.title}</span><span class="contents__here">{here ?? `1 · ${d.folio.names.cover}`}</span></summary>
       <div class="contents__card">
         <p class="contents__h">{d.contents.title}</p>
         <ol class="toc">

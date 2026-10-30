@@ -10,10 +10,12 @@ interface Props {
   path?: string;
   /** A wider sheet, for pages with more to lay out (the price list). */
   wide?: boolean;
+  /** The sheet's name, shown on the Contents card on phones. */
+  here: string;
 }
-const { locale, path = '', wide = false } = Astro.props;
+const { locale, path = '', wide = false, here } = Astro.props;
 ---
-<Desk locale={locale} sheet={path} />
+<Desk locale={locale} sheet={path} here={here} />
 <main class:list={['plain-wrap', { 'plain--wide': wide }]} id="top">
   <div class="sheet">
     <section class="face">

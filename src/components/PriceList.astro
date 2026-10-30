@@ -23,7 +23,7 @@ const value = (it: PriceItem) => {
 };
 const two = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<PlainPage locale={locale} path="prices" wide>
+<PlainPage locale={locale} path="prices" here={T.title} wide>
   <div class="plist">
     <p class="kicker" aria-hidden="true"><b>7</b><span>{d.prices.kicker} · {T.insert}</span></p>
     <h1 class="h2">{T.title}</h1>

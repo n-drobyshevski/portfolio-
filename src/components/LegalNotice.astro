@@ -7,7 +7,7 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { d, t } = useI18n(locale);
 ---
-<PlainPage locale={locale} path="mentions-legales">
+<PlainPage locale={locale} path="mentions-legales" here={d.legal.title}>
   <div class="legal">
     <h1 class="h2">{d.legal.title}</h1>
     <p class="meta">{d.legal.meta}</p>

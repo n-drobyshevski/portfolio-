@@ -34,6 +34,7 @@ export const en = {
     work: 'Work',
     prices: 'Prices',
     quote: 'Get a quote',
+    quoteShort: 'Free quote',
     stampRing: 'NICOLAI DROBYSHEVSKI · WEB DESIGN · LILLE ·',
   },
   folio: {

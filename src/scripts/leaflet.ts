@@ -101,7 +101,7 @@ function init(CFG: Config) {
   const cropPaths = $$<SVGPathElement>('.crops path');
   const coverMarks = $$<SVGPathElement>('.pencil[data-g="cover"] .pm');
   const perf = $('.perf'), perfLine = $('.perf__line'), scissors = $('.scissors');
-  const odo = $('.odo'), folioName = $('.folio__name'), folioPg = $('.folio__pg');
+  const odo = $('.odo'), folioName = $('.folio__name'), folioPg = $('.folio__pg'), folioHere = $('.contents__here');
   const live = $('#live'), openTab = $('.open-tab');
 
   /* ---------- the leaflet model ---------- */
@@ -362,6 +362,7 @@ function init(CFG: Config) {
     const prev = folioCur; folioCur = name;
     folioName.textContent = CFG.folio[name];
     const num = FOLIO_NUM[name];
+    folioHere.textContent = num ? `${num} · ${CFG.folio[name]}` : CFG.folio[name];
     folioPg.style.display = num ? '' : 'none';
     if (!num) return;
     const dir = prev ? (FOLIO_ORDER.indexOf(name) > FOLIO_ORDER.indexOf(prev) ? 1 : -1) : 0;
