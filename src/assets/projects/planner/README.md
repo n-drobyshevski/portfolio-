@@ -1,4 +1,4 @@
-00-cover-tasks.webp: Cover: a task dragged from the tasks rail onto the week
+00-cover-poster.webp: Cover: title, tagline and features beside the week with a task being dragged onto it
 01-week.webp: Week view with shared and personal events, recurring standups and a partner overlay
 02-week-dark.webp: Week view in the dark theme
 03-month.webp: Month view with recurring events across the month
