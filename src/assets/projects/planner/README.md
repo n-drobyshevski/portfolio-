@@ -1,4 +1,4 @@
-00-cover-poster.webp: Cover: title, tagline and features beside the week with a task being dragged onto it
+00-cover-week.webp: Cover: a week grid whose events spell out the name, tagline and features, with a task being dropped into a free slot
 01-week.webp: Week view with shared and personal events, recurring standups and a partner overlay
 02-week-dark.webp: Week view in the dark theme
 03-month.webp: Month view with recurring events across the month

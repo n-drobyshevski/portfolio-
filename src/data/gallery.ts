@@ -6,7 +6,7 @@
 import type { ImageMetadata } from 'astro';
 import type { L } from './site';
 
-import plCover from '../assets/projects/planner/00-cover-poster.webp';
+import plCover from '../assets/projects/planner/00-cover-week.webp';
 import plWeek from '../assets/projects/planner/01-week.webp';
 import plBoard from '../assets/projects/planner/06-tasks-board.webp';
 import plSubtasks from '../assets/projects/planner/08-subtasks-in-order.webp';
@@ -46,7 +46,7 @@ const N = ' ';
 
 export const galleries: Record<string, Shot[]> = {
   planner: [
-    { src: plCover, caption: { en: 'A shared calendar where tasks become time', fr: 'Un agenda partagé où les tâches deviennent du temps' } },
+    { src: plCover, caption: { en: 'A shared calendar for two', fr: 'Un agenda partagé à deux' } },
     { src: plWeek, caption: { en: 'Week view with both calendars', fr: 'Vue semaine avec les deux agendas' } },
     { src: plBoard, caption: { en: 'Tasks board', fr: 'Tableau des tâches' } },
     { src: plSubtasks, caption: { en: 'Subtasks done in order', fr: 'Sous-tâches à faire dans l’ordre' } },
