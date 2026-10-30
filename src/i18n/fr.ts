@@ -135,8 +135,8 @@ export const fr: Dict = {
         kind: "PWA · appli MCP",
         label: "appli de cartes de français",
         slot: "[Capture d’écran]",
-        desc: "Des cartes pour apprendre le français familier, avec répétition espacée.",
-        long: "Une appli pensée pour le téléphone, pour apprendre le français familier, de l’argot au verlan. La répétition espacée choisit les mots à revoir chaque jour, les nouveaux mots viennent d’un dictionnaire, de suggestions de l’IA ou d’une capture d’écran de conversation, et une appli MCP permet de réviser et de faire des exercices directement dans une conversation avec Claude.",
+        desc: "Des cartes pour apprendre le vocabulaire français, avec répétition espacée.",
+        long: "Une appli pensée pour le téléphone, pour apprendre le vocabulaire français, des mots du quotidien aux expressions utiles. La répétition espacée choisit les mots à revoir chaque jour, les nouveaux mots viennent d’un dictionnaire, de suggestions de l’IA ou d’une capture d’écran de conversation, et une appli MCP permet de réviser et de faire des exercices directement dans une conversation avec Claude.",
         stack: "Next.js PWA · FSRS · Supabase · appli MCP"
       }
     ],
