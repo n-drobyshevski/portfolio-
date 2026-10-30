@@ -420,8 +420,10 @@ function init(CFG: Config) {
     }
     return (FACE_LABEL[currentPanel().id] || 'cover');
   }
+  let unfolding = false; // the phone intro scales the sheet down, so positions would point past the cover
   function currentPanel() {
     let cur = panels[0];
+    if (unfolding) return cur;
     panels.forEach(p => { if (p.getBoundingClientRect().top < innerHeight * .4) cur = p; });
     return cur;
   }
@@ -675,52 +677,113 @@ function init(CFG: Config) {
   openTab.addEventListener('blur', () => setPeek(false));
   openTab.addEventListener('click', () => { setPeek(false); goTo('hello', { dur: 1.1 }); });
 
+  /* ---------- intro on phones: the leaflet lands closed, unfolds two panels, then zooms in to the cover ---------- */
+  function unfoldIntro(unfolded: Set<HTMLElement>, after: () => void) {
+    const sheet = $('.sheet'), cv = face.cover.el, ab = face.about.el, wy = face.why.el;
+    const rest = panels.slice(3);
+    let top = 0;
+    for (let el: HTMLElement | null = sheet; el; el = el.offsetParent as HTMLElement | null) top += el.offsetTop;
+    const hc = cv.offsetHeight, ha = ab.offsetHeight, hw = wy.offsetHeight;
+    const s = clamp(.3, .58, (innerHeight - 150) / (hc + ha + hw));
+    const mid = (innerHeight - 56) / 2;
+    const y0 = mid - top - hc * s / 2, y1 = mid - top - (hc + ha + hw) * s / 2;
+    // the closed leaflet lies on the desk, so the sheet's paper and shadow step aside for the panels' own
+    const lift = '0 1px 1px rgb(var(--sh) / .12), 0 26px 44px -22px rgb(var(--sh) / .5)';
+    const crease = 'inset 0 1px 0 var(--crease), inset 0 2px 0 var(--paper-hi), ';
+    sheet.style.background = 'none'; sheet.style.boxShadow = 'none';
+    cv.style.boxShadow = lift; ab.style.boxShadow = crease + lift; wy.style.boxShadow = crease + lift;
+    gsap.set(sheet, { transformOrigin: '50% 0%', transformPerspective: 1400, scale: s, y: y0 });
+    gsap.set([ab, wy], { transformOrigin: '50% 0%', transformPerspective: 1300, backfaceVisibility: 'hidden' });
+    gsap.set(ab, { rotationX: -180 });
+    gsap.set(wy, { rotationX: 180 });
+    gsap.set([face.about.shade, face.why.shade], { opacity: .5 });
+    gsap.set(rest, { autoAlpha: 0 });
+    d.classList.remove('intro');
+    hidePaths(coverMarks);
+    unfolded.add(ab); unfolded.add(wy);
+    unfolding = true;
+
+    const skips = ['pointerdown', 'touchstart', 'wheel', 'keydown'] as const;
+    const skip = () => tl.progress(1);
+    const done = () => {
+      skips.forEach(t => removeEventListener(t, skip));
+      sheet.style.background = sheet.style.boxShadow = cv.style.boxShadow = ab.style.boxShadow = wy.style.boxShadow = '';
+      gsap.set([sheet, ab, wy], { clearProps: 'transform,transformOrigin,transformPerspective,backfaceVisibility' });
+      gsap.set([face.about.shade, face.why.shade], { clearProps: 'opacity' });
+      gsap.set(rest, { clearProps: 'opacity,visibility' });
+      drawPaths(coverMarks, .05, .7);
+      unfolding = false;
+      setFolio(PANEL_FOLIO[currentPanel().id]);
+      after();
+    };
+    const tl = gsap.timeline({ onComplete: done });
+    tl.fromTo(sheet, { y: y0 - 24, rotationX: 10, rotationZ: -4 }, { y: y0, rotationX: 0, rotationZ: 0, duration: .55, ease: 'power2.in' })
+      .to(sheet, { rotationZ: .4, duration: .1, ease: 'power1.out' })
+      .to(sheet, { rotationZ: 0, duration: .25, ease: 'expo.out' })
+      // About swings down from behind the cover, then Why from in front, like an accordion
+      .to(ab, { rotationX: 0, duration: .5, ease: 'paper' }, .65)
+      .to(face.about.shade, { opacity: 0, duration: .5, ease: 'power1.out' }, .65)
+      .to(sheet, { y: y1, duration: 1.05, ease: 'power2.inOut' }, .65)
+      .to(wy, { rotationX: 0, duration: .5, ease: 'paper' }, 1.2)
+      .to(face.why.shade, { opacity: 0, duration: .5, ease: 'power1.out' }, 1.2)
+      // then it is picked up to reading size, cover first
+      .to(sheet, { scale: 1, y: 0, duration: .7, ease: 'power3.inOut' }, 1.85)
+      .to(rest, { autoAlpha: 1, duration: .3 }, 2.2);
+    skips.forEach(t => addEventListener(t, skip, { passive: true }));
+  }
+
   /* ---------- build: the strip (phones, tablets, short laptops) ---------- */
   function buildStrip(opts: ModeOpts) {
     const first = opts.first;
     let seen = false;
     try { seen = sessionStorage.getItem('leaflet-intro') === '1'; sessionStorage.setItem('leaflet-intro', '1'); } catch { /* ignore */ }
     const wasIntro = d.classList.contains('intro');
-    d.classList.remove('intro');
-    if (first && wasIntro && !seen) {
-      const cv = face.cover.el;
-      hidePaths(coverMarks);
-      gsap.timeline()
-        .fromTo(cv, { y: -20, rotationX: 10, rotationZ: -4, transformPerspective: 900, transformOrigin: '50% 0%' }, { y: 0, rotationX: 0, rotationZ: 0, duration: .6, ease: 'power2.in' })
-        .to(cv, { rotationZ: .4, duration: .1, ease: 'power1.out' }).to(cv, { rotationZ: 0, duration: .25, ease: 'expo.out', clearProps: 'transform' })
-        .fromTo(coverMarks, { drawSVG: '0%' }, { drawSVG: '100%', duration: .7, ease: 'power2.inOut' }, .6);
-    } else if (first) {
-      hidePaths(coverMarks); drawPaths(coverMarks, .2, .6);
+    /* where a panel sits in the page, ignoring transforms (the intro scales the whole sheet) */
+    const pageTop = (el: HTMLElement | null) => { let y = 0; while (el) { y += el.offsetTop; el = el.offsetParent as HTMLElement | null; } return y; };
+    // during the intro the sheet is scaled, so the panels' scroll triggers are armed once it has landed
+    const unfolded = new Set<HTMLElement>(), arm: (() => void)[] = [];
+    const armAll = () => { arm.forEach(f => f()); ScrollTrigger.refresh(); };
+    const playIntro = first && wasIntro && !seen;
+    if (playIntro) unfoldIntro(unfolded, armAll);
+    else {
+      d.classList.remove('intro');
+      if (first) { hidePaths(coverMarks); drawPaths(coverMarks, .2, .6); }
     }
     panels.forEach((p, i) => {
       if (i === 0) return;
-      const r = p.getBoundingClientRect();
-      if (r.top < innerHeight * .9) { if (p.id === 'contact') replySet(); return; }
+      if (pageTop(p) - scrollY < innerHeight * .9) { if (p.id === 'contact') replySet(); return; }
       const paths = $$<SVGPathElement>('.pencil .pm', p), word = p.querySelector<HTMLElement>('.op-word'), shade = $('.shade', p);
       const valley = i % 2 === 1;
-      // a one-shot unfold (under half a second), then the panel lies flat and still
-      gsap.set(p, { transformPerspective: 1300, transformOrigin: '50% 0%', rotationX: valley ? -34 : 16 });
-      gsap.set(shade, { opacity: valley ? .16 : .08 });
+      // a one-shot unfold (under half a second), then the panel lies flat and still;
+      // panels the intro has just unfolded only reveal their word and pencil marks
+      const fold = !unfolded.has(p);
+      if (fold) {
+        gsap.set(p, { transformPerspective: 1300, transformOrigin: '50% 0%', rotationX: valley ? -34 : 16 });
+        gsap.set(shade, { opacity: valley ? .16 : .08 });
+      }
       if (word) gsap.set(word, { clipPath: 'inset(-12% 100% -12% 0%)' });
       hidePaths(paths);
       if (p.id === 'contact') replyPrep();
-      ScrollTrigger.create({
+      arm.push(() => ScrollTrigger.create({
         trigger: p, start: 'top 86%', once: true,
         onEnter: self => {
           const tl = gsap.timeline();
-          tl.to(p, { rotationX: 0, duration: .45, ease: 'paper' }, 0)
-            .to(shade, { opacity: 0, duration: .45, ease: 'power1.out' }, 0)
-            .set(p, { clearProps: 'transform' }, .46);
+          if (fold) {
+            tl.to(p, { rotationX: 0, duration: .45, ease: 'paper' }, 0)
+              .to(shade, { opacity: 0, duration: .45, ease: 'power1.out' }, 0)
+              .set(p, { clearProps: 'transform' }, .46);
+          }
           if (word) tl.to(word, { clipPath: 'inset(-12% 0% -12% 0%)', duration: .6, ease: 'power2.inOut' }, .12);
           tl.add(() => {
             if (word) drawPaths($$<SVGPathElement>('.pm', word), 0, .8);
             drawPaths(paths.filter(x => !word || !word.contains(x)), word ? .35 : 0, .7);
             if (p.id === 'contact') replyLanding();
-          }, .45);
+          }, fold ? .45 : .1);
           if (Math.abs(self.getVelocity()) > 3500) tl.progress(1);
         },
-      });
+      }));
     });
+    if (!playIntro) arm.forEach(f => f());
     if (window.__leafHash) { const el = document.getElementById(window.__leafHash.slice(1)); window.__leafHash = null; if (el) scrollToEl(el, true); }
     if (opts.keep) goTo(opts.keep, { instant: true, id: opts.keepId });
   }

@@ -79,8 +79,11 @@
 }
 
 
-/* phone intro start pose (only while html.intro is set; a watchdog removes it if scripts never arrive) */
-html.js.intro:not(.leaf-3d) .face--cover { transform: perspective(900px) translateY(-20px) rotate(-4deg) rotateX(10deg); transform-origin: 50% 0; }
+/* phone intro start pose: the leaflet lies small and closed on the desk until the script unfolds it
+   (only while html.intro is set; a watchdog removes it if scripts never arrive) */
+html.js.intro:not(.leaf-3d) .sheet { transform-origin: 50% 0; transform: translateY(16svh) scale(.5); background: none; box-shadow: none; }
+html.js.intro:not(.leaf-3d) .face:not(.face--cover) { visibility: hidden; }
+html.js.intro:not(.leaf-3d) .face--cover { box-shadow: 0 1px 1px rgb(var(--sh) / .12), 0 26px 44px -22px rgb(var(--sh) / .5); }
 
 /* calm proof: reduced motion or "Animations: off" */
 html.calm .pencil path { filter: none; }
