@@ -674,9 +674,9 @@ function init(CFG: Config) {
       const cancel = () => { back.kill(); removeEventListener('scroll', cancel); };
       addEventListener('scroll', cancel, { passive: true });
     };
-    previewTl = gsap.timeline({ delay: .25, onComplete: () => { previewTl = null; ev.forEach(n => removeEventListener(n, stop, true)); } })
-      .to(m, { time: LABELS.poster, duration: 2.3, ease: 'sine.inOut' })
-      .to(m, { time: 0, duration: 1.5, ease: 'power2.inOut' }, '+=.9');
+    previewTl = gsap.timeline({ delay: .1, onComplete: () => { previewTl = null; ev.forEach(n => removeEventListener(n, stop, true)); } })
+      .to(m, { time: LABELS.poster, duration: 1.4, ease: 'sine.inOut' })
+      .to(m, { time: 0, duration: 1, ease: 'power2.inOut' }, '+=.6');
     ev.forEach(n => addEventListener(n, stop, { capture: true, passive: true }));
   }
   function stopPreview() { if (previewTl) { previewTl.kill(); previewTl = null; } }
