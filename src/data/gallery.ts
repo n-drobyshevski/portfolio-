@@ -26,7 +26,7 @@ import trCover from '../assets/projects/translator/00-cover-dark.webp';
 import trDashboard from '../assets/projects/translator/02-dashboard.webp';
 import trDetail from '../assets/projects/translator/04-event-detail.webp';
 import trManager from '../assets/projects/translator/05-message-manager.webp';
-import kCover from '../assets/projects/cards/desktop/00-cover-fan.webp';
+import kCover from '../assets/projects/cards/desktop/00-cover-flashcard.webp';
 import kReview from '../assets/projects/cards/desktop/01-review.webp';
 import kAdd from '../assets/projects/cards/desktop/02-add-suggestions.webp';
 import kWord from '../assets/projects/cards/desktop/03-word-detail.webp';
@@ -74,7 +74,7 @@ export const galleries: Record<string, Shot[]> = {
     { src: trManager, caption: { en: 'Re-post a message by hand', fr: 'Republier un message à la main' } },
   ],
   cards: [
-    { src: kCover, caption: { en: 'Review, word detail and progress', fr: 'Révision, fiche du mot et progrès' } },
+    { src: kCover, caption: { en: 'Cards that know when to come back', fr: 'Des cartes qui savent quand revenir' } },
     { src: kReview, caption: { en: 'Review card with grading', fr: 'Carte de révision et notation' } },
     { src: kAdd, caption: { en: 'Quick add with suggestions', fr: 'Ajout rapide avec suggestions' } },
     { src: kWord, caption: { en: 'Conjugation of a verb', fr: 'La conjugaison d’un verbe' } },
