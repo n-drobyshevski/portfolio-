@@ -497,6 +497,64 @@ function init(CFG: Config) {
     goTo(want, { dur: .9 });
   });
 
+  /* ---------- gestures: pull the paper sideways to turn the leaflet ----------
+     A sideways swipe on a trackpad, or a drag with the mouse or a finger, moves through the same scroll as the wheel,
+     so the paper follows the hand; pulling to the left opens it further, as in a book. Letting go of a drag turns to
+     the next page that way (or back, after a nudge); a swipe settles through the scroll's own snap. */
+  const pxPerDx = () => innerHeight * 1.15 / (S.W || 500); // a pull across one panel is about one turn
+  const maxY = () => document.documentElement.scrollHeight - innerHeight;
+  addEventListener('wheel', e => {
+    if (S.mode !== 'leaf' || !st || e.ctrlKey) return; // ctrl: a pinch
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerWidth : 1;
+    const dx = e.deltaX * unit;
+    if (Math.abs(dx) <= Math.abs(e.deltaY * unit)) return;
+    e.preventDefault(); // and so no sideways overscroll or browser back-swipe either
+    window.scrollTo(0, clamp(0, maxY(), scrollY + dx * pxPerDx()));
+  }, { passive: false });
+
+  interface Drag { id: number; x: number; y: number; y0: number; on: boolean; lx: number; lt: number; vx: number }
+  let drag: Drag | null = null, dragClick = false;
+  const NO_DRAG = 'a, button, input, textarea, select, label, summary, [contenteditable], .open-tab';
+  stage.addEventListener('pointerdown', e => {
+    if (S.mode !== 'leaf' || !st || !introDone || e.button !== 0 || (e.target as Element).closest(NO_DRAG)) return;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, y0: scrollY, on: false, lx: e.clientX, lt: e.timeStamp, vx: 0 };
+  });
+  addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.on) {
+      if (Math.abs(dy) > 10 && Math.abs(dy) >= Math.abs(dx)) { drag = null; return; } // up and down stays a selection or a scroll
+      if (Math.abs(dx) < 10) return;
+      drag.on = true;
+      killScroll();
+      try { stage.setPointerCapture(e.pointerId); } catch { /* ignore */ }
+      d.classList.add('page-drag');
+    }
+    getSelection()?.removeAllRanges();
+    const dt = e.timeStamp - drag.lt;
+    if (dt > 0) drag.vx = .7 * drag.vx + .3 * (e.clientX - drag.lx) / dt;
+    drag.lx = e.clientX; drag.lt = e.timeStamp;
+    window.scrollTo(0, clamp(0, maxY(), drag.y0 - dx * pxPerDx()));
+  });
+  function endDrag(e: PointerEvent) {
+    if (!drag || e.pointerId !== drag.id) return;
+    const g = drag; drag = null;
+    if (!g.on || !st) return;
+    d.classList.remove('page-drag');
+    // the click that ends a drag is not a click (on the poster it would zoom in)
+    dragClick = true; setTimeout(() => { dragClick = false; }, 0);
+    const dx = e.clientX - g.x, flick = e.timeStamp - g.lt < 80 && Math.abs(g.vx) > .45;
+    const dir = flick ? -Math.sign(g.vx) : Math.abs(dx) > 40 ? -Math.sign(dx) : 0;
+    const t = (scrollY - st.start) / (st.end - st.start) * T;
+    let to: LabelName = currentLabel();
+    if (dir > 0) to = ORDER.find(n => LABELS[n] > t + 1) || 'reply';
+    if (dir < 0) to = [...ORDER].reverse().find(n => LABELS[n] < t - 1) || 'cover';
+    goTo(to, { dur: .7 });
+  }
+  addEventListener('pointerup', endDrag);
+  addEventListener('pointercancel', endDrag);
+  addEventListener('click', e => { if (dragClick) { e.preventDefault(); e.stopPropagation(); } }, true);
+
   /* ---------- build: the 3D leaflet ---------- */
   function buildMaster() {
     const W = S.W, C = S.C, s0 = S.coverS, sp = S.posterS;
@@ -540,6 +598,7 @@ function init(CFG: Config) {
 
   /* snap only to rest labels, in the direction of travel, after the scroll has stopped */
   function snapTo(v: number, self?: ScrollTrigger) {
+    if (drag && drag.on) return v; // a hand holding the paper still is not a stop; letting go decides the page
     for (const n in HOLDS) { const h = HOLDS[n]; if (v >= h[0] / T && v <= h[1] / T) return LABELS[n as LabelName] / T; }
     const ps = ORDER.map(n => LABELS[n] / T);
     if (v < .015) return 0;
@@ -964,6 +1023,7 @@ function init(CFG: Config) {
     Object.assign(intro, { dy: 0, s: 1, rx: 0, rz: 0, dx: 0, puff: 0, lift: 0 });
     peek.v = 0; peekOn = false; introDone = true;
     for (const k in drawn) delete drawn[k];
+    drag = null; d.classList.remove('page-drag');
   }
   function applyMode(opts?: ModeOpts) {
     const o = opts || {};
