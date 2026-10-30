@@ -77,6 +77,8 @@ const jsonLd =
 const prePaint = `(function () {
   var d = document.documentElement, off = false, seen = false;
   d.classList.add('js');
+  /* a reload starts at the cover, not wherever the browser last scrolled to (links with a #section still land there) */
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
   try { off = localStorage.getItem('leaflet-motion') === 'off'; } catch (e) {}
   try { seen = sessionStorage.getItem('leaflet-intro') === '1'; } catch (e) {}
   if (off) d.classList.add('motion-off');
