@@ -93,6 +93,24 @@ const prePaint = `(function () {
   }
   setTimeout(function () { if (!window.__leafReady) d.classList.remove('leaf-3d', 'intro'); }, 3000);
 })();`;
+/* A hard refresh (Ctrl/Cmd+Shift+R) plays the intro again, though it is otherwise once per session.
+   It downloads the page's stylesheet afresh, while an ordinary refresh takes it straight from the cache (its name is
+   hashed and it never changes), so the stylesheet's transfer size tells the two apart. This runs at the top of the
+   body: the stylesheet has arrived by then, and nothing has been painted yet. */
+const hardRefresh = `(function () {
+  var d = document.documentElement;
+  try {
+    var nav = performance.getEntriesByType('navigation')[0];
+    if (!nav || nav.type !== 'reload') return;
+    var css = performance.getEntriesByType('resource').filter(function (r) {
+      var u = r.name.split('?')[0];
+      return u.indexOf('/_astro/') !== -1 && u.slice(-4) === '.css';
+    });
+    if (!css.length || !css.every(function (r) { return r.transferSize > 0; })) return;
+    sessionStorage.removeItem('leaflet-intro');
+    if (!d.classList.contains('calm') && !location.hash && !window.__leafHash) d.classList.add('intro');
+  } catch (e) {}
+})();`;
 const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : '';
 const ogImageAlt = t(d.meta.ogImageAlt);
 ---
@@ -130,6 +148,7 @@ const ogImageAlt = t(d.meta.ogImageAlt);
 {variant === 'leaflet' && <script is:inline set:html={prePaint}></script>}
 </head>
 <body>
+{variant === 'leaflet' && <script is:inline set:html={hardRefresh}></script>}
 <slot />
 </body>
 </html>
