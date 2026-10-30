@@ -623,7 +623,8 @@ function init(CFG: Config) {
     Object.assign(intro, { dy: -4, s: 1.06, rx: 14, rz: -5.3, dx: 18, puff: 0, lift: 1 });
     hidePaths(coverMarks); hidePaths(cropPaths); drawn.cover = true;
     render();
-    introTl = gsap.timeline({ onUpdate: render, onComplete: endIntro });
+    previewNext = true;
+    introTl = gsap.timeline({ onUpdate: render, onComplete: () => { endIntro(); if (previewNext) previewOpen(); } });
     introTl
       .to(intro, { dy: 0, s: 1, rx: 0, lift: 0, duration: .52, ease: 'power2.in' }, 0)
       .to(intro, { puff: -6, duration: .14, ease: 'power2.out' }, .52)
@@ -649,12 +650,37 @@ function init(CFG: Config) {
       .to(stamp, { scale: .95, duration: .16, ease: 'power4.in' })
       .to(stamp, { scale: 1, duration: .14, ease: 'power2.out' });
   }
-  function skipIntro() { if (introTl) introTl.progress(1); }
+  function skipIntro() { previewNext = false; if (introTl) introTl.progress(1); }
   function armSkip() {
     const ev = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
     const fn = (e: Event) => { if (e.type === 'keydown' && (e as KeyboardEvent).key === 'Tab') return; skipIntro(); ev.forEach(n => removeEventListener(n, fn, true)); };
     ev.forEach(n => addEventListener(n, fn, { capture: true, passive: true }));
   }
+  /* after the drop, a first look: the leaflet opens by itself all the way to the poster, holds, and folds back to its cover.
+     It plays the scroll timeline without scrolling; any wheel, key, click or touch hands it back to the scroll at once. */
+  let previewNext = false, previewTl: gsap.core.Timeline | null = null;
+  function previewOpen() {
+    if (S.mode !== 'leaf' || !master || !st || scrollY > 2) return;
+    const m = master, ev = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+    const stop = (e?: Event) => {
+      if (e && e.type === 'keydown' && (e as KeyboardEvent).key === 'Tab') return;
+      ev.forEach(n => removeEventListener(n, stop, true));
+      if (!previewTl) return;
+      previewTl.kill(); previewTl = null;
+      // fold back to wherever the scroll says the reader is (the cover, unless they have started scrolling)
+      if (!st || master !== m) return;
+      const back = gsap.to(m, { progress: st.progress, duration: .55, ease: 'power2.inOut', onComplete: () => removeEventListener('scroll', cancel) });
+      // a real scroll takes over at once: the scroll's own scrub carries on from where the paper is
+      const cancel = () => { back.kill(); removeEventListener('scroll', cancel); };
+      addEventListener('scroll', cancel, { passive: true });
+    };
+    previewTl = gsap.timeline({ delay: .25, onComplete: () => { previewTl = null; ev.forEach(n => removeEventListener(n, stop, true)); } })
+      .to(m, { time: LABELS.poster, duration: 2.3, ease: 'sine.inOut' })
+      .to(m, { time: 0, duration: 1.5, ease: 'power2.inOut' }, '+=.9');
+    ev.forEach(n => addEventListener(n, stop, { capture: true, passive: true }));
+  }
+  function stopPreview() { if (previewTl) { previewTl.kill(); previewTl = null; } }
+
   /* the Skip button exists only while the intro plays; afterwards it would be a dead control */
   const skipBtn = $('.skip');
   function hideSkip() { const had = document.activeElement === skipBtn; skipBtn.hidden = true; if (had) $('.cover__acts .btn').focus({ preventScroll: true }); }
@@ -666,7 +692,7 @@ function init(CFG: Config) {
     peekOn = on;
     gsap.to(peek, { v: on ? 13 : 0, duration: on ? .45 : .6, ease: on ? 'ui' : 'power2.inOut', overwrite: true, onUpdate: render, onComplete: render });
   }
-  const canPeek = () => S.mode === 'leaf' && introDone && master && master.time() < 1 && !scrollTw;
+  const canPeek = () => S.mode === 'leaf' && introDone && !previewTl && master && master.time() < 1 && !scrollTw;
   face.cover.el.addEventListener('pointermove', e => {
     if (!canPeek() || !mmFine.matches) return;
     const r = face.cover.el.getBoundingClientRect();
@@ -868,6 +894,7 @@ function init(CFG: Config) {
   }
   function resetAll() {
     if (finishUnfold) finishUnfold(); // first, so the scroll triggers it arms are cleared just below
+    stopPreview(); previewNext = false;
     ScrollTrigger.getAll().forEach(t => t.kill());
     if (master) { master.kill(); master = null; }
     st = null;
