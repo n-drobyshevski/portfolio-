@@ -1,6 +1,6 @@
 # French Cards MCP app screenshots (chat widgets)
 
-Widgets rendered in a mocked MCP Apps host inside a neutral chat frame (about 700px wide), demo data, UI in Russian.
+Sample French-English vocabulary. Widgets rendered in a mocked MCP Apps host inside a neutral chat frame (about 700px wide), interface shown in English.
 
 - 01-cards-front.webp: Card player in the chat: question side
 - 02-cards-flipped.webp: Card player flipped: translation, example and grading buttons
